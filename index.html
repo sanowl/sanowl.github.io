@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>San Owl - AI Researcher & Theoretical Physicist</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+    primary: '#faf3e0', // A warm, light cream for the primary background
+    secondary: '#f0e1c9', // A slightly darker beige for secondary elements
+    accent: '#e07a5f', // A warm terracotta for accents
+    text: '#000000', // Black for clear, feeble text
+    light: '#000000',
+},
+
+
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                    },
+                    animation: {
+                        'gradient': 'gradient 15s ease infinite',
+                        'float': 'float 6s ease-in-out infinite',
+                    },
+                    keyframes: {
+                        gradient: {
+                            '0%, 100%': {
+                                'background-size': '200% 200%',
+                                'background-position': 'left center'
+                            },
+                            '50%': {
+                                'background-size': '200% 200%',
+                                'background-position': 'right center'
+                            }
+                        },
+                        float: {
+                            '0%, 100%': { transform: 'translateY(0px)' },
+                            '50%': { transform: 'translateY(-20px)' },
+                        }
+                    },
+                }
+            }
+        }
+    </script>
+</head>
+<body class="bg-primary text-text">
+    <header class="fixed w-full bg-primary bg-opacity-90 backdrop-filter backdrop-blur-lg z-50 transition-all duration-300">
+        <nav class="container mx-auto px-6 py-4">
+            <div class="flex justify-between items-center">
+                <a href="#" class="text-2xl font-bold text-accent">San Owl</a>
+                <div class="hidden md:flex space-x-6">
+                    <a href="#about" class="text-light hover:text-accent transition-colors hover:underline">About</a>
+                    <a href="#experience" class="text-light hover:text-accent transition-colors hover:underline">Experience</a>
+                    <a href="#skills" class="text-light hover:text-accent transition-colors hover:underline">Skills</a>
+                    <a href="#projects" class="text-light hover:text-accent transition-colors hover:underline">Projects</a>
+                    <a href="#contact" class="text-light hover:text-accent transition-colors hover:underline">Contact</a>
+                </div>
+                <button class="md:hidden text-light focus:outline-none" id="menu-toggle">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7"></path>
+                    </svg>
+                </button>
+            </div>
+        </nav>
+        <div class="md:hidden hidden" id="mobile-menu">
+            <a href="#about" class="block py-2 px-4 text-sm text-light hover:bg-secondary">About</a>
+            <a href="#experience" class="block py-2 px-4 text-sm text-light hover:bg-secondary">Experience</a>
+            <a href="#skills" class="block py-2 px-4 text-sm text-light hover:bg-secondary">Skills</a>
+            <a href="#projects" class="block py-2 px-4 text-sm text-light hover:bg-secondary">Projects</a>
+            <a href="#contact" class="block py-2 px-4 text-sm text-light hover:bg-secondary">Contact</a>
+        </div>
+    </header>
+
+    <main class="pt-20">
+        <section id="hero" class="min-h-screen flex items-center justify-center text-center px-4 bg-gradient-to-r from-primary via-secondary to-primary animate-gradient">
+            <div class="max-w-3xl">
+                <h1 class="text-5xl md:text-6xl font-bold mb-6 text-light animate-float">San Owl</h1>
+                <p class="text-xl md:text-2xl mb-12">AI Researcher & Theoretical Physicist</p>
+                <a href="#contact" class="bg-transparent text-accent border-2 border-accent px-8 py-3 rounded-full hover:bg-accent hover:text-primary transition-all duration-300 shadow-lg hover:shadow-xl transform hover:scale-105">Connect with Me</a>
+            </div>
+        </section>
+
+        <section id="about" class="py-24 bg-secondary">
+            <div class="container mx-auto px-6">
+                <h2 class="text-4xl font-bold mb-12 text-center text-light">About Me</h2>
+                <div class="bg-primary rounded-3xl shadow-2xl p-8 md:p-12 max-w-3xl mx-auto transform hover:scale-105 transition-all duration-300">
+                    <p class="text-xl leading-relaxed">
+                        As an AI researcher and theoretical physicist, I'm driven by the pursuit of knowledge at the intersection of artificial intelligence and fundamental physics. My work aims to unravel the mysteries of our universe through advanced AI techniques, pushing the boundaries of what's possible in both fields.
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <section id="experience" class="py-24">
+            <div class="container mx-auto px-6">
+                <h2 class="text-4xl font-bold mb-12 text-center text-light">Professional Experience</h2>
+                <div class="space-y-12">
+                    <div class="bg-secondary p-8 rounded-3xl shadow-2xl hover:shadow-3xl transition-all duration-300 transform hover:-translate-y-2">
+                        <h3 class="text-2xl font-semibold mb-2 text-accent">AI Engineer & Full Stack Developer</h3>
+                        <p class="text-light mb-2">Freelance, Remote | March 2020 - Present</p>
+                        <ul class="list-disc list-inside space-y-2">
+                            <li>Developed cutting-edge AI models for various applications</li>
+                            <li>Implemented full-stack solutions using modern technologies</li>
+                            <li>Collaborated with international clients on diverse projects</li>
+                        </ul>
+                    </div>
+                    <div class="bg-secondary p-8 rounded-3xl shadow-2xl hover:shadow-3xl transition-all duration-300 transform hover:-translate-y-2">
+                        <h3 class="text-2xl font-semibold mb-2 text-accent">CEO & Founder</h3>
+                        <p class="text-light mb-2">Evolvemind, Remote | Jan 2022 - Feb 2024</p>
+                        <ul class="list-disc list-inside space-y-2">
+                            <li>Led a team in developing an AI-powered mental health application</li>
+                            <li>Secured funding and managed all aspects of the startup</li>
+                            <li>Drove product vision and strategy</li>
+                        </ul>
+                    </div>
+                    <div class="bg-secondary p-8 rounded-3xl shadow-2xl hover:shadow-3xl transition-all duration-300 transform hover:-translate-y-2">
+                        <h3 class="text-2xl font-semibold mb-2 text-accent">AI Open Source Engineer Intern</h3>
+                        <p class="text-light mb-2">Tublian AI, Columbus, Ohio, USA | April 2024 - June 2024</p>
+                        <ul class="list-disc list-inside space-y-2">
+                            <li>Contributed to open-source AI projects</li>
+                            <li>Collaborated with a team of experienced AI engineers</li>
+                            <li>Gained hands-on experience with state-of-the-art AI technologies</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="skills" class="py-24 bg-secondary">
+            <div class="container mx-auto px-6">
+                <h2 class="text-4xl font-bold mb-12 text-center text-light">Skills & Expertise</h2>
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                    <div class="bg-primary p-8 rounded-3xl shadow-2xl hover:shadow-3xl transition-all duration-300 transform hover:-translate-y-2">
+                        <h3 class="text-xl font-semibold mb-4 text-accent">Technical Skills</h3>
+                        <ul class="space-y-2 text-sm">
+                            <li class="flex items-center"><span class="w-2 h-2 bg-accent rounded-full mr-2"></span>AI & Machine Learning</li>
+                            <li class="flex items-center"><span class="w-2 h-2 bg-accent rounded-full mr-2"></span>Neural Networks</li>
+                            <li class="flex items-center"><span class="w-2 h-2 bg-accent rounded-full mr-2"></span>Deep Learning</li>
+                            <li class="flex items-center"><span class="w-2 h-2 bg-accent rounded-full mr-2"></span>Natural Language Processing</li>
+                            <li class="flex items-center"><span class="w-2 h-2 bg-accent rounded-full mr-2"></span>Computer Vision</li>
+                            <li class="flex items-center"><span class="w-2 h-2 bg-accent rounded-full mr-2"></span>Reinforcement Learning</li>
+                            <li class="flex items-center"><span class="w-2 h-2 bg-accent rounded-full mr-2"></span>Full Stack Development</li>
+                            <li class="flex items-center"><span class="w-2 h-2 bg-accent rounded-full mr-2"></span>Backend Development</li>
+                        </ul>
+                    </div>
+                    <div class="bg-primary p-8 rounded-3xl shadow-2xl hover:shadow-3xl transition-all duration-300 transform hover:-translate-y-2">
+                        <h3 class="text-xl font-semibold mb-4 text-accent">Advanced Theoretical Physics</h3>
+                        <ul class="space-y-2 text-sm">
+                            <li class="flex items-center"><span class="w-2 h-2 bg-accent rounded-full mr-2"></span>Quantum Mechanics & Quantum Entanglement</li>
+                            <li class="flex items-center"><span class="w-2 h-2 bg-accent rounded-full mr-2"></span>General Relativity & Black Hole Thermodynamics</li>
+                            <li class="flex items-center"><span class="w-2 h-2 bg-accent rounded-full mr-2"></span>Quantum Field Theory & Quantum Chromodynamics (QCD)</li>
+                            <li class="flex items-center"><span class="w-2 h-2 bg-accent rounded-full mr-2"></span>Cosmology & Dark Matter/Dark Energy</li>
+                            <li class="flex items-center"><span class="w-2 h-2 bg-accent rounded-full mr-2"></span>String Theory & M-Theory</li>
+                            <li class="flex items-center"><span class="w-2 h-2 bg-accent rounded-full mr-2"></span>Quantum Gravity & Loop Quantum Gravity</li>
+                        </ul>
+                    </div>
+                    <div class="bg-primary p-8 rounded-3xl shadow-2xl hover:shadow-3xl transition-all duration-300 transform hover:-translate-y-2">
+                        <h3 class="text-xl font-semibold mb-4 text-accent">Programming & Tools</h3>
+                        <ul class="space-y-2 text-sm">
+                            <li class="flex items-center"><span class="w-2 h-2 bg-accent rounded-full mr-2"></span>Python, C++, Julia</li>
+                            <li class="flex items-center"><span class="w-2 h-2 bg-accent rounded-full mr-2"></span>PyTorch, TensorFlow</li>
+                            <li class="flex items-center"><span class="w-2 h-2 bg-accent rounded-full mr-2"></span>CUDA, OpenCL</li>
+                            <li class="flex items-center"><span class="w-2 h-2 bg-accent rounded-full mr-2"></span>Git, Docker</li>
+                            <li class="flex items-center"><span class="w-2 h-2 bg-accent rounded-full mr-2"></span>LaTeX, Jupyter</li>
+                            <li class="flex items-center"><span class="w-2 h-2 bg-accent rounded-full mr-2"></span>React, Node.js, Django</li>
+                            <li class="flex items-center"><span class="w-2 h-2 bg-accent rounded-full mr-2"></span>Express, MongoDB</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="projects" class="py-24">
+            <div class="container mx-auto px-6">
+                <h2 class="text-4xl font-bold mb-12 text-center text-light">Featured Projects</h2>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                    <div class="relative bg-secondary p-8 rounded-3xl shadow-2xl hover:shadow-3xl transition-all duration-300 transform hover:-translate-y-2 overflow-hidden group">
+                        <div class="absolute inset-0 bg-gradient-to-r from-accent to-primary opacity-0 group-hover:opacity-20 transition-opacity duration-300"></div>
+                        <h3 class="relative z-10 text-xl font-semibold mb-4 text-accent">LSLM</h3>
+                        <p class="relative z-10 mb-4">Listening-while-Speaking Language Model: An innovative approach to real-time language processing and generation.</p>
+                        <a href="https://github.com/sanowl/LSLM-Listening-while-Speaking-Language-Model" target="_blank" class="relative z-10 text-accent hover:underline">Explore Project →</a>
+                    </div>
+                    <div class="relative bg-secondary p-8 rounded-3xl shadow-2xl hover:shadow-3xl transition-all duration-300 transform hover:-translate-y-2 overflow-hidden group">
+                        <div class="absolute inset-0 bg-gradient-to-r from-accent to-primary opacity-0 group-hover:opacity-20 transition-opacity duration-300"></div>
+                        <h3 class="relative z-10 text-xl font-semibold mb-4 text-accent">MoRA</h3>
+                        <p class="relative z-10 mb-4">High-Rank Matrix Adaptation for Parameter-Efficient Fine-Tuning of Large Language Models.</p>
+                        <a href="https://github.com/sanowl/MoRA-High-Rank-Matrix-Adaptation-for-Parameter-Efficient-Fine-Tuning-of-Large-Language-Models" target="_blank" class="relative z-10 text-accent hover:underline">Explore Project →</a>
+                    </div>
+                    <div class="relative bg-secondary p-8 rounded-3xl shadow-2xl hover:shadow-3xl transition-all duration-300 transform hover:-translate-y-2 overflow-hidden group">
+                        <div class="absolute inset-0 bg-gradient-to-r from-accent to-primary opacity-0 group-hover:opacity-20 transition-opacity duration-300"></div>
+                        <h3 class="relative z-10 text-xl font-semibold mb-4 text-accent">SARA</h3>
+                        <p class="relative z-10 mb-4">Singular Value-Based Adaptive Low-Rank Adaptation: A novel approach to efficient model adaptation.</p>
+                        <a href="https://github.com/sanowl/SARA-Singular-Value-Based-Adaptive-Low-Rank-Adaption" target="_blank" class="relative z-10 text-accent hover:underline">Explore Project →</a>
+                    </div>
+                    <div class="relative bg-secondary p-8 rounded-3xl shadow-2xl hover:shadow-3xl transition-all duration-300 transform hover:-translate-y-2 overflow-hidden group">
+                        <div class="absolute inset-0 bg-gradient-to-r from-accent to-primary opacity-0 group-hover:opacity-20 transition-opacity duration-300"></div>
+                        <h3 class="relative z-10 text-xl font-semibold mb-4 text-accent">SEED Story</h3>
+                        <p class="relative z-10 mb-4">Multimodal Long Story Generation with Large Language Models: Pushing the boundaries of AI-generated narratives.</p>
+                        <a href="https://github.com/sanowl/SEED-Story-Multimodal-Long-Story-Generation-with-Large-Language-Models" target="_blank" class="relative z-10 text-accent hover:underline">Explore Project →</a>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+
+        <section id="open-source" class="py-24 bg-secondary">
+            <div class="container mx-auto px-6">
+                <h2 class="text-4xl font-bold mb-12 text-center text-light">Open Source Contributions</h2>
+                <div class="space-y-8">
+                    <div class="bg-primary p-8 rounded-3xl shadow-2xl hover:shadow-3xl transition-all duration-300 transform hover:-translate-y-2">
+                        <h3 class="text-xl font-semibold mb-4 text-accent">Tesla</h3>
+                        <p class="mb-2">Assisted in developing AI models for autonomous driving features.</p>
+                    </div>
+                    <div class="bg-primary p-8 rounded-3xl shadow-2xl hover:shadow-3xl transition-all duration-300 transform hover:-translate-y-2">
+                        <h3 class="text-xl font-semibold mb-4 text-accent">NASA</h3>
+                        <p class="mb-2">Improved test code readability and organization for the cmr-metadata-review project.</p>
+                    </div>
+                    <div class="bg-primary p-8 rounded-3xl shadow-2xl hover:shadow-3xl transition-all duration-300 transform hover:-translate-y-2">
+                        <h3 class="text-xl font-semibold mb-4 text-accent">Zou Group</h3>
+                        <p class="mb-2">Refactored and improved testing code for the textgrad library, enhancing readability, maintainability, and adherence to Python coding standards.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="hobbies" class="py-24">
+            <div class="container mx-auto px-6">
+                <h2 class="text-4xl font-bold mb-12 text-center text-light">Hobbies & Interests</h2>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                    <div class="bg-secondary p-8 rounded-3xl shadow-2xl hover:shadow-3xl transition-all duration-300 transform hover:-translate-y-2">
+                        <h3 class="text-xl font-semibold mb-4 text-accent">Reading Classical Books</h3>
+                        <p>Enjoy exploring classical literature, including works by authors such as Leo Tolstoy, Jane Austen, and Charles Dickens.</p>
+                    </div>
+                    <div class="bg-secondary p-8 rounded-3xl shadow-2xl hover:shadow-3xl transition-all duration-300 transform hover:-translate-y-2">
+                        <h3 class="text-xl font-semibold mb-4 text-accent">Running</h3>
+                        <p>Passionate about running, participating in various events and maintaining an active lifestyle.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="contact" class="py-24 bg-secondary">
+            <div class="container mx-auto px-6 text-center">
+                <h2 class="text-4xl font-bold mb-12 text-light">Let's Collaborate</h2>
+                <p class="text-xl mb-8">Interested in pushing the boundaries of AI and physics together? Let's connect.</p>
+                <a href="mailto:sanhashim12@outlook.com" class="bg-transparent text-accent border-2 border-accent px-8 py-3 rounded-full hover:bg-accent hover:text-primary transition-all duration-300 shadow-lg hover:shadow-xl transform hover:scale-105">Get in Touch</a>
+            </div>
+        </section>
+    </main>
+
+    <footer class="bg-primary text-light py-8">
+        <div class="container mx-auto px-6 text-center">
+            <p class="mb-4">&copy; 2024 San Owl. Exploring the frontiers of AI and Physics.</p>
+            <div class="space-x-4">
+                <a href="https://github.com/sanowl" target="_blank" class="text-accent hover:text-white transition-colors">GitHub</a>
+        
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Mobile menu toggle
+        const menuToggle = document.getElementById('menu-toggle');
+        const mobileMenu = document.getElementById('mobile-menu');
+        menuToggle.addEventListener('click', () => {
+            mobileMenu.classList.toggle('hidden');
+        });
+
+        // Shrinking header on scroll
+        window.addEventListener('scroll', () => {
+            const header = document.querySelector('header');
+            if (window.scrollY > 100) {
+                header.classList.add('py-2');
+                header.classList.remove('py-4');
+            } else {
+                header.classList.add('py-4');
+                header.classList.remove('py-2');
+            }
+        });
+
+        // Intersection Observer for fade-in effect
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('opacity-100', 'translate-y-0');
+                }
+            });
+        }, {
+            threshold: 0.1
+        });
+
+        document.querySelectorAll('section > div').forEach((el) => {
+            el.classList.add('opacity-0', 'translate-y-10', 'transition-all', 'duration-1000', 'ease-out');
+            observer.observe(el);
+        });
+    </script>
+</body>
+</html>
