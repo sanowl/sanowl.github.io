@@ -1,260 +1,224 @@
 <!DOCTYPE html>
 <html lang="en" class="scroll-smooth">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>San Owl - AI Researcher & Theoretical Physicist</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.11.4/gsap.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.11.4/ScrollTrigger.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
-    <style>
-.bg-gradient-animate {
-    background: linear-gradient(
-        270deg,
-        #cfd8dc,
-        #b0bec5,
-        #90a4ae,
-        #78909c,
-        #607d8b,
-        #455a64
-    );
-    background-size: 300% 300%;
-    animation: gradientShift 12s ease-in-out infinite, pulseGlow 4s ease-in-out infinite alternate;
-}
-
-@keyframes gradientShift {
-    0% {
-        background-position: 0% 50%;
-    }
-    50% {
-        background-position: 100% 50%;
-    }
-    100% {
-        background-position: 0% 50%;
-    }
-}
-
-@keyframes pulseGlow {
-    0% {
-        box-shadow: 0 0 20px rgba(33, 150, 243, 0.3);
-    }
-    50% {
-        box-shadow: 0 0 40px rgba(33, 150, 243, 0.7);
-    }
-    100% {
-        box-shadow: 0 0 20px rgba(33, 150, 243, 0.3);
-    }
-}
-
-.text-shadow {
-    text-shadow: 3px 3px 6px rgba(0, 0, 0, 0.25);
-    animation: textFloat 5s ease-in-out infinite, textColorShift 6s ease-in-out infinite alternate;
-}
-
-@keyframes textFloat {
-    0%, 100% {
-        transform: translateY(0);
-    }
-    50% {
-        transform: translateY(-8px);
-    }
-}
-
-@keyframes textColorShift {
-    0% {
-        color: #eceff1;
-    }
-    50% {
-        color: #b0bec5;
-    }
-    100% {
-        color: #eceff1;
-    }
-}
-
-.glow {
-    box-shadow: 0 0 25px rgba(33, 150, 243, 0.7);
-    animation: glowPulse 3s ease-in-out infinite alternate, glowColorShift 5s ease-in-out infinite alternate;
-}
-
-@keyframes glowPulse {
-    0% {
-        box-shadow: 0 0 25px rgba(33, 150, 243, 0.5);
-    }
-    50% {
-        box-shadow: 0 0 40px rgba(33, 150, 243, 0.9);
-    }
-    100% {
-        box-shadow: 0 0 25px rgba(33, 150, 243, 0.5);
-    }
-}
-
-@keyframes glowColorShift {
-    0% {
-        box-shadow: 0 0 25px rgba(33, 150, 243, 0.7);
-    }
-    50% {
-        box-shadow: 0 0 25px rgba(0, 188, 212, 0.7);
-    }
-    100% {
-        box-shadow: 0 0 25px rgba(33, 150, 243, 0.7);
-    }
-}
-
-/* Enhanced hover effects for interactive elements */
-.hover-zoom {
-    transition: transform 0.3s ease, filter 0.3s ease;
-}
-
-.hover-zoom:hover {
-    transform: scale(1.08);
-    filter: brightness(1.1);
-}
-
-.hover-bright {
-    transition: filter 0.3s ease, transform 0.3s ease;
-}
-
-.hover-bright:hover {
-    filter: brightness(1.3);
-    transform: translateY(-3px);
-}
-
-
-    </style>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#ffffff',
+                        secondary: '#f3f4f6',
+                        accent: '#3b82f6',
+                        text: '#1f2937',
+                    },
+                    fontFamily: {
+                        sans: ['Poppins', 'sans-serif'],
+                    },
+                    animation: {
+                        'gradient': 'gradient 15s ease infinite',
+                        'float': 'float 6s ease-in-out infinite',
+                    },
+                    keyframes: {
+                        gradient: {
+                            '0%, 100%': {
+                                'background-size': '200% 200%',
+                                'background-position': 'left center'
+                            },
+                            '50%': {
+                                'background-size': '200% 200%',
+                                'background-position': 'right center'
+                            }
+                        },
+                        float: {
+                            '0%, 100%': { transform: 'translateY(0px)' },
+                            '50%': { transform: 'translateY(-20px)' },
+                        }
+                    },
+                }
+            }
+        }
+    </script>
 </head>
-
-<body class="bg-gray-100 text-gray-800 font-['Poppins']">
-    <header class="fixed w-full bg-gradient-to-r from-gray-800 via-gray-900 to-black bg-opacity-80 backdrop-filter backdrop-blur-xl z-50 transition-all duration-300 shadow-md">
-        <nav class="container mx-auto px-6 py-4 flex justify-between items-center">
-            <a href="#" class="text-3xl font-extrabold text-white tracking-tight hover:tracking-wide transition-all duration-300 ease-in-out">San Owl</a>
-            <div class="hidden md:flex space-x-8">
-                <a href="#about" class="text-white text-lg font-medium hover:text-gray-300 transition-colors duration-200 ease-in-out">About</a>
-                <a href="#experience" class="text-white text-lg font-medium hover:text-gray-300 transition-colors duration-200 ease-in-out">Experience</a>
-                <a href="#skills" class="text-white text-lg font-medium hover:text-gray-300 transition-colors duration-200 ease-in-out">Skills</a>
-                <a href="#projects" class="text-white text-lg font-medium hover:text-gray-300 transition-colors duration-200 ease-in-out">Projects</a>
-                <a href="#contact" class="text-white text-lg font-medium hover:text-gray-300 transition-colors duration-200 ease-in-out">Contact</a>
-            </div>
-            <div class="md:hidden flex items-center">
-                <button class="text-white focus:outline-none">
-                    <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+<body class="bg-primary text-text">
+    <header class="fixed w-full bg-primary bg-opacity-90 backdrop-filter backdrop-blur-lg z-50 transition-all duration-300 shadow-md">
+        <nav class="container mx-auto px-6 py-4">
+            <div class="flex justify-between items-center">
+                <a href="#" class="text-2xl font-bold text-accent">San Owl</a>
+                <div class="hidden md:flex space-x-6">
+                    <a href="#about" class="text-text hover:text-accent transition-colors">About</a>
+                    <a href="#experience" class="text-text hover:text-accent transition-colors">Experience</a>
+                    <a href="#skills" class="text-text hover:text-accent transition-colors">Skills</a>
+                    <a href="#projects" class="text-text hover:text-accent transition-colors">Projects</a>
+                    <a href="#contact" class="text-text hover:text-accent transition-colors">Contact</a>
+                </div>
+                <button class="md:hidden text-text focus:outline-none" id="menu-toggle">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7"></path>
                     </svg>
                 </button>
             </div>
         </nav>
+        <div class="md:hidden hidden" id="mobile-menu">
+            <a href="#about" class="block py-2 px-4 text-sm text-text hover:bg-secondary">About</a>
+            <a href="#experience" class="block py-2 px-4 text-sm text-text hover:bg-secondary">Experience</a>
+            <a href="#skills" class="block py-2 px-4 text-sm text-text hover:bg-secondary">Skills</a>
+            <a href="#projects" class="block py-2 px-4 text-sm text-text hover:bg-secondary">Projects</a>
+            <a href="#contact" class="block py-2 px-4 text-sm text-text hover:bg-secondary">Contact</a>
+        </div>
     </header>
 
-
-
-
-    <main>
-        <section id="hero" class="h-screen flex items-center justify-center relative overflow-hidden bg-gradient-animate">
-            <div id="particles-js" class="absolute inset-0"></div>
-            <div class="text-center z-10">
-                <h1 class="text-6xl md:text-8xl font-bold mb-6 text-shadow">San Owl</h1>
-                <p class="text-xl md:text-2xl mb-12">AI Researcher & Theoretical Physicist</p>
-                <a href="#contact" class="bg-blue-500 text-white px-8 py-3 rounded-full hover:bg-blue-600 transition-all duration-300 transform hover:scale-110 glow">Connect with Me</a>
+    <main class="pt-20">
+        <section id="hero" class="min-h-screen flex items-center justify-center text-center px-4 bg-gradient-to-r from-blue-400 via-indigo-500 to-purple-500 animate-gradient">
+            <div class="max-w-3xl">
+                <h1 class="text-5xl md:text-6xl font-bold mb-6 text-white animate-float">San Owl</h1>
+                <p class="text-xl md:text-2xl mb-12 text-white">AI Researcher & Theoretical Physicist</p>
+                <a href="#contact" class="bg-white text-accent px-8 py-3 rounded-full hover:bg-accent hover:text-white transition-all duration-300 shadow-lg hover:shadow-xl transform hover:scale-105">Connect with Me</a>
             </div>
         </section>
 
         <section id="about" class="py-24 bg-white">
             <div class="container mx-auto px-6">
-                <h2 class="text-4xl font-bold mb-12 text-center text-gray-800">About Me</h2>
-                <div class="bg-gray-100 rounded-3xl p-8 md:p-12 max-w-3xl mx-auto transform hover:scale-105 transition-all duration-300 glow">
-                    <p class="text-xl leading-relaxed text-gray-700">
+                <h2 class="text-4xl font-bold mb-12 text-center text-text">About Me</h2>
+                <div class="bg-white rounded-3xl shadow-xl p-8 md:p-12 max-w-3xl mx-auto">
+                    <p class="text-xl leading-relaxed">
                         As an AI researcher and theoretical physicist, I'm driven by the pursuit of knowledge at the intersection of artificial intelligence and fundamental physics. My work aims to unravel the mysteries of our universe through advanced AI techniques, pushing the boundaries of what's possible in both fields.
                     </p>
                 </div>
             </div>
         </section>
 
-        <section id="experience" class="py-24 bg-gray-100">
+        <section id="experience" class="py-24 bg-secondary">
             <div class="container mx-auto px-6">
-                <h2 class="text-4xl font-bold mb-12 text-center text-gray-800">Professional Experience</h2>
+                <h2 class="text-4xl font-bold mb-12 text-center text-text">Professional Experience</h2>
                 <div class="space-y-8">
-                    <div class="bg-white p-8 rounded-3xl transform hover:scale-105 transition-all duration-300 glow">
-                        <h3 class="text-2xl font-semibold mb-2 text-gray-800">AI Engineer & Full Stack Developer</h3>
-                        <p class="text-gray-600">Freelance, Remote | March 2020 - Present</p>
+                    <div class="bg-white p-8 rounded-3xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-2">
+                        <h3 class="text-2xl font-semibold mb-2 text-accent">AI Engineer & Full Stack Developer</h3>
+                        <p class="text-text mb-2">Freelance, Remote | March 2020 - Present</p>
                     </div>
-                    <div class="bg-white p-8 rounded-3xl transform hover:scale-105 transition-all duration-300 glow">
-                        <h3 class="text-2xl font-semibold mb-2 text-gray-800">CEO & Founder</h3>
-                        <p class="text-gray-600">Evolvemind, Remote | Jan 2022 - Feb 2024</p>
+                    <div class="bg-white p-8 rounded-3xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-2">
+                        <h3 class="text-2xl font-semibold mb-2 text-accent">CEO & Founder</h3>
+                        <p class="text-text mb-2">Evolvemind, Remote | Jan 2022 - Feb 2024</p>
                     </div>
-                    <div class="bg-white p-8 rounded-3xl transform hover:scale-105 transition-all duration-300 glow">
-                        <h3 class="text-2xl font-semibold mb-2 text-gray-800">AI Open Source Engineer Intern</h3>
-                        <p class="text-gray-600">Tublian AI, Columbus, Ohio, USA | Remote | April 2024 - June 2024</p>
+                    <div class="bg-white p-8 rounded-3xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-2">
+                        <h3 class="text-2xl font-semibold mb-2 text-accent">AI Open Source Engineer Intern</h3>
+                        <p class="text-text mb-2">Tublian AI, Columbus, Ohio, USA | Remote | April 2024 - June 2024</p>
                     </div>
-                    <div class="bg-white p-8 rounded-3xl transform hover:scale-105 transition-all duration-300 glow">
-                        <h3 class="text-2xl font-semibold mb-2 text-gray-800">Backend Engineer</h3>
-                        <p class="text-gray-600">K&C, Remote | Germany | October 2023 - March 2024</p>
+                    <div class="bg-white p-8 rounded-3xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-2">
+                        <h3 class="text-2xl font-semibold mb-2 text-accent">Backend Engineer</h3>
+                        <p class="text-text mb-2">K&C, Munich, Germany | Remote</p>
                     </div>
                 </div>
             </div>
         </section>
-        
 
         <section id="skills" class="py-24 bg-white">
             <div class="container mx-auto px-6">
-                <h2 class="text-4xl font-bold mb-12 text-center text-gray-800">Skills & Expertise</h2>
+                <h2 class="text-4xl font-bold mb-12 text-center text-text">Skills & Expertise</h2>
                 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                    <div class="bg-gray-100 p-8 rounded-3xl transform hover:scale-105 transition-all duration-300 glow">
-                        <h3 class="text-xl font-semibold mb-4 text-gray-800">Technical Skills</h3>
-                        <ul class="space-y-2 text-sm text-gray-700">
-                            <li class="flex items-center"><span class="w-2 h-2 bg-blue-500 rounded-full mr-2"></span>AI & Machine Learning</li>
-                            <li class="flex items-center"><span class="w-2 h-2 bg-blue-500 rounded-full mr-2"></span>Neural Networks</li>
-                            <li class="flex items-center"><span class="w-2 h-2 bg-blue-500 rounded-full mr-2"></span>Deep Learning</li>
-                            <li class="flex items-center"><span class="w-2 h-2 bg-blue-500 rounded-full mr-2"></span>Natural Language Processing</li>
+                    <div class="bg-secondary p-8 rounded-3xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-2">
+                        <h3 class="text-xl font-semibold mb-4 text-accent">Technical Skills</h3>
+                        <ul class="space-y-2 text-sm">
+                            <li class="flex items-center"><span class="w-2 h-2 bg-accent rounded-full mr-2"></span>AI & Machine Learning</li>
+                            <li class="flex items-center"><span class="w-2 h-2 bg-accent rounded-full mr-2"></span>Neural Networks</li>
+                            <li class="flex items-center"><span class="w-2 h-2 bg-accent rounded-full mr-2"></span>Deep Learning</li>
+                            <li class="flex items-center"><span class="w-2 h-2 bg-accent rounded-full mr-2"></span>Natural Language Processing</li>
+                            <li class="flex items-center"><span class="w-2 h-2 bg-accent rounded-full mr-2"></span>Computer Vision</li>
+                            <li class="flex items-center"><span class="w-2 h-2 bg-accent rounded-full mr-2"></span>Reinforcement Learning</li>
+                            <li class="flex items-center"><span class="w-2 h-2 bg-accent rounded-full mr-2"></span>Full Stack Development</li>
+                            <li class="flex items-center"><span class="w-2 h-2 bg-accent rounded-full mr-2"></span>Backend Development</li>
                         </ul>
                     </div>
-                    <div class="bg-gray-100 p-8 rounded-3xl transform hover:scale-105 transition-all duration-300 glow">
-                        <h3 class="text-xl font-semibold mb-4 text-gray-800">Theoretical Physics</h3>
-                        <ul class="space-y-2 text-sm text-gray-700">
-                            <li class="flex items-center"><span class="w-2 h-2 bg-blue-500 rounded-full mr-2"></span>Quantum Mechanics</li>
-                            <li class="flex items-center"><span class="w-2 h-2 bg-blue-500 rounded-full mr-2"></span>General Relativity</li>
-                            <li class="flex items-center"><span class="w-2 h-2 bg-blue-500 rounded-full mr-2"></span>Quantum Field Theory</li>
-                            <li class="flex items-center"><span class="w-2 h-2 bg-blue-500 rounded-full mr-2"></span>Cosmology</li>
+                    <div class="bg-secondary p-8 rounded-3xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-2">
+                        <h3 class="text-xl font-semibold mb-4 text-accent">Theoretical Physics</h3>
+                        <ul class="space-y-2 text-sm">
+                            <li class="flex items-center"><span class="w-2 h-2 bg-accent rounded-full mr-2"></span>Quantum Mechanics & Quantum Entanglement</li>
+                            <li class="flex items-center"><span class="w-2 h-2 bg-accent rounded-full mr-2"></span>General Relativity & Black Hole Thermodynamics</li>
+                            <li class="flex items-center"><span class="w-2 h-2 bg-accent rounded-full mr-2"></span>Quantum Field Theory & Quantum Chromodynamics (QCD)</li>
+                            <li class="flex items-center"><span class="w-2 h-2 bg-accent rounded-full mr-2"></span>Cosmology & Dark Matter/Dark Energy</li>
+                            <li class="flex items-center"><span class="w-2 h-2 bg-accent rounded-full mr-2"></span>String Theory & M-Theory</li>
+                            <li class="flex items-center"><span class="w-2 h-2 bg-accent rounded-full mr-2"></span>Quantum Gravity & Loop Quantum Gravity</li>
                         </ul>
                     </div>
-                    <div class="bg-gray-100 p-8 rounded-3xl transform hover:scale-105 transition-all duration-300 glow">
-                        <h3 class="text-xl font-semibold mb-4 text-gray-800">Programming & Tools</h3>
-                        <ul class="space-y-2 text-sm text-gray-700">
-                            <li class="flex items-center"><span class="w-2 h-2 bg-blue-500 rounded-full mr-2"></span>Python, C++, Julia</li>
-                            <li class="flex items-center"><span class="w-2 h-2 bg-blue-500 rounded-full mr-2"></span>PyTorch, TensorFlow</li>
-                            <li class="flex items-center"><span class="w-2 h-2 bg-blue-500 rounded-full mr-2"></span>CUDA, OpenCL</li>
-                            <li class="flex items-center"><span class="w-2 h-2 bg-blue-500 rounded-full mr-2"></span>Git, Docker</li>
+                    <div class="bg-secondary p-8 rounded-3xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-2">
+                        <h3 class="text-xl font-semibold mb-4 text-accent">Programming & Tools</h3>
+                        <ul class="space-y-2 text-sm">
+                            <li class="flex items-center"><span class="w-2 h-2 bg-accent rounded-full mr-2"></span>Python, C++, Julia</li>
+                            <li class="flex items-center"><span class="w-2 h-2 bg-accent rounded-full mr-2"></span>PyTorch, TensorFlow</li>
+                            <li class="flex items-center"><span class="w-2 h-2 bg-accent rounded-full mr-2"></span>CUDA, OpenCL</li>
+                            <li class="flex items-center"><span class="w-2 h-2 bg-accent rounded-full mr-2"></span>Git, Docker</li>
+                            <li class="flex items-center"><span class="w-2 h-2 bg-accent rounded-full mr-2"></span>LaTeX, Jupyter</li>
+                            <li class="flex items-center"><span class="w-2 h-2 bg-accent rounded-full mr-2"></span>React, Node.js, Django</li>
+                            <li class="flex items-center"><span class="w-2 h-2 bg-accent rounded-full mr-2"></span>Express, MongoDB</li>
                         </ul>
                     </div>
                 </div>
             </div>
         </section>
 
-        <section id="projects" class="py-24 bg-gray-100">
+        <section id="projects" class="py-24 bg-secondary">
             <div class="container mx-auto px-6">
-                <h2 class="text-4xl font-bold mb-12 text-center text-gray-800">Featured Projects</h2>
+                <h2 class="text-4xl font-bold mb-12 text-center text-text">Featured Projects</h2>
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
-                    <div class="bg-white p-8 rounded-3xl transform hover:scale-105 transition-all duration-300 glow">
-                        <h3 class="text-xl font-semibold mb-4 text-gray-800">LSLM</h3>
-                        <p class="mb-4 text-gray-600">Listening-while-Speaking Language Model: An innovative approach to real-time language processing and generation.</p>
-                        <a href="https://github.com/sanowl/LSLM-Listening-while-Speaking-Language-Model.git" target="_blank" class="text-blue-500 hover:underline">Explore Project →</a>
+                    <div class="bg-white p-8 rounded-3xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-2">
+                        <h3 class="text-xl font-semibold mb-4 text-accent">LSLM</h3>
+                        <p class="mb-4">Listening-while-Speaking Language Model: An innovative approach to real-time language processing and generation.</p>
+                        <a href="https://github.com/sanowl/LSLM-Listening-while-Speaking-Language-Model" target="_blank" class="text-accent hover:underline">Explore Project →</a>
                     </div>
-                    <div class="bg-white p-8 rounded-3xl transform hover:scale-105 transition-all duration-300 glow">
-                        <h3 class="text-xl font-semibold mb-4 text-gray-800">MoRA</h3>
-                        <p class="mb-4 text-gray-600">High-Rank Matrix Adaptation for Parameter-Efficient Fine-Tuning of Large Language Models.</p>
-                        <a href="#" class="text-blue-500 hover:underline">Explore Project →</a>
+                    <div class="bg-white p-8 rounded-3xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-2">
+                        <h3 class="text-xl font-semibold mb-4 text-accent">MoRA</h3>
+                        <p class="mb-4">High-Rank Matrix Adaptation for Parameter-Efficient Fine-Tuning of Large Language Models.</p>
+                        <a href="https://github.com/sanowl/MoRA-High-Rank-Matrix-Adaptation-for-Parameter-Efficient-Fine-Tuning-of-Large-Language-Models" target="_blank" class="text-accent hover:underline">Explore Project →</a>
                     </div>
-                    <div class="bg-white p-8 rounded-3xl transform hover:scale-105 transition-all duration-300 glow">
-                        <h3 class="text-xl font-semibold mb-4 text-gray-800">PMoE-LLAMA7B</h3>
-                        <p class="mb-4 text-gray-600">Progressive Mixture of Experts with Asymmetric Transformer for LLaMA/Meta-LLaMA-3.1-8B.</p>
-                        <a href="https://github.com/sanowl/PMoE-LLAMA7B-Progressive-Mixture-of-Experts-with-Asymmetric-Transformer-for-llama-Meta-Llama-3.1-8B.git" target="_blank" class="text-blue-500 hover:underline">Explore Project →</a>
+                    <div class="bg-white p-8 rounded-3xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-2">
+                        <h3 class="text-xl font-semibold mb-4 text-accent">SARA</h3>
+                        <p class="mb-4">Singular Value-Based Adaptive Low-Rank Adaptation: A novel approach to efficient model adaptation.</p>
+                        <a href="https://github.com/sanowl/SARA-Singular-Value-Based-Adaptive-Low-Rank-Adaption" target="_blank" class="text-accent hover:underline">Explore Project →</a>
                     </div>
-                    <div class="bg-white p-8 rounded-3xl transform hover:scale-105 transition-all duration-300 glow">
-                        <h3 class="text-xl font-semibold mb-4 text-gray-800">Meta-LLaMA</h3>
-                        <p class="mb-4 text-gray-600">A comprehensive exploration of Meta-LLaMA-3.1-8B with state-of-the-art models and techniques.</p>
-                        <a href="#" class="text-blue-500 hover:underline">Explore Project →</a>
+                    <div class="bg-white p-8 rounded-3xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-2">
+                        <h3 class="text-xl font-semibold mb-4 text-accent">SEED Story</h3>
+                        <p class="mb-4">Multimodal Long Story Generation with Large Language Models: Pushing the boundaries of AI-generated narratives.</p>
+                        <a href="https://github.com/sanowl/SEED-Story-Multimodal-Long-Story-Generation-with-Large-Language-Models" target="_blank" class="text-accent hover:underline">Explore Project →</a>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="open-source" class="py-24 bg-white">
+            <div class="container mx-auto px-6">
+                <h2 class="text-4xl font-bold mb-12 text-center text-text">Open Source Contributions</h2>
+                <div class="space-y-8">
+                    <div class="bg-secondary p-8 rounded-3xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-2">
+                        <h3 class="text-xl font-semibold mb-4 text-accent">Tesla</h3>
+                        <p class="mb-2">Assisted in developing AI models for autonomous driving features.</p>
+                    </div>
+                    <div class="bg-secondary p-8 rounded-3xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-2">
+                        <h3 class="text-xl font-semibold mb-4 text-accent">NASA</h3>
+                        <p class="mb-2">Improved test code readability and organization for the cmr-metadata-review project.</p>
+                    </div>
+                    <div class="bg-secondary p-8 rounded-3xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-2">
+                        <h3 class="text-xl font-semibold mb-4 text-accent">Zou Group</h3>
+                        <p class="mb-2">Refactored and improved testing code for the textgrad library, enhancing readability, maintainability, and adherence to Python coding standards.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="hobbies" class="py-24 bg-secondary">
+            <div class="container mx-auto px-6">
+                <h2 class="text-4xl font-bold mb-12 text-center text-text">Hobbies & Interests</h2>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                    <div class="bg-white p-8 rounded-3xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-2">
+                        <h3 class="text-xl font-semibold mb-4 text-accent">Reading Classical Books</h3>
+                        <p>Enjoy exploring classical literature, including works by authors such as Leo Tolstoy, Jane Austen, and Charles Dickens.</p>
+                    </div>
+                    <div class="bg-white p-8 rounded-3xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-2">
+                        <h3 class="text-xl font-semibold mb-4 text-accent">Running</h3>
+                        <p>Passionate about running, participating in various events and maintaining an active lifestyle.</p>
                     </div>
                 </div>
             </div>
@@ -262,291 +226,57 @@
 
         <section id="contact" class="py-24 bg-white">
             <div class="container mx-auto px-6 text-center">
-                <h2 class="text-4xl font-bold mb-12 text-gray-800">Let's Collaborate</h2>
-                <p class="text-xl mb-8 text-gray-700">Interested in pushing the boundaries of AI and physics together? Let's connect.</p>
-                <a href="mailto:sanhashim12@outlook.com" class="bg-blue-500 text-white px-8 py-3 rounded-full hover:bg-blue-600 transition-all duration-300 transform hover:scale-110 glow">Get in Touch</a>
+                <h2 class="text-4xl font-bold mb-12 text-text">Let's Collaborate</h2>
+                <p class="text-xl mb-8">Interested in pushing the boundaries of AI and physics together? Let's connect.</p>
+                <a href="mailto:sanhashim12@outlook.com" class="bg-accent text-white px-8 py-3 rounded-full hover:bg-blue-600 transition-all duration-300 shadow-lg hover:shadow-xl transform hover:scale-105">Get in Touch</a>
             </div>
         </section>
     </main>
 
-    <footer class="bg-gray-100 text-gray-800 py-8">
+    <footer class="bg-secondary text-text py-8">
         <div class="container mx-auto px-6 text-center">
             <p class="mb-4">&copy; 2024 San Owl. Exploring the frontiers of AI and Physics.</p>
             <div class="space-x-4">
-                <a href="https://github.com/sanowl" target="_blank" class="text-blue-500 hover:text-blue-600 transition-colors">GitHub</a>
+                <a href="https://github.com/sanowl" target="_blank" class="text-accent hover:text-blue-600 transition-colors">GitHub</a>
             </div>
         </div>
     </footer>
 
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/particles.js/2.0.0/particles.min.js"></script>
     <script>
-        gsap.registerPlugin(ScrollTrigger);
-
-        // Particles.js configuration
-       // Enhanced Particles.js configuration
-// Advanced Particles.js configuration with enhanced mouse interaction and visual effects
-particlesJS("particles-js", {
-    particles: {
-        number: {
-            value: 100,
-            density: { enable: true, value_area: 800 }
-        },
-        color: {
-            value: ["#ffffff", "#b3e5fc", "#81d4fa", "#4fc3f7", "#29b6f6"] // Extended color palette
-        },
-        shape: {
-            type: ["circle", "triangle", "polygon", "star"],
-            polygon: { nb_sides: 6 },
-            star: { nb_sides: 5 }
-        },
-        opacity: {
-            value: 0.6,
-            random: true,
-            anim: { enable: true, speed: 0.5, opacity_min: 0.1, sync: false }
-        },
-        size: {
-            value: 4,
-            random: true,
-            anim: { enable: true, speed: 5, size_min: 0.5, sync: false }
-        },
-        line_linked: {
-            enable: true,
-            distance: 150,
-            color: "#ffffff",
-            opacity: 0.4,
-            width: 1.5
-        },
-        move: {
-            enable: true,
-            speed: 3,
-            direction: "none",
-            random: false,
-            straight: false,
-            out_mode: "bounce",
-            bounce: true,
-            attract: { enable: true, rotateX: 600, rotateY: 1200 }
-        }
-    },
-    interactivity: {
-        detect_on: "canvas",
-        events: {
-            onhover: { enable: true, mode: "bubble" },
-            onclick: { enable: true, mode: "repulse" },
-            resize: true
-        },
-        modes: {
-            grab: {
-                distance: 200,
-                line_linked: { opacity: 1 }
-            },
-            bubble: {
-                distance: 250,
-                size: 12,
-                duration: 2,
-                opacity: 0.8,
-                speed: 3
-            },
-            repulse: { 
-                distance: 200, 
-                duration: 0.4,
-                speed: 1
-            },
-            push: { particles_nb: 4 },
-            remove: { particles_nb: 2 }
-        }
-    },
-    retina_detect: true
-});
-
-// Enhanced Smooth Entrance Animations using GSAP
-gsap.registerPlugin(ScrollTrigger);
-
-gsap.utils.toArray('section').forEach((section, index) => {
-    const tl = gsap.timeline({
-        scrollTrigger: {
-            trigger: section,
-            start: 'top 80%',
-            end: 'top 20%',
-            scrub: 1,
-            markers: false,
-        }
-    });
-
-    // Stagger effect for child elements
-    tl.from(section.children, {
-        opacity: 0,
-        y: 50,
-        duration: 1,
-        stagger: 0.2,
-        ease: "power3.out"
-    });
-
-    // Add a subtle scale effect
-    tl.from(section, {
-        scale: 0.9,
-        duration: 1,
-        ease: "power2.out"
-    }, "<");
-
-    // Add a custom effect based on the section index
-    if (index % 2 === 0) {
-        tl.from(section, {
-            rotationY: 15,
-            duration: 1.5,
-            ease: "elastic.out(1, 0.3)"
-        }, "<0.2");
-    } else {
-        tl.from(section, {
-            rotationX: -15,
-            duration: 1.5,
-            ease: "elastic.out(1, 0.3)"
-        }, "<0.2");
-    }
-});
-
-// Add parallax effect to background elements
-gsap.utils.toArray('.parallax-bg').forEach(bg => {
-    gsap.to(bg, {
-        backgroundPositionY: "50%",
-        ease: "none",
-        scrollTrigger: {
-            trigger: bg,
-            start: "top bottom",
-            end: "bottom top",
-            scrub: true
-        }
-    });
-});
-
-// Smooth scroll navigation
-document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-    anchor.addEventListener('click', function (e) {
-        e.preventDefault();
-        document.querySelector(this.getAttribute('href')).scrollIntoView({
-            behavior: 'smooth'
-        });
-    });
-});
-
-
-// Animate skill items with staggered fade-in and slide-in effect
-const skillItems = document.querySelectorAll('.space-y-2 li');
-gsap.from(skillItems, {
-    opacity: 0,
-    x: -60, // Increased slide-in offset for more pronounced effect
-    duration: 1.2, // Slightly longer duration for smoother transition
-    ease: "power3.out",
-    stagger: 0.25, // Increased stagger for a more rhythmic reveal
-    scrollTrigger: {
-        trigger: skillItems,
-        start: 'top 85%',
-    }
-});
-
-// Floating animation for hero text with a more natural ease
-gsap.to('#hero h1', {
-    y: 15, // Increased floating distance
-    opacity: 0.95, // Slightly increased opacity for a crisper look
-    duration: 3, // Longer duration for a more gentle float
-    ease: "sine.inOut",
-    yoyo: true,
-    repeat: -1
-});
-
-// Enhanced Parallax effect for hero section
-gsap.to('#particles-js', {
-    y: 80, // Reduced parallax distance for a subtler effect
-    ease: "none",
-    scrollTrigger: {
-        trigger: '#hero',
-        start: 'top top',
-        end: 'bottom top',
-        scrub: true
-    }
-});
-
-
-        // Updated glowing effect for buttons with a pulsating effect
-        const glowButtons = document.querySelectorAll('.glow');
-        glowButtons.forEach(button => {
-            gsap.to(button, {
-                boxShadow: '0 0 25px rgba(33, 150, 243, 0.8)',
-                duration: 1.5,
-                repeat: -1,
-                yoyo: true,
-                ease: "power2.inOut"
-            });
+        // Mobile menu toggle
+        const menuToggle = document.getElementById('menu-toggle');
+        const mobileMenu = document.getElementById('mobile-menu');
+        menuToggle.addEventListener('click', () => {
+            mobileMenu.classList.toggle('hidden');
         });
 
-        // Improved 3D Tilt effect for project cards with a subtle rotation reset
-        const cards = document.querySelectorAll('.bg-white');
-        cards.forEach(card => {
-            card.addEventListener('mousemove', (e) => {
-                const rect = card.getBoundingClientRect();
-                const x = e.clientX - rect.left;
-                const y = e.clientY - rect.top;
-                const centerX = rect.width / 2;
-                const centerY = rect.height / 2;
-                const rotateX = (y - centerY) / 15;
-                const rotateY = (centerX - x) / 15;
-
-                gsap.to(card, {
-                    rotationX: rotateX,
-                    rotationY: rotateY,
-                    duration: 0.3,
-                    ease: "power2.out"
-                });
-            });
-
-            card.addEventListener('mouseleave', () => {
-                gsap.to(card, {
-                    rotationX: 0,
-                    rotationY: 0,
-                    duration: 0.5,
-                    ease: "power2.inOut"
-                });
-            });
-        });
-
-        // Typing animation for the subtitle with a smoother effect
-        const subtitle = document.querySelector('#hero p');
-        const text = subtitle.textContent;
-        subtitle.textContent = '';
-        for (let i = 0; i < text.length; i++) {
-            const span = document.createElement('span');
-            span.textContent = text[i];
-            span.style.opacity = '0';
-            subtitle.appendChild(span);
-            gsap.to(span, {
-                opacity: 1,
-                duration: 0.15,
-                delay: i * 0.1,
-                ease: "power2.inOut"
-            });
-        }
-
-        // Scroll-triggered progress bar with a smoother fill
-        const progressBar = document.createElement('div');
-        progressBar.style.position = 'fixed';
-        progressBar.style.top = '0';
-        progressBar.style.left = '0';
-        progressBar.style.height = '4px';
-        progressBar.style.width = '0%';
-        progressBar.style.backgroundColor = '#2196f3';
-        progressBar.style.zIndex = '1000';
-        document.body.appendChild(progressBar);
-
-        gsap.to(progressBar, {
-            width: '100%',
-            ease: 'none',
-            scrollTrigger: {
-                trigger: 'body',
-                start: 'top top',
-                end: 'bottom bottom',
-                scrub: 0.5
+        // Shrinking header on scroll
+        window.addEventListener('scroll', () => {
+            const header = document.querySelector('header');
+            if (window.scrollY > 100) {
+                header.classList.add('py-2');
+                header.classList.remove('py-4');
+            } else {
+                header.classList.add('py-4');
+                header.classList.remove('py-2');
             }
+        });
+
+        // Intersection Observer for fade-in effect
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('opacity-100', 'translate-y-0');
+                }
+            });
+        }, {
+            threshold: 0.1
+        });
+
+        document.querySelectorAll('section > div').forEach((el) => {
+            el.classList.add('opacity-0', 'translate-y-10', 'transition-all', 'duration-1000', 'ease-out');
+            observer.observe(el);
         });
     </script>
 </body>
-
 </html>
