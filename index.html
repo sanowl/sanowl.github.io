@@ -3,58 +3,373 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>San Owl - AI Researcher & Theoretical Physicist</title>
+    <title>San Hashim - AI Researcher & Engineer</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.css">
     <script>
         tailwind.config = {
             theme: {
                 extend: {
                     colors: {
                         primary: '#ffffff',
-                        secondary: '#f3f4f6',
+                        secondary: '#f8fafc',
                         accent: '#3b82f6',
-                        text: '#1f2937',
+                        accentDark: '#1d4ed8',
+                        accentSecondary: '#8b5cf6',
+                        text: '#1e293b',
+                        darkBg: '#0f172a',
                     },
                     fontFamily: {
-                        sans: ['Poppins', 'sans-serif'],
+                        sans: ['Inter', 'sans-serif'],
+                        display: ['Poppins', 'sans-serif'],
                     },
                     animation: {
                         'gradient': 'gradient 15s ease infinite',
                         'float': 'float 6s ease-in-out infinite',
+                        'pulse-slow': 'pulse 4s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+                        'spin-slow': 'spin 8s linear infinite',
+                        'bounce-slow': 'bounce 3s infinite',
+                        'wiggle': 'wiggle 1s ease-in-out infinite',
+                        'fade-in': 'fadeIn 1.5s ease-out forwards',
+                        'slide-up': 'slideUp 0.7s ease-out forwards',
+                        'slide-down': 'slideDown 0.7s ease-out forwards',
+                        'scale-in': 'scaleIn 0.7s ease-out forwards',
+                        'slide-in-right': 'slideInRight 0.7s ease-out forwards',
+                        'slide-in-left': 'slideInLeft 0.7s ease-out forwards',
                     },
                     keyframes: {
                         gradient: {
                             '0%, 100%': {
-                                'background-size': '200% 200%',
-                                'background-position': 'left center'
+                                'background-position': '0% 50%'
                             },
                             '50%': {
-                                'background-size': '200% 200%',
-                                'background-position': 'right center'
+                                'background-position': '100% 50%'
                             }
                         },
                         float: {
                             '0%, 100%': { transform: 'translateY(0px)' },
                             '50%': { transform: 'translateY(-20px)' },
-                        }
+                        },
+                        wiggle: {
+                            '0%, 100%': { transform: 'rotate(-3deg)' },
+                            '50%': { transform: 'rotate(3deg)' },
+                        },
+                        fadeIn: {
+                            '0%': { opacity: '0' },
+                            '100%': { opacity: '1' },
+                        },
+                        slideUp: {
+                            '0%': { transform: 'translateY(30px)', opacity: '0' },
+                            '100%': { transform: 'translateY(0)', opacity: '1' },
+                        },
+                        slideDown: {
+                            '0%': { transform: 'translateY(-30px)', opacity: '0' },
+                            '100%': { transform: 'translateY(0)', opacity: '1' },
+                        },
+                        scaleIn: {
+                            '0%': { transform: 'scale(0.9)', opacity: '0' },
+                            '100%': { transform: 'scale(1)', opacity: '1' },
+                        },
+                        slideInRight: {
+                            '0%': { transform: 'translateX(30px)', opacity: '0' },
+                            '100%': { transform: 'translateX(0)', opacity: '1' },
+                        },
+                        slideInLeft: {
+                            '0%': { transform: 'translateX(-30px)', opacity: '0' },
+                            '100%': { transform: 'translateX(0)', opacity: '1' },
+                        },
+                    },
+                    backgroundImage: {
+                        'radial-gradient': 'radial-gradient(circle, var(--tw-gradient-stops))',
                     },
                 }
             }
         }
     </script>
+    <style>
+        /* Smooth scrolling */
+        html {
+            scroll-behavior: smooth;
+        }
+        
+        /* Improved gradient text */
+        .gradient-text {
+            background: linear-gradient(to right, #3b82f6, #8b5cf6);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            text-fill-color: transparent;
+        }
+        
+        /* Enhanced hero background */
+        .bg-gradient-hero {
+            background: linear-gradient(135deg, #3b82f6 0%, #4f46e5 50%, #8b5cf6 100%);
+            background-size: 200% 200%;
+        }
+        
+        /* Improved card hover */
+        .card-hover {
+            transition: all 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        }
+        
+        .card-hover:hover {
+            transform: translateY(-10px) scale(1.02);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+        }
+        
+        /* Glass morphism effect */
+        .glass-effect {
+            background: rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+        
+        /* For the particle background */
+        #particles-js {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            z-index: 0;
+        }
+        
+        /* Scrollbar styling */
+        ::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+        
+        ::-webkit-scrollbar-track {
+            background: #f1f5f9;
+        }
+        
+        ::-webkit-scrollbar-thumb {
+            background: #94a3b8;
+            border-radius: 4px;
+        }
+        
+        ::-webkit-scrollbar-thumb:hover {
+            background: #64748b;
+        }
+        
+        /* Enhanced animations for links */
+        .nav-link {
+            position: relative;
+        }
+        
+        .nav-link::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background-color: #3b82f6;
+            transition: width 0.3s ease;
+        }
+        
+        .nav-link:hover::after {
+            width: 100%;
+        }
+        
+        /* 3D Button effect */
+        .btn-3d {
+            transform-style: preserve-3d;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        
+        .btn-3d:hover {
+            transform: translateY(-5px) scale(1.03);
+            box-shadow: 0 10px 25px -5px rgba(59, 130, 246, 0.5), 0 8px 10px -6px rgba(59, 130, 246, 0.3);
+        }
+        
+        .btn-3d:active {
+            transform: translateY(-2px) scale(1.01);
+        }
+        
+        /* Animated background */
+        .animated-bg {
+            background: linear-gradient(-45deg, #3b82f6, #4f46e5, #8b5cf6, #6366f1);
+            background-size: 400% 400%;
+            animation: gradient 15s ease infinite;
+        }
+        
+        @keyframes gradient {
+            0% {
+                background-position: 0% 50%;
+            }
+            50% {
+                background-position: 100% 50%;
+            }
+            100% {
+                background-position: 0% 50%;
+            }
+        }
+        
+        /* Floating elements */
+        .floating {
+            animation: floating 3s ease-in-out infinite;
+        }
+        
+        @keyframes floating {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+        
+        /* Timeline styling */
+        .timeline-container {
+            position: relative;
+        }
+        
+        .timeline-container::after {
+            content: '';
+            position: absolute;
+            width: 4px;
+            background-color: rgba(59, 130, 246, 0.3);
+            top: 0;
+            bottom: 0;
+            left: 20px;
+            margin-left: -2px;
+        }
+        
+        .timeline-item {
+            position: relative;
+            padding-left: 60px;
+        }
+        
+        .timeline-dot {
+            position: absolute;
+            top: 8px;
+            left: 10px;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background-color: #3b82f6;
+            z-index: 1;
+            box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.2);
+        }
+        
+        /* Neon glow effect */
+        .neon-glow {
+            box-shadow: 0 0 15px rgba(59, 130, 246, 0.5), 0 0 30px rgba(59, 130, 246, 0.3);
+        }
+        
+        /* Badge pulsing animation */
+        .badge-pulse {
+            animation: pulse 2s infinite;
+        }
+        
+        @keyframes pulse {
+            0% {
+                box-shadow: 0 0 0 0 rgba(59, 130, 246, 0.7);
+            }
+            70% {
+                box-shadow: 0 0 0 10px rgba(59, 130, 246, 0);
+            }
+            100% {
+                box-shadow: 0 0 0 0 rgba(59, 130, 246, 0);
+            }
+        }
+        
+        /* Shiny effect on cards */
+        .shiny {
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .shiny::after {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(
+                to right,
+                rgba(255, 255, 255, 0) 0%,
+                rgba(255, 255, 255, 0.1) 50%,
+                rgba(255, 255, 255, 0) 100%
+            );
+            transform: rotate(30deg);
+            transition: transform 1.5s;
+        }
+        
+        .shiny:hover::after {
+            transform: rotate(30deg) translate(300px, 0);
+        }
+        
+        /* Preloader */
+        .preloader {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: #0f172a;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+            transition: opacity 0.5s ease, visibility 0.5s ease;
+        }
+        
+        .preloader.loaded {
+            opacity: 0;
+            visibility: hidden;
+        }
+        
+        /* Smooth transition between sections */
+        section {
+            transition: background-color 0.5s ease;
+        }
+        
+        /* Hover lift effect */
+        .hover-lift {
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        
+        .hover-lift:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+        }
+    </style>
 </head>
-<body class="bg-primary text-text">
-    <header class="fixed w-full bg-primary bg-opacity-90 backdrop-filter backdrop-blur-lg z-50 transition-all duration-300 shadow-md">
-        <nav class="container mx-auto px-6 py-4">
+<body class="bg-white text-text font-sans overflow-x-hidden">
+    <!-- Preloader -->
+    <div class="preloader">
+        <div class="flex flex-col items-center">
+            <div class="w-16 h-16 border-4 border-accent border-t-transparent rounded-full animate-spin mb-4"></div>
+            <div class="text-white text-xl font-display">Loading...</div>
+        </div>
+    </div>
+
+    <!-- Cursor follower (for desktop) -->
+    <div id="cursor-follower" class="hidden md:block fixed w-12 h-12 rounded-full border-2 border-accent/50 pointer-events-none z-50 -translate-x-1/2 -translate-y-1/2 opacity-0 transition-opacity duration-300"></div>
+
+    <!-- Navbar -->
+    <header class="fixed w-full bg-white bg-opacity-90 backdrop-filter backdrop-blur-lg z-50 transition-all duration-500 shadow-sm">
+        <nav class="container mx-auto px-6 md:px-12 py-4">
             <div class="flex justify-between items-center">
-                <a href="#" class="text-2xl font-bold text-accent">San Owl</a>
-                <div class="hidden md:flex space-x-6">
-                    <a href="#about" class="text-text hover:text-accent transition-colors">About</a>
-                    <a href="#experience" class="text-text hover:text-accent transition-colors">Experience</a>
-                    <a href="#skills" class="text-text hover:text-accent transition-colors">Skills</a>
-                    <a href="#projects" class="text-text hover:text-accent transition-colors">Projects</a>
-                    <a href="#contact" class="text-text hover:text-accent transition-colors">Contact</a>
+                <a href="#" class="text-2xl font-bold font-display relative group">
+                    <span class="gradient-text">San Hashim</span>
+                    <span class="absolute -bottom-1 left-0 w-0 h-0.5 bg-gradient-to-r from-blue-500 to-purple-600 group-hover:w-full transition-all duration-500"></span>
+                </a>
+                <div class="hidden md:flex space-x-8">
+                    <a href="#about" class="text-text hover:text-accent transition-colors duration-300 font-medium text-sm nav-link">About</a>
+                    <a href="#experience" class="text-text hover:text-accent transition-colors duration-300 font-medium text-sm nav-link">Experience</a>
+                    <a href="#skills" class="text-text hover:text-accent transition-colors duration-300 font-medium text-sm nav-link">Skills</a>
+                    <a href="#certifications" class="text-text hover:text-accent transition-colors duration-300 font-medium text-sm nav-link">Certifications</a>
+                    <a href="#projects" class="text-text hover:text-accent transition-colors duration-300 font-medium text-sm nav-link">Projects</a>
+                    <a href="#contact" class="text-text hover:text-accent transition-colors duration-300 font-medium text-sm nav-link">Contact</a>
+                </div>
+                <div class="hidden md:block">
+                    <a href="mailto:sanhashim12@outlook.com" class="px-5 py-2.5 bg-accent hover:bg-accentDark text-white font-medium rounded-lg transition-all duration-300 text-sm btn-3d">
+                        <i class="fas fa-envelope mr-2"></i> Connect
+                    </a>
                 </div>
                 <button class="md:hidden text-text focus:outline-none" id="menu-toggle">
                     <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
@@ -63,220 +378,1316 @@
                 </button>
             </div>
         </nav>
-        <div class="md:hidden hidden" id="mobile-menu">
-            <a href="#about" class="block py-2 px-4 text-sm text-text hover:bg-secondary">About</a>
-            <a href="#experience" class="block py-2 px-4 text-sm text-text hover:bg-secondary">Experience</a>
-            <a href="#skills" class="block py-2 px-4 text-sm text-text hover:bg-secondary">Skills</a>
-            <a href="#projects" class="block py-2 px-4 text-sm text-text hover:bg-secondary">Projects</a>
-            <a href="#contact" class="block py-2 px-4 text-sm text-text hover:bg-secondary">Contact</a>
+        <div class="md:hidden hidden bg-white shadow-xl rounded-b-2xl" id="mobile-menu">
+            <div class="px-4 pt-2 pb-6 space-y-3">
+                <a href="#about" class="block py-2.5 px-4 text-base font-medium text-text hover:bg-secondary hover:text-accent rounded-xl transition-all">About</a>
+                <a href="#experience" class="block py-2.5 px-4 text-base font-medium text-text hover:bg-secondary hover:text-accent rounded-xl transition-all">Experience</a>
+                <a href="#skills" class="block py-2.5 px-4 text-base font-medium text-text hover:bg-secondary hover:text-accent rounded-xl transition-all">Skills</a>
+                <a href="#certifications" class="block py-2.5 px-4 text-base font-medium text-text hover:bg-secondary hover:text-accent rounded-xl transition-all">Certifications</a>
+                <a href="#projects" class="block py-2.5 px-4 text-base font-medium text-text hover:bg-secondary hover:text-accent rounded-xl transition-all">Projects</a>
+                <a href="#contact" class="block py-2.5 px-4 text-base font-medium text-text hover:bg-secondary hover:text-accent rounded-xl transition-all">Contact</a>
+                <a href="mailto:sanhashim12@outlook.com" class="block text-center mt-4 py-2.5 bg-accent hover:bg-accentDark text-white font-medium rounded-xl transition-all duration-300">Get In Touch</a>
+            </div>
         </div>
     </header>
 
-    <main class="pt-20">
-        <section id="hero" class="min-h-screen flex items-center justify-center text-center px-4 bg-gradient-to-r from-blue-400 via-indigo-500 to-purple-500 animate-gradient">
-            <div class="max-w-3xl">
-                <h1 class="text-5xl md:text-6xl font-bold mb-6 text-white animate-float">San Owl</h1>
-                <p class="text-xl md:text-2xl mb-12 text-white">AI Researcher & Theoretical Physicist</p>
-                <a href="#contact" class="bg-white text-accent px-8 py-3 rounded-full hover:bg-accent hover:text-white transition-all duration-300 shadow-lg hover:shadow-xl transform hover:scale-105">Connect with Me</a>
+    <main>
+        <!-- Hero Section -->
+        <section id="hero" class="relative min-h-screen flex items-center justify-center overflow-hidden animated-bg">
+            <div id="particles-js"></div>
+            <div class="absolute inset-0 bg-gradient-to-b from-black/50 to-black/20 z-10"></div>
+            <div class="container mx-auto px-6 md:px-12 py-24 relative z-20">
+                <div class="flex flex-col md:flex-row items-center justify-between">
+                    <div class="md:w-1/2 text-center md:text-left" data-aos="fade-right" data-aos-delay="200">
+                        <div class="inline-block mb-3 px-4 py-1.5 rounded-full glass-effect text-white text-sm font-medium backdrop-blur-md">
+                            <span class="mr-2">⭐</span>
+                            <span>AI/ML Engineer & AWS Certified Cloud Architect</span>
+                        </div>
+                        <h1 class="text-5xl md:text-6xl lg:text-7xl font-bold mb-6 text-white font-display leading-tight">
+                            <span>San</span>
+                            <span>Hashim</span>
+                        </h1>
+                        <p class="text-xl md:text-2xl mb-8 text-white opacity-90 font-light max-w-xl">
+                            Building innovative AI solutions with deep learning & NLP expertise to solve complex problems.
+                        </p>
+                        <div class="flex flex-col sm:flex-row gap-4 justify-center md:justify-start">
+                            <a href="#contact" class="bg-white text-accent px-8 py-3.5 rounded-xl hover:bg-accent hover:text-white transition-all duration-300 shadow-lg hover:shadow-xl transform hover:scale-105 font-medium group">
+                                <span class="relative z-10 flex items-center justify-center">
+                                    <i class="fas fa-envelope mr-2 group-hover:animate-bounce"></i> 
+                                    Connect with Me
+                                </span>
+                            </a>
+                            <a href="https://github.com/sanowl" target="_blank" class="glass-effect text-white px-8 py-3.5 rounded-xl hover:bg-white/10 transition-all duration-300 font-medium">
+                                <i class="fab fa-github mr-2"></i> GitHub Profile
+                            </a>
+                        </div>
+                    </div>
+                    <div class="hidden md:block md:w-1/2 mt-12 md:mt-0" data-aos="fade-left" data-aos-delay="300">
+                        <div class="relative mx-auto w-72 h-72 lg:w-96 lg:h-96">
+                            <div class="absolute inset-0 bg-gradient-to-r from-blue-500 to-purple-600 rounded-full blur-3xl opacity-70 animate-pulse-slow"></div>
+                            <div class="absolute inset-8 bg-white rounded-full shadow-xl"></div>
+                            <div class="absolute inset-0 flex items-center justify-center">
+                                <div class="rotate-3d">
+                                    <svg class="w-40 h-40 lg:w-56 lg:h-56 text-accent icon-3d" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                        <path d="M12 16C8.13401 16 5 12.866 5 9C5 5.13401 8.13401 2 12 2C15.866 2 19 5.13401 19 9C19 12.866 15.866 16 12 16Z" stroke="currentColor" stroke-width="1.5"/>
+                                        <path d="M12 16V22" stroke="currentColor" stroke-width="1.5"/>
+                                        <path d="M8 19H16" stroke="currentColor" stroke-width="1.5"/>
+                                        <path d="M12 6V12" stroke="currentColor" stroke-width="1.5"/>
+                                        <path d="M12 12L15 9" stroke="currentColor" stroke-width="1.5"/>
+                                    </svg>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="absolute bottom-8 left-0 right-0 flex justify-center z-20">
+                <a href="#about" class="animate-bounce bg-white p-2 w-10 h-10 rounded-full shadow-lg flex items-center justify-center">
+                    <svg class="w-6 h-6 text-accent" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 14l-7 7m0 0l-7-7m7 7V3"></path>
+                    </svg>
+                </a>
             </div>
         </section>
 
+        <!-- About Section -->
         <section id="about" class="py-24 bg-white">
-            <div class="container mx-auto px-6">
-                <h2 class="text-4xl font-bold mb-12 text-center text-text">About Me</h2>
-                <div class="bg-white rounded-3xl shadow-xl p-8 md:p-12 max-w-3xl mx-auto">
-                    <p class="text-xl leading-relaxed">
-                        As an AI researcher and theoretical physicist, I'm driven by the pursuit of knowledge at the intersection of artificial intelligence and fundamental physics. My work aims to unravel the mysteries of our universe through advanced AI techniques, pushing the boundaries of what's possible in both fields.
+            <div class="container mx-auto px-6 md:px-12" data-aos="fade-up" data-aos-duration="1000">
+                <div class="text-center mb-16">
+                    <h2 class="text-4xl font-bold font-display gradient-text inline-block">About Me</h2>
+                    <div class="w-24 h-1 bg-accent mx-auto mt-4 rounded-full"></div>
+                </div>
+                
+                <div class="max-w-4xl mx-auto" data-aos="fade-up" data-aos-delay="300">
+                    <div class="inline-flex items-center px-4 py-2 bg-blue-50 text-blue-600 rounded-full text-sm font-medium mb-4">
+                        <i class="fas fa-certificate mr-2"></i> AWS Certified Cloud Architect
+                    </div>
+                    <h3 class="text-2xl font-bold mb-4 text-text">AI/ML Engineer & NLP Specialist</h3>
+                    <p class="text-lg leading-relaxed mb-6 text-text/80">
+                        I am driven by a passion for developing intelligent systems that can understand, learn, and adapt. With expertise in deep learning, natural language processing, and cloud architecture, I build AI solutions that solve real-world problems.
                     </p>
+                    <p class="text-lg leading-relaxed mb-8 text-text/80">
+                        As an AI researcher and engineer, I work at the intersection of cutting-edge machine learning techniques and practical applications. My experience spans from designing neural network architectures to deploying scalable AI systems in production environments.
+                    </p>
+                    
+                    <div class="grid grid-cols-2 md:grid-cols-4 gap-6 mt-8">
+                        <div class="flex items-center hover-lift p-3 rounded-xl">
+                            <div class="flex-shrink-0 w-12 h-12 bg-blue-100 rounded-xl flex items-center justify-center mr-4">
+                                <i class="fas fa-brain text-accent text-xl"></i>
+                            </div>
+                            <div>
+                                <h4 class="font-semibold">AI Specialist</h4>
+                                <p class="text-sm text-text/70">Deep Learning Expert</p>
+                            </div>
+                        </div>
+                        <div class="flex items-center hover-lift p-3 rounded-xl">
+                            <div class="flex-shrink-0 w-12 h-12 bg-blue-100 rounded-xl flex items-center justify-center mr-4">
+                                <i class="fas fa-cloud text-accent text-xl"></i>
+                            </div>
+                            <div>
+                                <h4 class="font-semibold">Cloud Architect</h4>
+                                <p class="text-sm text-text/70">AWS Certified</p>
+                            </div>
+                        </div>
+                        <div class="flex items-center hover-lift p-3 rounded-xl">
+                            <div class="flex-shrink-0 w-12 h-12 bg-blue-100 rounded-xl flex items-center justify-center mr-4">
+                                <i class="fas fa-comment-dots text-accent text-xl"></i>
+                            </div>
+                            <div>
+                                <h4 class="font-semibold">NLP Engineer</h4>
+                                <p class="text-sm text-text/70">Language Processing</p>
+                            </div>
+                        </div>
+                        <div class="flex items-center hover-lift p-3 rounded-xl">
+                            <div class="flex-shrink-0 w-12 h-12 bg-blue-100 rounded-xl flex items-center justify-center mr-4">
+                                <i class="fas fa-code text-accent text-xl"></i>
+                            </div>
+                            <div>
+                                <h4 class="font-semibold">Full Stack</h4>
+                                <p class="text-sm text-text/70">End-to-End Developer</p>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </section>
 
+        <!-- Experience Section -->
         <section id="experience" class="py-24 bg-secondary">
-            <div class="container mx-auto px-6">
-                <h2 class="text-4xl font-bold mb-12 text-center text-text">Professional Experience</h2>
-                <div class="space-y-8">
-                    <div class="bg-white p-8 rounded-3xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-2">
-                        <h3 class="text-2xl font-semibold mb-2 text-accent">AI Engineer & Full Stack Developer</h3>
-                        <p class="text-text mb-2">Freelance, Remote | March 2020 - Present</p>
+            <div class="container mx-auto px-6 md:px-12" data-aos="fade-up" data-aos-duration="1000">
+                <div class="text-center mb-16">
+                    <h2 class="text-4xl font-bold font-display gradient-text inline-block">Professional Experience</h2>
+                    <div class="w-24 h-1 bg-accent mx-auto mt-4 rounded-full"></div>
+                    <p class="text-lg text-text/70 mt-6 max-w-2xl mx-auto">My journey through AI research, deep learning, and software engineering.</p>
+                </div>
+                
+                <div class="timeline-container">
+                    <!-- Co-Founder & CTO at Flyaway -->
+                    <div class="timeline-item mb-16" data-aos="fade-up" data-aos-delay="100">
+                        <div class="timeline-dot"></div>
+                        <div class="bg-white rounded-2xl shadow-xl p-8 card-hover">
+                            <div class="flex flex-col md:flex-row md:items-center md:justify-between mb-6">
+                                <div>
+                                    <h3 class="text-2xl font-semibold text-accent">Co-Founder & CTO</h3>
+                                    <p class="text-lg text-gray-600">Flyaway</p>
+                                </div>
+                                <div class="mt-2 md:mt-0">
+                                    <span class="px-4 py-1.5 bg-blue-100 text-accent rounded-lg text-sm font-medium">April 2024 - Present</span>
+                                </div>
+                            </div>
+                            <div class="mb-4 flex items-center text-sm text-gray-500">
+                                <i class="fas fa-map-marker-alt text-accent/70 mr-2"></i>
+                                <span>Sulaymaniyah, Iraq - Hybrid</span>
+                                <span class="mx-2">•</span>
+                                <span class="bg-green-100 text-green-600 px-2 py-0.5 rounded-full text-xs">Full-time</span>
+                            </div>
+                            <p class="text-text/70 leading-relaxed mb-6">
+                                Currently working on building recommendation systems and integrating LLM APIs to enable seamless customer interaction and dynamic query handling. Developing analytics systems for extracting actionable insights and improving overall performance. Additionally, working on image compression methods using Rust, focusing on optimization techniques such as quantization and efficient encoding algorithms to enhance storage and transmission efficiency.
+                            </p>
+                            <div class="flex flex-wrap gap-2 mb-6">
+                                <span class="badge px-3 py-1.5 bg-blue-50 text-blue-600 rounded-lg text-xs font-medium">Artificial Intelligence</span>
+                                <span class="badge px-3 py-1.5 bg-blue-50 text-blue-600 rounded-lg text-xs font-medium">Data Analysis</span>
+                                <span class="badge px-3 py-1.5 bg-blue-50 text-blue-600 rounded-lg text-xs font-medium">Data Science</span>
+                                <span class="badge px-3 py-1.5 bg-blue-50 text-blue-600 rounded-lg text-xs font-medium">Python</span>
+                                <span class="badge px-3 py-1.5 bg-blue-50 text-blue-600 rounded-lg text-xs font-medium">PyTorch</span>
+                                <span class="badge px-3 py-1.5 bg-blue-50 text-blue-600 rounded-lg text-xs font-medium">Hugging Face</span>
+                                <span class="badge px-3 py-1.5 bg-blue-50 text-blue-600 rounded-lg text-xs font-medium">Fine Tuning</span>
+                            </div>
+                        </div>
                     </div>
-                    <div class="bg-white p-8 rounded-3xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-2">
-                        <h3 class="text-2xl font-semibold mb-2 text-accent">CEO & Founder</h3>
-                        <p class="text-text mb-2">Evolvemind, Remote | Jan 2022 - Feb 2024</p>
+                    
+                    <!-- Deep Learning Engineer -->
+                    <div class="timeline-item mb-16" data-aos="fade-up" data-aos-delay="200">
+                        <div class="timeline-dot"></div>
+                        <div class="bg-white rounded-2xl shadow-xl p-8 card-hover">
+                            <div class="flex flex-col md:flex-row md:items-center md:justify-between mb-6">
+                                <div>
+                                    <h3 class="text-2xl font-semibold text-accent">Deep Learning Engineer</h3>
+                                    <p class="text-lg text-gray-600">Burton Algorithms</p>
+                                </div>
+                                <div class="mt-2 md:mt-0">
+                                    <span class="px-4 py-1.5 bg-blue-100 text-accent rounded-lg text-sm font-medium">November 2024 - Present</span>
+                                </div>
+                            </div>
+                            <div class="mb-4 flex items-center text-sm text-gray-500">
+                                <i class="fas fa-map-marker-alt text-accent/70 mr-2"></i>
+                                <span>Dallas, Texas, United States</span>
+                                <span class="mx-2">•</span>
+                                <span class="bg-green-100 text-green-600 px-2 py-0.5 rounded-full text-xs">Full-time</span>
+                            </div>
+                            <p class="text-text/70 leading-relaxed mb-6">
+                                Leading deep learning initiatives focused on computer vision and natural language processing applications. Designing and implementing neural network architectures for complex pattern recognition and predictive analytics solutions.
+                            </p>
+                        </div>
                     </div>
-                    <div class="bg-white p-8 rounded-3xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-2">
-                        <h3 class="text-2xl font-semibold mb-2 text-accent">AI Open Source Engineer Intern</h3>
-                        <p class="text-text mb-2">Tublian AI, Columbus, Ohio, USA | Remote | April 2024 - June 2024</p>
+                    
+                    <!-- Lead AI Engineer -->
+                    <div class="timeline-item mb-16" data-aos="fade-up" data-aos-delay="300">
+                        <div class="timeline-dot"></div>
+                        <div class="bg-white rounded-2xl shadow-xl p-8 card-hover">
+                            <div class="flex flex-col md:flex-row md:items-center md:justify-between mb-6">
+                                <div>
+                                    <h3 class="text-2xl font-semibold text-accent">Lead AI Engineer</h3>
+                                    <p class="text-lg text-gray-600">Futura Sourcings</p>
+                                </div>
+                                <div class="mt-2 md:mt-0">
+                                    <span class="px-4 py-1.5 bg-blue-100 text-accent rounded-lg text-sm font-medium">June 2024 - November 2024</span>
+                                </div>
+                            </div>
+                            <div class="mb-4 flex items-center text-sm text-gray-500">
+                                <i class="fas fa-map-marker-alt text-accent/70 mr-2"></i>
+                                <span>United States - Remote</span>
+                                <span class="mx-2">•</span>
+                                <span class="bg-green-100 text-green-600 px-2 py-0.5 rounded-full text-xs">Full-time</span>
+                            </div>
+                            <p class="text-text/70 leading-relaxed mb-6">
+                                Collaborated on the development of an image generation model integrating Transformer and CNN architectures, focusing on optimizing training pipelines and improving model efficiency. Managed a team to oversee key aspects, including data preprocessing (cleaning, augmentation, and annotation), hyperparameter tuning, and experiment tracking. Facilitated coordination and innovation within the team to refine model outputs effectively.
+                            </p>
+                            <div class="flex flex-wrap gap-2 mb-6">
+                                <span class="badge px-3 py-1.5 bg-blue-50 text-blue-600 rounded-lg text-xs font-medium">Analytical Skills</span>
+                                <span class="badge px-3 py-1.5 bg-blue-50 text-blue-600 rounded-lg text-xs font-medium">Artificial Intelligence</span>
+                                <span class="badge px-3 py-1.5 bg-blue-50 text-blue-600 rounded-lg text-xs font-medium">PyTorch</span>
+                                <span class="badge px-3 py-1.5 bg-blue-50 text-blue-600 rounded-lg text-xs font-medium">Pandas</span>
+                                <span class="badge px-3 py-1.5 bg-blue-50 text-blue-600 rounded-lg text-xs font-medium">CNN</span>
+                                <span class="badge px-3 py-1.5 bg-blue-50 text-blue-600 rounded-lg text-xs font-medium">Transformers</span>
+                            </div>
+                        </div>
                     </div>
-                    <div class="bg-white p-8 rounded-3xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-2">
-                        <h3 class="text-2xl font-semibold mb-2 text-accent">Backend Engineer</h3>
-                        <p class="text-text mb-2">K&C, Munich, Germany | Remote</p>
+                    
+                    <!-- AI Software Engineer Intern -->
+                    <div class="timeline-item mb-16" data-aos="fade-up" data-aos-delay="400">
+                        <div class="timeline-dot"></div>
+                        <div class="bg-white rounded-2xl shadow-xl p-8 card-hover">
+                            <div class="flex flex-col md:flex-row md:items-center md:justify-between mb-6">
+                                <div>
+                                    <h3 class="text-2xl font-semibold text-accent">AI Software Engineer</h3>
+                                    <p class="text-lg text-gray-600">TUBLIAN</p>
+                                </div>
+                                <div class="mt-2 md:mt-0">
+                                    <span class="px-4 py-1.5 bg-blue-100 text-accent rounded-lg text-sm font-medium">May 2024 - June 2024</span>
+                                </div>
+                            </div>
+                            <div class="mb-4 flex items-center text-sm text-gray-500">
+                                <i class="fas fa-map-marker-alt text-accent/70 mr-2"></i>
+                                <span>Columbus, Ohio, United States - Remote</span>
+                                <span class="mx-2">•</span>
+                                <span class="bg-purple-100 text-purple-600 px-2 py-0.5 rounded-full text-xs">Internship</span>
+                            </div>
+                            <p class="text-text/70 leading-relaxed mb-6">
+                                Contributed to AI open-source projects, focusing on code management and development. Applied deep learning algorithms and architectures to solve complex problems. Worked with PyTorch frameworks to build and optimize neural network models.
+                            </p>
+                            <div class="flex flex-wrap gap-2 mb-6">
+                                <span class="badge px-3 py-1.5 bg-blue-50 text-blue-600 rounded-lg text-xs font-medium">Deep Learning</span>
+                                <span class="badge px-3 py-1.5 bg-blue-50 text-blue-600 rounded-lg text-xs font-medium">Core ML</span>
+                                <span class="badge px-3 py-1.5 bg-blue-50 text-blue-600 rounded-lg text-xs font-medium">PyTorch</span>
+                                <span class="badge px-3 py-1.5 bg-blue-50 text-blue-600 rounded-lg text-xs font-medium">CNN</span>
+                                <span class="badge px-3 py-1.5 bg-blue-50 text-blue-600 rounded-lg text-xs font-medium">RNN</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Backend Engineer Intern -->
+                    <div class="timeline-item mb-16" data-aos="fade-up" data-aos-delay="500">
+                        <div class="timeline-dot"></div>
+                        <div class="bg-white rounded-2xl shadow-xl p-8 card-hover">
+                            <div class="flex flex-col md:flex-row md:items-center md:justify-between mb-6">
+                                <div>
+                                    <h3 class="text-2xl font-semibold text-accent">Backend Engineer</h3>
+                                    <p class="text-lg text-gray-600">K&C (Krusche & Company)</p>
+                                </div>
+                                <div class="mt-2 md:mt-0">
+                                    <span class="px-4 py-1.5 bg-blue-100 text-accent rounded-lg text-sm font-medium">Oct 2023 - Mar 2024</span>
+                                </div>
+                            </div>
+                            <div class="mb-4 flex items-center text-sm text-gray-500">
+                                <i class="fas fa-map-marker-alt text-accent/70 mr-2"></i>
+                                <span>Munich, Bavaria, Germany</span>
+                                <span class="mx-2">•</span>
+                                <span class="bg-purple-100 text-purple-600 px-2 py-0.5 rounded-full text-xs">Internship</span>
+                            </div>
+                            <p class="text-text/70 leading-relaxed mb-6">
+                                Developed robust backend systems and APIs for enterprise applications. Implemented scalable architectures and optimized database performance to handle high-volume data processing needs.
+                            </p>
+                            <div class="flex flex-wrap gap-2 mb-6">
+                                <span class="badge px-3 py-1.5 bg-blue-50 text-blue-600 rounded-lg text-xs font-medium">Node.js</span>
+                                <span class="badge px-3 py-1.5 bg-blue-50 text-blue-600 rounded-lg text-xs font-medium">MySQL</span>
+                                <span class="badge px-3 py-1.5 bg-blue-50 text-blue-600 rounded-lg text-xs font-medium">JavaScript</span>
+                                <span class="badge px-3 py-1.5 bg-blue-50 text-blue-600 rounded-lg text-xs font-medium">Jira</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Founder at Evolvemind -->
+                    <div class="timeline-item" data-aos="fade-up" data-aos-delay="600">
+                        <div class="timeline-dot"></div>
+                        <div class="bg-white rounded-2xl shadow-xl p-8 card-hover">
+                            <div class="flex flex-col md:flex-row md:items-center md:justify-between mb-6">
+                                <div>
+                                    <h3 class="text-2xl font-semibold text-accent">Founder</h3>
+                                    <p class="text-lg text-gray-600">Evolvemind</p>
+                                </div>
+                                <div class="mt-2 md:mt-0">
+                                    <span class="px-4 py-1.5 bg-blue-100 text-accent rounded-lg text-sm font-medium">Jan 2021 - Sep 2023</span>
+                                </div>
+                            </div>
+                            <div class="mb-4 flex items-center text-sm text-gray-500">
+                                <i class="fas fa-map-marker-alt text-accent/70 mr-2"></i>
+                                <span>Sulaymaniyah, Iraq - Remote</span>
+                                <span class="mx-2">•</span>
+                                <span class="bg-indigo-100 text-indigo-600 px-2 py-0.5 rounded-full text-xs">Self-employed</span>
+                            </div>
+                            <p class="text-text/70 leading-relaxed mb-6">
+                                Led the development of EvolveMind, an AI-driven mental health application powered by ChatGPT API for personalized recommendations. Managed a team of 5, driving innovation and delivering impactful solutions to enhance mental well-being.
+                            </p>
+                            <div class="flex flex-wrap gap-2 mb-6">
+                                <span class="badge px-3 py-1.5 bg-blue-50 text-blue-600 rounded-lg text-xs font-medium">Knowledge Engineering</span>
+                                <span class="badge px-3 py-1.5 bg-blue-50 text-blue-600 rounded-lg text-xs font-medium">Project Management</span>
+                                <span class="badge px-3 py-1.5 bg-blue-50 text-blue-600 rounded-lg text-xs font-medium">Sales Management</span>
+                                <span class="badge px-3 py-1.5 bg-blue-50 text-blue-600 rounded-lg text-xs font-medium">Artificial Intelligence</span>
+                                <span class="badge px-3 py-1.5 bg-blue-50 text-blue-600 rounded-lg text-xs font-medium">Deep Learning</span>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
         </section>
 
+        <!-- Skills Section -->
         <section id="skills" class="py-24 bg-white">
-            <div class="container mx-auto px-6">
-                <h2 class="text-4xl font-bold mb-12 text-center text-text">Skills & Expertise</h2>
+            <div class="container mx-auto px-6 md:px-12" data-aos="fade-up" data-aos-duration="1000">
+                <div class="text-center mb-16">
+                    <h2 class="text-4xl font-bold font-display gradient-text inline-block">Skills & Expertise</h2>
+                    <div class="w-24 h-1 bg-accent mx-auto mt-4 rounded-full"></div>
+                    <p class="text-lg text-text/70 mt-6 max-w-2xl mx-auto">My specialized toolset combining cutting-edge AI research with deep technical knowledge.</p>
+                </div>
+                
                 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                    <div class="bg-secondary p-8 rounded-3xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-2">
-                        <h3 class="text-xl font-semibold mb-4 text-accent">Technical Skills</h3>
-                        <ul class="space-y-2 text-sm">
-                            <li class="flex items-center"><span class="w-2 h-2 bg-accent rounded-full mr-2"></span>AI & Machine Learning</li>
-                            <li class="flex items-center"><span class="w-2 h-2 bg-accent rounded-full mr-2"></span>Neural Networks</li>
-                            <li class="flex items-center"><span class="w-2 h-2 bg-accent rounded-full mr-2"></span>Deep Learning</li>
-                            <li class="flex items-center"><span class="w-2 h-2 bg-accent rounded-full mr-2"></span>Natural Language Processing</li>
-                            <li class="flex items-center"><span class="w-2 h-2 bg-accent rounded-full mr-2"></span>Computer Vision</li>
-                            <li class="flex items-center"><span class="w-2 h-2 bg-accent rounded-full mr-2"></span>Reinforcement Learning</li>
-                            <li class="flex items-center"><span class="w-2 h-2 bg-accent rounded-full mr-2"></span>Full Stack Development</li>
-                            <li class="flex items-center"><span class="w-2 h-2 bg-accent rounded-full mr-2"></span>Backend Development</li>
-                        </ul>
+                    <!-- Technical Skills Card -->
+                    <div class="bg-white rounded-3xl shadow-xl overflow-hidden shiny" data-aos="fade-up" data-aos-delay="100">
+                        <div class="h-3 bg-blue-500 progress-bar"></div>
+                        <div class="p-8">
+                            <div class="w-14 h-14 bg-blue-100 rounded-2xl flex items-center justify-center mb-6">
+                                <i class="fas fa-microchip text-blue-500 text-2xl"></i>
+                            </div>
+                            <h3 class="text-xl font-semibold mb-4 text-text">AI & Machine Learning</h3>
+                            <ul class="space-y-4">
+                                <li>
+                                    <div class="flex justify-between mb-1">
+                                        <span>Deep Learning</span>
+                                        <span class="text-accent font-medium">95%</span>
+                                    </div>
+                                    <div class="w-full bg-blue-100 h-2 rounded-full">
+                                        <div class="bg-blue-500 h-2 rounded-full" style="width: 95%"></div>
+                                    </div>
+                                </li>
+                                <li>
+                                    <div class="flex justify-between mb-1">
+                                        <span>NLP & Transformers</span>
+                                        <span class="text-accent font-medium">92%</span>
+                                    </div>
+                                    <div class="w-full bg-blue-100 h-2 rounded-full">
+                                        <div class="bg-blue-500 h-2 rounded-full" style="width: 92%"></div>
+                                    </div>
+                                </li>
+                                <li>
+                                    <div class="flex justify-between mb-1">
+                                        <span>Computer Vision</span>
+                                        <span class="text-accent font-medium">88%</span>
+                                    </div>
+                                    <div class="w-full bg-blue-100 h-2 rounded-full">
+                                        <div class="bg-blue-500 h-2 rounded-full" style="width: 88%"></div>
+                                    </div>
+                                </li>
+                                <li>
+                                    <div class="flex justify-between mb-1">
+                                        <span>Reinforcement Learning</span>
+                                        <span class="text-accent font-medium">85%</span>
+                                    </div>
+                                    <div class="w-full bg-blue-100 h-2 rounded-full">
+                                        <div class="bg-blue-500 h-2 rounded-full" style="width: 85%"></div>
+                                    </div>
+                                </li>
+                                <li>
+                                    <div class="flex justify-between mb-1">
+                                        <span>Neural Networks</span>
+                                        <span class="text-accent font-medium">90%</span>
+                                    </div>
+                                    <div class="w-full bg-blue-100 h-2 rounded-full">
+                                        <div class="bg-blue-500 h-2 rounded-full" style="width: 90%"></div>
+                                    </div>
+                                </li>
+                            </ul>
+                        </div>
                     </div>
-                    <div class="bg-secondary p-8 rounded-3xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-2">
-                        <h3 class="text-xl font-semibold mb-4 text-accent">Theoretical Physics</h3>
-                        <ul class="space-y-2 text-sm">
-                            <li class="flex items-center"><span class="w-2 h-2 bg-accent rounded-full mr-2"></span>Quantum Mechanics & Quantum Entanglement</li>
-                            <li class="flex items-center"><span class="w-2 h-2 bg-accent rounded-full mr-2"></span>General Relativity & Black Hole Thermodynamics</li>
-                            <li class="flex items-center"><span class="w-2 h-2 bg-accent rounded-full mr-2"></span>Quantum Field Theory & Quantum Chromodynamics (QCD)</li>
-                            <li class="flex items-center"><span class="w-2 h-2 bg-accent rounded-full mr-2"></span>Cosmology & Dark Matter/Dark Energy</li>
-                            <li class="flex items-center"><span class="w-2 h-2 bg-accent rounded-full mr-2"></span>String Theory & M-Theory</li>
-                            <li class="flex items-center"><span class="w-2 h-2 bg-accent rounded-full mr-2"></span>Quantum Gravity & Loop Quantum Gravity</li>
-                        </ul>
+                    
+                    <!-- Cloud & DevOps -->
+                    <div class="bg-white rounded-3xl shadow-xl overflow-hidden shiny" data-aos="fade-up" data-aos-delay="200">
+                        <div class="h-3 bg-purple-500 progress-bar"></div>
+                        <div class="p-8">
+                            <div class="w-14 h-14 bg-purple-100 rounded-2xl flex items-center justify-center mb-6">
+                                <i class="fas fa-cloud text-purple-500 text-2xl"></i>
+                            </div>
+                            <h3 class="text-xl font-semibold mb-4 text-text">Cloud & DevOps</h3>
+                            <ul class="space-y-4">
+                                <li>
+                                    <div class="flex justify-between mb-1">
+                                        <span>AWS Services</span>
+                                        <span class="text-accent font-medium">90%</span>
+                                    </div>
+                                    <div class="w-full bg-purple-100 h-2 rounded-full">
+                                        <div class="bg-purple-500 h-2 rounded-full" style="width: 90%"></div>
+                                    </div>
+                                </li>
+                                <li>
+                                    <div class="flex justify-between mb-1">
+                                        <span>CI/CD Pipelines</span>
+                                        <span class="text-accent font-medium">85%</span>
+                                    </div>
+                                    <div class="w-full bg-purple-100 h-2 rounded-full">
+                                        <div class="bg-purple-500 h-2 rounded-full" style="width: 85%"></div>
+                                    </div>
+                                </li>
+                                <li>
+                                    <div class="flex justify-between mb-1">
+                                        <span>Docker & Kubernetes</span>
+                                        <span class="text-accent font-medium">88%</span>
+                                    </div>
+                                    <div class="w-full bg-purple-100 h-2 rounded-full">
+                                        <div class="bg-purple-500 h-2 rounded-full" style="width: 88%"></div>
+                                    </div>
+                                </li>
+                                <li>
+                                    <div class="flex justify-between mb-1">
+                                        <span>Serverless Architecture</span>
+                                        <span class="text-accent font-medium">92%</span>
+                                    </div>
+                                    <div class="w-full bg-purple-100 h-2 rounded-full">
+                                        <div class="bg-purple-500 h-2 rounded-full" style="width: 92%"></div>
+                                    </div>
+                                </li>
+                                <li>
+                                    <div class="flex justify-between mb-1">
+                                        <span>MLOps</span>
+                                        <span class="text-accent font-medium">87%</span>
+                                    </div>
+                                    <div class="w-full bg-purple-100 h-2 rounded-full">
+                                        <div class="bg-purple-500 h-2 rounded-full" style="width: 87%"></div>
+                                    </div>
+                                </li>
+                            </ul>
+                        </div>
                     </div>
-                    <div class="bg-secondary p-8 rounded-3xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-2">
-                        <h3 class="text-xl font-semibold mb-4 text-accent">Programming & Tools</h3>
-                        <ul class="space-y-2 text-sm">
-                            <li class="flex items-center"><span class="w-2 h-2 bg-accent rounded-full mr-2"></span>Python, C++, Julia</li>
-                            <li class="flex items-center"><span class="w-2 h-2 bg-accent rounded-full mr-2"></span>PyTorch, TensorFlow</li>
-                            <li class="flex items-center"><span class="w-2 h-2 bg-accent rounded-full mr-2"></span>CUDA, OpenCL</li>
-                            <li class="flex items-center"><span class="w-2 h-2 bg-accent rounded-full mr-2"></span>Git, Docker</li>
-                            <li class="flex items-center"><span class="w-2 h-2 bg-accent rounded-full mr-2"></span>LaTeX, Jupyter</li>
-                            <li class="flex items-center"><span class="w-2 h-2 bg-accent rounded-full mr-2"></span>React, Node.js, Django</li>
-                            <li class="flex items-center"><span class="w-2 h-2 bg-accent rounded-full mr-2"></span>Express, MongoDB</li>
-                        </ul>
+                    
+                    <!-- Programming & Tools Card -->
+                    <div class="bg-white rounded-3xl shadow-xl overflow-hidden shiny" data-aos="fade-up" data-aos-delay="300">
+                        <div class="h-3 bg-green-500 progress-bar"></div>
+                        <div class="p-8">
+                            <div class="w-14 h-14 bg-green-100 rounded-2xl flex items-center justify-center mb-6">
+                                <i class="fas fa-code text-green-500 text-2xl"></i>
+                            </div>
+                            <h3 class="text-xl font-semibold mb-4 text-text">Programming & Frameworks</h3>
+                            <ul class="space-y-4">
+                                <li>
+                                    <div class="flex justify-between mb-1">
+                                        <span>Python</span>
+                                        <span class="text-accent font-medium">95%</span>
+                                    </div>
+                                    <div class="w-full bg-green-100 h-2 rounded-full">
+                                        <div class="bg-green-500 h-2 rounded-full" style="width: 95%"></div>
+                                    </div>
+                                </li>
+                                <li>
+                                    <div class="flex justify-between mb-1">
+                                        <span>PyTorch / TensorFlow</span>
+                                        <span class="text-accent font-medium">90%</span>
+                                    </div>
+                                    <div class="w-full bg-green-100 h-2 rounded-full">
+                                        <div class="bg-green-500 h-2 rounded-full" style="width: 90%"></div>
+                                    </div>
+                                </li>
+                                <li>
+                                    <div class="flex justify-between mb-1">
+                                        <span>Node.js & JavaScript</span>
+                                        <span class="text-accent font-medium">85%</span>
+                                    </div>
+                                    <div class="w-full bg-green-100 h-2 rounded-full">
+                                        <div class="bg-green-500 h-2 rounded-full" style="width: 85%"></div>
+                                    </div>
+                                </li>
+                                <li>
+                                    <div class="flex justify-between mb-1">
+                                        <span>SQL & NoSQL Databases</span>
+                                        <span class="text-accent font-medium">88%</span>
+                                    </div>
+                                    <div class="w-full bg-green-100 h-2 rounded-full">
+                                        <div class="bg-green-500 h-2 rounded-full" style="width: 88%"></div>
+                                    </div>
+                                </li>
+                                <li>
+                                    <div class="flex justify-between mb-1">
+                                        <span>RESTful & GraphQL APIs</span>
+                                        <span class="text-accent font-medium">92%</span>
+                                    </div>
+                                    <div class="w-full bg-green-100 h-2 rounded-full">
+                                        <div class="bg-green-500 h-2 rounded-full" style="width: 92%"></div>
+                                    </div>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Technology Expertise -->
+                <div class="mt-16" data-aos="fade-up" data-aos-delay="300">
+                    <h3 class="text-2xl font-semibold mb-8 text-center">Technologies I Work With</h3>
+                    <div class="flex flex-wrap justify-center gap-6">
+                        <div class="bg-white shadow-md rounded-xl px-6 py-4 flex items-center space-x-3 hover-lift">
+                            <div class="w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center">
+                                <i class="fab fa-python text-blue-500"></i>
+                            </div>
+                            <span>Python</span>
+                        </div>
+                        <div class="bg-white shadow-md rounded-xl px-6 py-4 flex items-center space-x-3 hover-lift">
+                            <div class="w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center">
+                                <i class="fas fa-brain text-blue-500"></i>
+                            </div>
+                            <span>PyTorch</span>
+                        </div>
+                        <div class="bg-white shadow-md rounded-xl px-6 py-4 flex items-center space-x-3 hover-lift">
+                            <div class="w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center">
+                                <i class="fab fa-aws text-blue-500"></i>
+                            </div>
+                            <span>AWS</span>
+                        </div>
+                        <div class="bg-white shadow-md rounded-xl px-6 py-4 flex items-center space-x-3 hover-lift">
+                            <div class="w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center">
+                                <i class="fab fa-node-js text-blue-500"></i>
+                            </div>
+                            <span>Node.js</span>
+                        </div>
+                        <div class="bg-white shadow-md rounded-xl px-6 py-4 flex items-center space-x-3 hover-lift">
+                            <div class="w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center">
+                                <i class="fas fa-database text-blue-500"></i>
+                            </div>
+                            <span>MongoDB</span>
+                        </div>
+                        <div class="bg-white shadow-md rounded-xl px-6 py-4 flex items-center space-x-3 hover-lift">
+                            <div class="w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center">
+                                <i class="fab fa-docker text-blue-500"></i>
+                            </div>
+                            <span>Docker</span>
+                        </div>
                     </div>
                 </div>
             </div>
         </section>
 
-        <section id="projects" class="py-24 bg-secondary">
-            <div class="container mx-auto px-6">
-                <h2 class="text-4xl font-bold mb-12 text-center text-text">Featured Projects</h2>
+        <!-- Certifications Section -->
+        <section id="certifications" class="py-24 bg-secondary relative overflow-hidden">
+            <div class="absolute -top-20 right-0 w-96 h-96 bg-purple-400/10 rounded-full blur-3xl"></div>
+            <div class="absolute -bottom-20 left-0 w-96 h-96 bg-accent/10 rounded-full blur-3xl"></div>
+            
+            <div class="container mx-auto px-6 md:px-12 relative z-10" data-aos="fade-up" data-aos-duration="1000">
+                <div class="text-center mb-16">
+                    <h2 class="text-4xl font-bold font-display gradient-text inline-block">Licenses & Certifications</h2>
+                    <div class="w-24 h-1 bg-accent mx-auto mt-4 rounded-full"></div>
+                    <p class="text-lg text-text/70 mt-6 max-w-2xl mx-auto">Professional qualifications and specialized training in AI, cloud, and advanced technologies.</p>
+                </div>
+                
+                <!-- Category: AI & LLMs -->
+                <div class="mb-12">
+                    <h3 class="text-2xl font-semibold mb-8 inline-flex items-center">
+                        <span class="w-10 h-10 bg-blue-100 rounded-xl flex items-center justify-center mr-4">
+                            <i class="fas fa-brain text-blue-500"></i>
+                        </span>
+                        AI & Language Models
+                    </h3>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                        <!-- Duke: LLMs -->
+                        <div class="bg-white rounded-2xl shadow-lg p-6 hover-lift shiny" data-aos="fade-up" data-aos-delay="100">
+                            <div class="flex items-start mb-4">
+                                <div class="bg-blue-50 p-3 rounded-xl mr-4 w-12 h-12 flex items-center justify-center">
+                                    <i class="fas fa-university text-blue-500 text-2xl"></i>
+                                </div>
+                                <div>
+                                    <h4 class="font-semibold text-lg">GenAI and LLMs on AWS</h4>
+                                    <p class="text-sm text-gray-600">Duke University</p>
+                                    <p class="text-xs text-gray-500 mt-1">Issued Sep 2024</p>
+                                </div>
+                            </div>
+                            <p class="text-sm text-gray-700">Advanced techniques for deploying and managing generative AI models on Amazon Web Services infrastructure.</p>
+                        </div>
+                        
+                        <!-- Duke: Databricks -->
+                        <div class="bg-white rounded-2xl shadow-lg p-6 hover-lift shiny" data-aos="fade-up" data-aos-delay="150">
+                            <div class="flex items-start mb-4">
+                                <div class="bg-blue-50 p-3 rounded-xl mr-4 w-12 h-12 flex items-center justify-center">
+                                    <i class="fas fa-university text-blue-500 text-2xl"></i>
+                                </div>
+                                <div>
+                                    <h4 class="font-semibold text-lg">Databricks to Local LLMs</h4>
+                                    <p class="text-sm text-gray-600">Duke University</p>
+                                    <p class="text-xs text-gray-500 mt-1">Issued Sep 2024</p>
+                                </div>
+                            </div>
+                            <p class="text-sm text-gray-700">Implementation of locally deployed language models using Databricks for efficient data processing and inference.</p>
+                        </div>
+                        
+                        <!-- IBM: Generative AI -->
+                        <div class="bg-white rounded-2xl shadow-lg p-6 hover-lift shiny" data-aos="fade-up" data-aos-delay="200">
+                            <div class="flex items-start mb-4">
+                                <div class="bg-blue-50 p-3 rounded-xl mr-4 w-12 h-12 flex items-center justify-center">
+                                    <i class="fas fa-laptop-code text-blue-500 text-2xl"></i>
+                                </div>
+                                <div>
+                                    <h4 class="font-semibold text-lg">Generative AI Language Modeling with Transformers</h4>
+                                    <p class="text-sm text-gray-600">IBM</p>
+                                    <p class="text-xs text-gray-500 mt-1">Issued Sep 2024</p>
+                                </div>
+                            </div>
+                            <p class="text-sm text-gray-700">Advanced training in transformer architecture for generative AI applications and language modeling.</p>
+                        </div>
+                        
+                        <!-- Duke: LLMOps -->
+                        <div class="bg-white rounded-2xl shadow-lg p-6 hover-lift shiny" data-aos="fade-up" data-aos-delay="250">
+                            <div class="flex items-start mb-4">
+                                <div class="bg-blue-50 p-3 rounded-xl mr-4 w-12 h-12 flex items-center justify-center">
+                                    <i class="fas fa-university text-blue-500 text-2xl"></i>
+                                </div>
+                                <div>
+                                    <h4 class="font-semibold text-lg">Large Language Model Operations Specialization</h4>
+                                    <p class="text-sm text-gray-600">Duke University</p>
+                                    <p class="text-xs text-gray-500 mt-1">Issued Sep 2024</p>
+                                </div>
+                            </div>
+                            <p class="text-sm text-gray-700">Comprehensive training on operational aspects of deploying and managing large language models at scale.</p>
+                        </div>
+                        
+                        <!-- Duke: Open Source LLMOps -->
+                        <div class="bg-white rounded-2xl shadow-lg p-6 hover-lift shiny" data-aos="fade-up" data-aos-delay="300">
+                            <div class="flex items-start mb-4">
+                                <div class="bg-blue-50 p-3 rounded-xl mr-4 w-12 h-12 flex items-center justify-center">
+                                    <i class="fas fa-university text-blue-500 text-2xl"></i>
+                                </div>
+                                <div>
+                                    <h4 class="font-semibold text-lg">Open Source LLMOps Solutions</h4>
+                                    <p class="text-sm text-gray-600">Duke University</p>
+                                    <p class="text-xs text-gray-500 mt-1">Issued Sep 2024</p>
+                                </div>
+                            </div>
+                            <p class="text-sm text-gray-700">Implementation of open-source tooling and frameworks for LLM operations and deployment.</p>
+                        </div>
+                        
+                        <!-- Duke: Azure LLMs -->
+                        <div class="bg-white rounded-2xl shadow-lg p-6 hover-lift shiny" data-aos="fade-up" data-aos-delay="350">
+                            <div class="flex items-start mb-4">
+                                <div class="bg-blue-50 p-3 rounded-xl mr-4 w-12 h-12 flex items-center justify-center">
+                                    <i class="fas fa-university text-blue-500 text-2xl"></i>
+                                </div>
+                                <div>
+                                    <h4 class="font-semibold text-lg">Operationalizing LLMs on Azure</h4>
+                                    <p class="text-sm text-gray-600">Duke University</p>
+                                    <p class="text-xs text-gray-500 mt-1">Issued Sep 2024</p>
+                                </div>
+                            </div>
+                            <p class="text-sm text-gray-700">Specialized techniques for deploying and scaling large language models on Microsoft Azure cloud infrastructure.</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Category: Cloud & Engineering -->
+                <div class="mb-12">
+                    <h3 class="text-2xl font-semibold mb-8 inline-flex items-center">
+                        <span class="w-10 h-10 bg-blue-100 rounded-xl flex items-center justify-center mr-4">
+                            <i class="fas fa-cloud text-blue-500"></i>
+                        </span>
+                        Cloud & Data Engineering
+                    </h3>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                        <!-- Google: Kubernetes -->
+                        <div class="bg-white rounded-2xl shadow-lg p-6 hover-lift shiny" data-aos="fade-up" data-aos-delay="100">
+                            <div class="flex items-start mb-4">
+                                <div class="bg-blue-50 p-3 rounded-xl mr-4 w-12 h-12 flex items-center justify-center">
+                                    <i class="fab fa-google text-blue-500 text-2xl"></i>
+                                </div>
+                                <div>
+                                    <h4 class="font-semibold text-lg">Architecting with Google Kubernetes Engine: Foundations</h4>
+                                    <p class="text-sm text-gray-600">Google Cloud Training</p>
+                                    <p class="text-xs text-gray-500 mt-1">Issued Sep 2024</p>
+                                </div>
+                            </div>
+                            <p class="text-sm text-gray-700">Fundamentals of container orchestration and cloud infrastructure management using Google Kubernetes Engine.</p>
+                        </div>
+                        
+                        <!-- Duke: Data Engineering -->
+                        <div class="bg-white rounded-2xl shadow-lg p-6 hover-lift shiny" data-aos="fade-up" data-aos-delay="150">
+                            <div class="flex items-start mb-4">
+                                <div class="bg-blue-50 p-3 rounded-xl mr-4 w-12 h-12 flex items-center justify-center">
+                                    <i class="fas fa-university text-blue-500 text-2xl"></i>
+                                </div>
+                                <div>
+                                    <h4 class="font-semibold text-lg">Advanced Data Engineering</h4>
+                                    <p class="text-sm text-gray-600">Duke University</p>
+                                    <p class="text-xs text-gray-500 mt-1">Issued Sep 2024</p>
+                                </div>
+                            </div>
+                            <p class="text-sm text-gray-700">Advanced techniques for building scalable data pipelines and architectures for large-scale data processing.</p>
+                        </div>
+                        
+                        <!-- Google: ML Systems -->
+                        <div class="bg-white rounded-2xl shadow-lg p-6 hover-lift shiny" data-aos="fade-up" data-aos-delay="200">
+                            <div class="flex items-start mb-4">
+                                <div class="bg-blue-50 p-3 rounded-xl mr-4 w-12 h-12 flex items-center justify-center">
+                                    <i class="fab fa-google text-blue-500 text-2xl"></i>
+                                </div>
+                                <div>
+                                    <h4 class="font-semibold text-lg">Production Machine Learning Systems</h4>
+                                    <p class="text-sm text-gray-600">Google Cloud Training</p>
+                                    <p class="text-xs text-gray-500 mt-1">Issued Sep 2024</p>
+                                </div>
+                            </div>
+                            <p class="text-sm text-gray-700">Implementation and management of production-ready machine learning systems and infrastructure.</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Category: Science & Physics -->
+                <div>
+                    <h3 class="text-2xl font-semibold mb-8 inline-flex items-center">
+                        <span class="w-10 h-10 bg-blue-100 rounded-xl flex items-center justify-center mr-4">
+                            <i class="fas fa-atom text-blue-500"></i>
+                        </span>
+                        Advanced Sciences
+                    </h3>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                        <!-- HKU: Physics -->
+                        <div class="bg-white rounded-2xl shadow-lg p-6 hover-lift shiny" data-aos="fade-up" data-aos-delay="100">
+                            <div class="flex items-start mb-4">
+                                <div class="bg-blue-50 p-3 rounded-xl mr-4 w-12 h-12 flex items-center justify-center">
+                                    <i class="fas fa-graduation-cap text-blue-500 text-2xl"></i>
+                                </div>
+                                <div>
+                                    <h4 class="font-semibold text-lg">Understanding Modern Physics III: Simplicity and Complexity</h4>
+                                    <p class="text-sm text-gray-600">The Hong Kong University of Science and Technology</p>
+                                    <p class="text-xs text-gray-500 mt-1">Issued Oct 2024</p>
+                                </div>
+                            </div>
+                            <p class="text-sm text-gray-700">Advanced concepts in modern physics focusing on complexity theory and emergent phenomena.</p>
+                        </div>
+                        
+                        <!-- Boulder: Quantum -->
+                        <div class="bg-white rounded-2xl shadow-lg p-6 hover-lift shiny" data-aos="fade-up" data-aos-delay="150">
+                            <div class="flex items-start mb-4">
+                                <div class="bg-blue-50 p-3 rounded-xl mr-4 w-12 h-12 flex items-center justify-center">
+                                    <i class="fas fa-flask text-blue-500 text-2xl"></i>
+                                </div>
+                                <div>
+                                    <h4 class="font-semibold text-lg">Quantum Mechanics</h4>
+                                    <p class="text-sm text-gray-600">University of Colorado Boulder</p>
+                                    <p class="text-xs text-gray-500 mt-1">Issued Oct 2024</p>
+                                </div>
+                            </div>
+                            <p class="text-sm text-gray-700">Fundamental principles and mathematical frameworks of quantum mechanics and their applications.</p>
+                        </div>
+                        
+                        <!-- Dartmouth: Reality -->
+                        <div class="bg-white rounded-2xl shadow-lg p-6 hover-lift shiny" data-aos="fade-up" data-aos-delay="200">
+                            <div class="flex items-start mb-4">
+                                <div class="bg-blue-50 p-3 rounded-xl mr-4 w-12 h-12 flex items-center justify-center">
+                                    <i class="fas fa-atom text-blue-500 text-2xl"></i>
+                                </div>
+                                <div>
+                                    <h4 class="font-semibold text-lg">Question Reality: Matter</h4>
+                                    <p class="text-sm text-gray-600">Dartmouth College</p>
+                                    <p class="text-xs text-gray-500 mt-1">Issued Oct 2024</p>
+                                </div>
+                            </div>
+                            <p class="text-sm text-gray-700">Philosophical and scientific exploration of the nature of matter and physical reality.</p>
+                        </div>
+                        
+                        <!-- Edinburgh: Philosophy -->
+                        <div class="bg-white rounded-2xl shadow-lg p-6 hover-lift shiny" data-aos="fade-up" data-aos-delay="250">
+                            <div class="flex items-start mb-4">
+                                <div class="bg-blue-50 p-3 rounded-xl mr-4 w-12 h-12 flex items-center justify-center">
+                                    <i class="fas fa-book text-blue-500 text-2xl"></i>
+                                </div>
+                                <div>
+                                    <h4 class="font-semibold text-lg">Philosophy, Science and Religion</h4>
+                                    <p class="text-sm text-gray-600">The University of Edinburgh</p>
+                                    <p class="text-xs text-gray-500 mt-1">Issued Oct 2024</p>
+                                </div>
+                            </div>
+                            <p class="text-sm text-gray-700">Interdisciplinary study of the relationships between philosophical thought, scientific method, and religious perspectives.</p>
+                        </div>
+                        
+                        <!-- Johns Hopkins: Cancer Biology -->
+                        <div class="bg-white rounded-2xl shadow-lg p-6 hover-lift shiny" data-aos="fade-up" data-aos-delay="300">
+                            <div class="flex items-start mb-4">
+                                <div class="bg-blue-50 p-3 rounded-xl mr-4 w-12 h-12 flex items-center justify-center">
+                                    <i class="fas fa-microscope text-blue-500 text-2xl"></i>
+                                </div>
+                                <div>
+                                    <h4 class="font-semibold text-lg">Cancer Biology</h4>
+                                    <p class="text-sm text-gray-600">The Johns Hopkins University</p>
+                                    <p class="text-xs text-gray-500 mt-1">Issued Feb 2025</p>
+                                </div>
+                            </div>
+                            <p class="text-sm text-gray-700">Fundamentals of cancer biology, including cellular mechanisms, genetics, and clinical applications.</p>
+                        </div>
+                        
+                        <!-- Imperial College: Mathematics -->
+                        <div class="bg-white rounded-2xl shadow-lg p-6 hover-lift shiny" data-aos="fade-up" data-aos-delay="350">
+                            <div class="flex items-start mb-4">
+                                <div class="bg-blue-50 p-3 rounded-xl mr-4 w-12 h-12 flex items-center justify-center">
+                                    <i class="fas fa-square-root-alt text-blue-500 text-2xl"></i>
+                                </div>
+                                <div>
+                                    <h4 class="font-semibold text-lg">Mathematics for Machine Learning: Multivariate Calculus</h4>
+                                    <p class="text-sm text-gray-600">Imperial College London</p>
+                                    <p class="text-xs text-gray-500 mt-1">Issued Feb 2025</p>
+                                </div>
+                            </div>
+                            <p class="text-sm text-gray-700">Advanced mathematical foundations critical for machine learning algorithms and optimization techniques.</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="text-center mt-16">
+                    <div class="inline-block px-6 py-3 bg-white shadow-md rounded-xl">
+                        <span class="text-gray-600">View all certifications on</span>
+                        <a href="https://www.linkedin.com/in/san-hashim/" target="_blank" class="text-blue-600 font-medium ml-2 flex items-center justify-center inline-flex">
+                            <i class="fab fa-linkedin text-blue-700 mr-2"></i> LinkedIn
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Projects Section -->
+        <section id="projects" class="py-24 bg-white relative overflow-hidden">
+            <div class="container mx-auto px-6 md:px-12 relative z-10" data-aos="fade-up" data-aos-duration="1000">
+                <div class="text-center mb-16">
+                    <h2 class="text-4xl font-bold font-display gradient-text inline-block">Featured Projects</h2>
+                    <div class="w-24 h-1 bg-accent mx-auto mt-4 rounded-full"></div>
+                    <p class="text-lg text-text/70 mt-6 max-w-2xl mx-auto">Innovative research and development at the intersection of AI and software engineering.</p>
+                </div>
+                
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
-                    <div class="bg-white p-8 rounded-3xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-2">
-                        <h3 class="text-xl font-semibold mb-4 text-accent">LSLM</h3>
-                        <p class="mb-4">Listening-while-Speaking Language Model: An innovative approach to real-time language processing and generation.</p>
-                        <a href="https://github.com/sanowl/LSLM-Listening-while-Speaking-Language-Model" target="_blank" class="text-accent hover:underline">Explore Project →</a>
+                    <!-- Project 1 -->
+                    <div class="bg-white rounded-3xl shadow-xl overflow-hidden card-hover" data-aos="fade-up" data-aos-delay="100">
+                        <div class="relative h-48 bg-gradient-to-r from-blue-400 to-purple-500">
+                            <div class="absolute inset-0 flex items-center justify-center">
+                                <i class="fas fa-comments text-white text-5xl"></i>
+                            </div>
+                        </div>
+                        <div class="p-8">
+                            <h3 class="text-2xl font-semibold mb-2 text-accent">LSLM</h3>
+                            <p class="text-lg font-medium mb-2">Listening-while-Speaking Language Model</p>
+                            <p class="mb-6 text-text/70">
+                                An innovative approach to real-time language processing and generation that allows models to adjust responses mid-generation based on new inputs, similar to human conversation.
+                            </p>
+                            <div class="flex flex-wrap gap-2 mb-6">
+                                <span class="badge px-3 py-1.5 bg-blue-50 text-blue-600 rounded-lg text-xs font-medium">NLP</span>
+                                <span class="badge px-3 py-1.5 bg-blue-50 text-blue-600 rounded-lg text-xs font-medium">Transformer</span>
+                                <span class="badge px-3 py-1.5 bg-blue-50 text-blue-600 rounded-lg text-xs font-medium">PyTorch</span>
+                            </div>
+                            <a href="https://github.com/sanowl/LSLM-Listening-while-Speaking-Language-Model" target="_blank" class="inline-flex items-center text-accent hover:text-blue-700 font-medium">
+                                Explore Project <i class="fas fa-arrow-right ml-2"></i>
+                            </a>
+                        </div>
                     </div>
-                    <div class="bg-white p-8 rounded-3xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-2">
-                        <h3 class="text-xl font-semibold mb-4 text-accent">MoRA</h3>
-                        <p class="mb-4">High-Rank Matrix Adaptation for Parameter-Efficient Fine-Tuning of Large Language Models.</p>
-                        <a href="https://github.com/sanowl/MoRA-High-Rank-Matrix-Adaptation-for-Parameter-Efficient-Fine-Tuning-of-Large-Language-Models" target="_blank" class="text-accent hover:underline">Explore Project →</a>
+                    
+                    <!-- Project 2 -->
+                    <div class="bg-white rounded-3xl shadow-xl overflow-hidden card-hover" data-aos="fade-up" data-aos-delay="200">
+                        <div class="relative h-48 bg-gradient-to-r from-indigo-400 to-blue-600">
+                            <div class="absolute inset-0 flex items-center justify-center">
+                                <i class="fas fa-project-diagram text-white text-5xl"></i>
+                            </div>
+                        </div>
+                        <div class="p-8">
+                            <h3 class="text-2xl font-semibold mb-2 text-accent">MoRA</h3>
+                            <p class="text-lg font-medium mb-2">High-Rank Matrix Adaptation</p>
+                            <p class="mb-6 text-text/70">
+                                A parameter-efficient fine-tuning technique for large language models that achieves superior performance through adaptive high-rank matrix transformations.
+                            </p>
+                            <div class="flex flex-wrap gap-2 mb-6">
+                                <span class="badge px-3 py-1.5 bg-blue-50 text-blue-600 rounded-lg text-xs font-medium">LLMs</span>
+                                <span class="badge px-3 py-1.5 bg-blue-50 text-blue-600 rounded-lg text-xs font-medium">PEFT</span>
+                                <span class="badge px-3 py-1.5 bg-blue-50 text-blue-600 rounded-lg text-xs font-medium">Transfer Learning</span>
+                            </div>
+                            <a href="https://github.com/sanowl/MoRA-High-Rank-Matrix-Adaptation-for-Parameter-Efficient-Fine-Tuning-of-Large-Language-Models" target="_blank" class="inline-flex items-center text-accent hover:text-blue-700 font-medium">
+                                Explore Project <i class="fas fa-arrow-right ml-2"></i>
+                            </a>
+                        </div>
                     </div>
-                    <div class="bg-white p-8 rounded-3xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-2">
-                        <h3 class="text-xl font-semibold mb-4 text-accent">SARA</h3>
-                        <p class="mb-4">Singular Value-Based Adaptive Low-Rank Adaptation: A novel approach to efficient model adaptation.</p>
-                        <a href="https://github.com/sanowl/SARA-Singular-Value-Based-Adaptive-Low-Rank-Adaption" target="_blank" class="text-accent hover:underline">Explore Project →</a>
+                    
+                    <!-- Project 3 -->
+                    <div class="bg-white rounded-3xl shadow-xl overflow-hidden card-hover" data-aos="fade-up" data-aos-delay="300">
+                        <div class="relative h-48 bg-gradient-to-r from-purple-400 to-pink-500">
+                            <div class="absolute inset-0 flex items-center justify-center">
+                                <i class="fas fa-layer-group text-white text-5xl"></i>
+                            </div>
+                        </div>
+                        <div class="p-8">
+                            <h3 class="text-2xl font-semibold mb-2 text-accent">SARA</h3>
+                            <p class="text-lg font-medium mb-2">Singular Value-Based Adaptive Low-Rank Adaptation</p>
+                            <p class="mb-6 text-text/70">
+                                A novel approach to efficient model adaptation that utilizes singular value decomposition to dynamically adjust the rank of adaptation based on importance.
+                            </p>
+                            <div class="flex flex-wrap gap-2 mb-6">
+                                <span class="badge px-3 py-1.5 bg-blue-50 text-blue-600 rounded-lg text-xs font-medium">Matrix Factorization</span>
+                                <span class="badge px-3 py-1.5 bg-blue-50 text-blue-600 rounded-lg text-xs font-medium">SVD</span>
+                                <span class="badge px-3 py-1.5 bg-blue-50 text-blue-600 rounded-lg text-xs font-medium">Adaptive Computing</span>
+                            </div>
+                            <a href="https://github.com/sanowl/SARA-Singular-Value-Based-Adaptive-Low-Rank-Adaption" target="_blank" class="inline-flex items-center text-accent hover:text-blue-700 font-medium">
+                                Explore Project <i class="fas fa-arrow-right ml-2"></i>
+                            </a>
+                        </div>
                     </div>
-                    <div class="bg-white p-8 rounded-3xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-2">
-                        <h3 class="text-xl font-semibold mb-4 text-accent">SEED Story</h3>
-                        <p class="mb-4">Multimodal Long Story Generation with Large Language Models: Pushing the boundaries of AI-generated narratives.</p>
-                        <a href="https://github.com/sanowl/SEED-Story-Multimodal-Long-Story-Generation-with-Large-Language-Models" target="_blank" class="text-accent hover:underline">Explore Project →</a>
+                    
+                    <!-- Project 4 -->
+                    <div class="bg-white rounded-3xl shadow-xl overflow-hidden card-hover" data-aos="fade-up" data-aos-delay="400">
+                        <div class="relative h-48 bg-gradient-to-r from-green-400 to-teal-500">
+                            <div class="absolute inset-0 flex items-center justify-center">
+                                <i class="fas fa-book-open text-white text-5xl"></i>
+                            </div>
+                        </div>
+                        <div class="p-8">
+                            <h3 class="text-2xl font-semibold mb-2 text-accent">SEED Story</h3>
+                            <p class="text-lg font-medium mb-2">Multimodal Long Story Generation</p>
+                            <p class="mb-6 text-text/70">
+                                A framework for generating coherent and engaging long-form narratives using large language models with multimodal inputs to enhance storytelling capabilities.
+                            </p>
+                            <div class="flex flex-wrap gap-2 mb-6">
+                                <span class="badge px-3 py-1.5 bg-blue-50 text-blue-600 rounded-lg text-xs font-medium">Story Generation</span>
+                                <span class="badge px-3 py-1.5 bg-blue-50 text-blue-600 rounded-lg text-xs font-medium">Multimodal</span>
+                                <span class="badge px-3 py-1.5 bg-blue-50 text-blue-600 rounded-lg text-xs font-medium">LLMs</span>
+                            </div>
+                            <a href="https://github.com/sanowl/SEED-Story-Multimodal-Long-Story-Generation-with-Large-Language-Models" target="_blank" class="inline-flex items-center text-accent hover:text-blue-700 font-medium">
+                                Explore Project <i class="fas fa-arrow-right ml-2"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="text-center mt-12">
+                    <a href="https://github.com/sanowl" target="_blank" class="inline-flex items-center bg-accent hover:bg-blue-700 text-white py-3.5 px-8 rounded-xl font-medium transition-all duration-300 shadow-lg hover:shadow-xl btn-3d">
+                        <i class="fab fa-github mr-2"></i> View All Projects on GitHub
+                    </a>
+                </div>
+            </div>
+            
+            <!-- Abstract geometric decoration -->
+            <div class="absolute -top-20 right-0 w-96 h-96 bg-accent/10 rounded-full blur-3xl"></div>
+            <div class="absolute -bottom-20 left-0 w-96 h-96 bg-purple-400/10 rounded-full blur-3xl"></div>
+        </section>
+
+        <!-- Open Source Contributions -->
+        <section id="open-source" class="py-24 bg-secondary">
+            <div class="container mx-auto px-6 md:px-12" data-aos="fade-up" data-aos-duration="1000">
+                <div class="text-center mb-16">
+                    <h2 class="text-4xl font-bold font-display gradient-text inline-block">Open Source Contributions</h2>
+                    <div class="w-24 h-1 bg-accent mx-auto mt-4 rounded-full"></div>
+                    <p class="text-lg text-text/70 mt-6 max-w-2xl mx-auto">Collaborations and contributions to innovative open source projects.</p>
+                </div>
+                
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                    <!-- Tesla -->
+                    <div class="bg-white p-8 rounded-3xl shadow-lg hover:shadow-xl transition-all duration-500 transform hover:-translate-y-3 hover:scale-105" data-aos="fade-up" data-aos-delay="100">
+                        <div class="flex items-center justify-center mb-6">
+                            <div class="w-16 h-16 rounded-full bg-gray-100 flex items-center justify-center">
+                                <i class="fas fa-car text-gray-700 text-2xl"></i>
+                            </div>
+                        </div>
+                        <h3 class="text-xl font-semibold mb-4 text-center text-accent">Tesla</h3>
+                        <p class="text-center text-text/70">
+                            Assisted in developing AI models for autonomous driving features, focusing on object detection and path prediction algorithms.
+                        </p>
+                    </div>
+                    
+                    <!-- NASA -->
+                    <div class="bg-white p-8 rounded-3xl shadow-lg hover:shadow-xl transition-all duration-500 transform hover:-translate-y-3 hover:scale-105" data-aos="fade-up" data-aos-delay="200">
+                        <div class="flex items-center justify-center mb-6">
+                            <div class="w-16 h-16 rounded-full bg-blue-100 flex items-center justify-center">
+                                <i class="fas fa-rocket text-blue-700 text-2xl"></i>
+                            </div>
+                        </div>
+                        <h3 class="text-xl font-semibold mb-4 text-center text-accent">NASA</h3>
+                        <p class="text-center text-text/70">
+                            Improved test code readability and organization for the cmr-metadata-review project, enhancing the software quality and developer experience.
+                        </p>
+                    </div>
+                    
+                    <!-- Zou Group -->
+                    <div class="bg-white p-8 rounded-3xl shadow-lg hover:shadow-xl transition-all duration-500 transform hover:-translate-y-3 hover:scale-105" data-aos="fade-up" data-aos-delay="300">
+                        <div class="flex items-center justify-center mb-6">
+                            <div class="w-16 h-16 rounded-full bg-purple-100 flex items-center justify-center">
+                                <i class="fas fa-users text-purple-700 text-2xl"></i>
+                            </div>
+                        </div>
+                        <h3 class="text-xl font-semibold mb-4 text-center text-accent">Zou Group</h3>
+                        <p class="text-center text-text/70">
+                            Refactored and improved testing code for the textgrad library, enhancing readability, maintainability, and adherence to Python coding standards.
+                        </p>
                     </div>
                 </div>
             </div>
         </section>
 
-        <section id="open-source" class="py-24 bg-white">
-            <div class="container mx-auto px-6">
-                <h2 class="text-4xl font-bold mb-12 text-center text-text">Open Source Contributions</h2>
-                <div class="space-y-8">
-                    <div class="bg-secondary p-8 rounded-3xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-2">
-                        <h3 class="text-xl font-semibold mb-4 text-accent">Tesla</h3>
-                        <p class="mb-2">Assisted in developing AI models for autonomous driving features.</p>
+        <!-- Contact Section -->
+        <!-- Contact Section -->
+<section id="contact" class="py-24 bg-white relative overflow-hidden">
+    <div class="absolute inset-0 bg-gradient-to-br from-accent/5 to-accentSecondary/5"></div>
+    <div class="container mx-auto px-6 md:px-12 text-center relative z-10" data-aos="fade-up" data-aos-duration="1000">
+        <div class="max-w-3xl mx-auto">
+            <div class="inline-block mb-4 px-4 py-1 bg-accent/10 text-accent rounded-full text-sm font-medium">
+                <i class="fas fa-paper-plane mr-2"></i> Get In Touch
+            </div>
+            <h2 class="text-4xl font-bold font-display gradient-text inline-block">Let's Collaborate</h2>
+            <div class="w-24 h-1 bg-accent mx-auto mt-4 rounded-full"></div>
+            <p class="text-xl mt-8 mb-12 text-text/80">
+                Interested in AI research, deep learning solutions, or developing innovative applications? Let's connect and create something amazing together.
+            </p>
+            
+            <div class="flex flex-col md:flex-row gap-6 justify-center mb-16">
+                <a href="mailto:sanhashim12@outlook.com" class="flex items-center justify-center px-8 py-5 bg-accent text-white rounded-xl hover:bg-accentDark transition-all duration-300 shadow-lg hover:shadow-xl btn-3d">
+                    <i class="fas fa-envelope mr-3"></i>
+                    <span>sanhashim12@outlook.com</span>
+                </a>
+                <a href="https://github.com/sanowl" target="_blank" class="flex items-center justify-center px-8 py-5 bg-gray-900 text-white rounded-xl hover:bg-black transition-all duration-300 shadow-lg hover:shadow-xl btn-3d">
+                    <i class="fab fa-github mr-3"></i>
+                    <span>GitHub</span>
+                </a>
+            </div>
+            
+            <div class="bg-white p-10 rounded-3xl shadow-lg glass-effect backdrop-blur-lg border border-gray-200">
+                <h3 class="text-2xl font-semibold mb-8">Areas of Expertise</h3>
+                <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
+                    <div class="bg-accent/5 p-5 rounded-xl hover-lift flex flex-col items-center justify-center h-32">
+                        <i class="fas fa-brain text-accent text-3xl mb-4"></i>
+                        <p class="font-medium">AI & Machine Learning</p>
                     </div>
-                    <div class="bg-secondary p-8 rounded-3xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-2">
-                        <h3 class="text-xl font-semibold mb-4 text-accent">NASA</h3>
-                        <p class="mb-2">Improved test code readability and organization for the cmr-metadata-review project.</p>
+                    <div class="bg-accent/5 p-5 rounded-xl hover-lift flex flex-col items-center justify-center h-32">
+                        <i class="fas fa-comment-dots text-accent text-3xl mb-4"></i>
+                        <p class="font-medium">Natural Language Processing</p>
                     </div>
-                    <div class="bg-secondary p-8 rounded-3xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-2">
-                        <h3 class="text-xl font-semibold mb-4 text-accent">Zou Group</h3>
-                        <p class="mb-2">Refactored and improved testing code for the textgrad library, enhancing readability, maintainability, and adherence to Python coding standards.</p>
+                    <div class="bg-accent/5 p-5 rounded-xl hover-lift flex flex-col items-center justify-center h-32">
+                        <i class="fas fa-eye text-accent text-3xl mb-4"></i>
+                        <p class="font-medium">Computer Vision</p>
+                    </div>
+                    <div class="bg-accent/5 p-5 rounded-xl hover-lift flex flex-col items-center justify-center h-32">
+                        <i class="fas fa-cloud text-accent text-3xl mb-4"></i>
+                        <p class="font-medium">Cloud Architecture</p>
+                    </div>
+                    <div class="bg-accent/5 p-5 rounded-xl hover-lift flex flex-col items-center justify-center h-32">
+                        <i class="fas fa-server text-accent text-3xl mb-4"></i>
+                        <p class="font-medium">Backend Development</p>
+                    </div>
+                    <div class="bg-accent/5 p-5 rounded-xl hover-lift flex flex-col items-center justify-center h-32">
+                        <i class="fas fa-project-diagram text-accent text-3xl mb-4"></i>
+                        <p class="font-medium">System Architecture</p>
                     </div>
                 </div>
-            </div>
-        </section>
-
-        <section id="hobbies" class="py-24 bg-secondary">
-            <div class="container mx-auto px-6">
-                <h2 class="text-4xl font-bold mb-12 text-center text-text">Hobbies & Interests</h2>
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
-                    <div class="bg-white p-8 rounded-3xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-2">
-                        <h3 class="text-xl font-semibold mb-4 text-accent">Reading Classical Books</h3>
-                        <p>Enjoy exploring classical literature, including works by authors such as Leo Tolstoy, Jane Austen, and Charles Dickens.</p>
-                    </div>
-                    <div class="bg-white p-8 rounded-3xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-2">
-                        <h3 class="text-xl font-semibold mb-4 text-accent">Running</h3>
-                        <p>Passionate about running, participating in various events and maintaining an active lifestyle.</p>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <section id="contact" class="py-24 bg-white">
-            <div class="container mx-auto px-6 text-center">
-                <h2 class="text-4xl font-bold mb-12 text-text">Let's Collaborate</h2>
-                <p class="text-xl mb-8">Interested in pushing the boundaries of AI and physics together? Let's connect.</p>
-                <a href="mailto:sanhashim12@outlook.com" class="bg-accent text-white px-8 py-3 rounded-full hover:bg-blue-600 transition-all duration-300 shadow-lg hover:shadow-xl transform hover:scale-105">Get in Touch</a>
-            </div>
-        </section>
-    </main>
-
-    <footer class="bg-secondary text-text py-8">
-        <div class="container mx-auto px-6 text-center">
-            <p class="mb-4">&copy; 2024 San Owl. Exploring the frontiers of AI and Physics.</p>
-            <div class="space-x-4">
-                <a href="https://github.com/sanowl" target="_blank" class="text-accent hover:text-blue-600 transition-colors">GitHub</a>
             </div>
         </div>
-    </footer>
+    </div>
+</section>
 
-    <script>
-        // Mobile menu toggle
-        const menuToggle = document.getElementById('menu-toggle');
-        const mobileMenu = document.getElementById('mobile-menu');
-        menuToggle.addEventListener('click', () => {
-            mobileMenu.classList.toggle('hidden');
-        });
+<!-- Footer -->
+<footer class="bg-darkBg text-white py-16">
+    <div class="container mx-auto px-6 md:px-12">
+        <div class="flex flex-col md:flex-row justify-between items-center">
+            <div class="mb-8 md:mb-0">
+                <a href="#" class="text-3xl font-bold font-display">San Hashim</a>
+                <p class="mt-2 text-gray-400">AI/ML Engineer & AWS Cloud Architect</p>
+            </div>
+            <div class="flex space-x-8">
+                <a href="#about" class="text-gray-400 hover:text-white transition-colors">About</a>
+                <a href="#experience" class="text-gray-400 hover:text-white transition-colors">Experience</a>
+                <a href="#skills" class="text-gray-400 hover:text-white transition-colors">Skills</a>
+                <a href="#certifications" class="text-gray-400 hover:text-white transition-colors">Certifications</a>
+                <a href="#projects" class="text-gray-400 hover:text-white transition-colors">Projects</a>
+                <a href="#contact" class="text-gray-400 hover:text-white transition-colors">Contact</a>
+            </div>
+        </div>
+        <hr class="border-gray-800 my-8">
+        <div class="flex flex-col md:flex-row justify-between items-center">
+            <p>&copy; 2025 San Hashim. All rights reserved.</p>
+            <div class="flex space-x-6 mt-4 md:mt-0">
+                <a href="https://github.com/sanowl" target="_blank" class="text-gray-400 hover:text-white transition-colors">
+                    <i class="fab fa-github text-xl"></i>
+                </a>
+                <a href="mailto:sanhashim12@outlook.com" class="text-gray-400 hover:text-white transition-colors">
+                    <i class="fas fa-envelope text-xl"></i>
+                </a>
+                <a href="https://www.linkedin.com/in/san-hashim/" target="_blank" class="text-gray-400 hover:text-white transition-colors">
+                    <i class="fab fa-linkedin text-xl"></i>
+                </a>
+            </div>
+        </div>
+    </div>
+</footer>
 
-        // Shrinking header on scroll
-        window.addEventListener('scroll', () => {
-            const header = document.querySelector('header');
-            if (window.scrollY > 100) {
-                header.classList.add('py-2');
-                header.classList.remove('py-4');
-            } else {
-                header.classList.add('py-4');
-                header.classList.remove('py-2');
+<!-- Scripts -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/particles.js/2.0.0/particles.min.js"></script>
+<script>
+    // Preloader
+    window.addEventListener('load', function() {
+        const preloader = document.querySelector('.preloader');
+        setTimeout(() => {
+            preloader.classList.add('loaded');
+        }, 500);
+    });
+    
+    // Initialize AOS
+    AOS.init({
+        once: true,
+        duration: 800,
+        offset: 100,
+        delay: 100,
+        easing: 'ease-out-cubic'
+    });
+
+    // Mobile menu toggle
+    const menuToggle = document.getElementById('menu-toggle');
+    const mobileMenu = document.getElementById('mobile-menu');
+    menuToggle.addEventListener('click', () => {
+        mobileMenu.classList.toggle('hidden');
+    });
+
+    // Smooth scrolling for anchor links
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener('click', function (e) {
+            e.preventDefault();
+            const target = document.querySelector(this.getAttribute('href'));
+            if (target) {
+                window.scrollTo({
+                    top: target.offsetTop - 100,
+                    behavior: 'smooth'
+                });
+                
+                // Close mobile menu if open
+                if (!mobileMenu.classList.contains('hidden')) {
+                    mobileMenu.classList.add('hidden');
+                }
             }
         });
+    });
 
-        // Intersection Observer for fade-in effect
-        const observer = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    entry.target.classList.add('opacity-100', 'translate-y-0');
+    // Shrinking header on scroll
+    window.addEventListener('scroll', () => {
+        const header = document.querySelector('header');
+        if (window.scrollY > 100) {
+            header.classList.add('py-2');
+            header.classList.remove('py-4');
+            header.classList.add('shadow-md');
+        } else {
+            header.classList.add('py-4');
+            header.classList.remove('py-2');
+            header.classList.remove('shadow-md');
+        }
+    });
+
+    // Initialize particles.js
+    particlesJS('particles-js', {
+        "particles": {
+            "number": {
+                "value": 100,
+                "density": {
+                    "enable": true,
+                    "value_area": 800
                 }
+            },
+            "color": {
+                "value": "#ffffff"
+            },
+            "shape": {
+                "type": "circle",
+                "stroke": {
+                    "width": 0,
+                    "color": "#000000"
+                },
+            },
+            "opacity": {
+                "value": 0.5,
+                "random": true,
+            },
+            "size": {
+                "value": 3,
+                "random": true,
+            },
+            "line_linked": {
+                "enable": true,
+                "distance": 150,
+                "color": "#ffffff",
+                "opacity": 0.4,
+                "width": 1
+            },
+            "move": {
+                "enable": true,
+                "speed": 2,
+                "direction": "none",
+                "random": true,
+                "straight": false,
+                "out_mode": "out",
+                "bounce": false,
+            }
+        },
+        "interactivity": {
+            "detect_on": "canvas",
+            "events": {
+                "onhover": {
+                    "enable": true,
+                    "mode": "grab"
+                },
+                "onclick": {
+                    "enable": true,
+                    "mode": "push"
+                },
+                "resize": true
+            },
+            "modes": {
+                "grab": {
+                    "distance": 140,
+                    "line_linked": {
+                        "opacity": 1
+                    }
+                },
+                "push": {
+                    "particles_nb": 4
+                },
+            }
+        },
+        "retina_detect": true
+    });
+    
+    // Custom cursor follower (for desktop)
+    const cursorFollower = document.getElementById('cursor-follower');
+    
+    if (window.innerWidth > 768) {
+        document.addEventListener('mousemove', (e) => {
+            cursorFollower.style.opacity = '1';
+            cursorFollower.style.transform = `translate(${e.clientX}px, ${e.clientY}px)`;
+        });
+        
+        document.querySelectorAll('a, button').forEach(el => {
+            el.addEventListener('mouseenter', () => {
+                cursorFollower.style.width = '50px';
+                cursorFollower.style.height = '50px';
+                cursorFollower.style.borderWidth = '1px';
+                cursorFollower.style.backgroundColor = 'rgba(59, 130, 246, 0.1)';
             });
-        }, {
-            threshold: 0.1
+            
+            el.addEventListener('mouseleave', () => {
+                cursorFollower.style.width = '12px';
+                cursorFollower.style.height = '12px';
+                cursorFollower.style.borderWidth = '2px';
+                cursorFollower.style.backgroundColor = 'transparent';
+            });
         });
-
-        document.querySelectorAll('section > div').forEach((el) => {
-            el.classList.add('opacity-0', 'translate-y-10', 'transition-all', 'duration-1000', 'ease-out');
-            observer.observe(el);
+        
+        // Hide cursor when it leaves the window
+        document.addEventListener('mouseout', (e) => {
+            if (e.toElement === null && e.relatedTarget === null) {
+                cursorFollower.style.opacity = '0';
+            }
         });
-    </script>
+    }
+    
+    // 3D rotation effect for cards
+    document.querySelectorAll('.rotate-3d').forEach(el => {
+        el.addEventListener('mousemove', (e) => {
+            const rect = el.getBoundingClientRect();
+            const x = e.clientX - rect.left;
+            const y = e.clientY - rect.top;
+            const centerX = rect.width / 2;
+            const centerY = rect.height / 2;
+            
+            const rotateX = (y - centerY) / 10;
+            const rotateY = (centerX - x) / 10;
+            
+            el.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg)`;
+            
+            const icon = el.querySelector('.icon-3d');
+            if (icon) {
+                icon.style.transform = `translateZ(40px)`;
+            }
+        });
+        
+        el.addEventListener('mouseleave', () => {
+            el.style.transform = 'perspective(1000px) rotateX(0) rotateY(0)';
+            
+            const icon = el.querySelector('.icon-3d');
+            if (icon) {
+                icon.style.transform = `translateZ(20px)`;
+            }
+        });
+    });
+</script>
 </body>
 </html>
