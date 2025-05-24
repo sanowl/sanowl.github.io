@@ -4,71 +4,409 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>My Curated Paper Insights</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,300;0,400;0,700;1,400&family=Merriweather:ital,wght@0,300;0,400;0,700;1,300;1,400;1,700&display=swap" rel="stylesheet">
   <style>
+    /* --- "A Lot More Nicer" - Enhanced Creamy Design --- */
     :root {
-      --bg-main: #F0E6D2; /* Deeper Cream */
-      --bg-card: #FAF6EE; /* Lighter Cream for cards */
-      --text-main: #544B3D; /* Darker Brown/Gray for main text */
-      --text-headings: #7D5A44; /* Muted, Richer Brown for headings */
-      --text-meta: #8C7B70; /* Softer Brown for meta/less prominent text */
-      --accent-border: #D6CBBB; /* Mid Beige-Brown for borders, accents */
-      --accent-button-bg: #E9E0D4;
-      --accent-button-hover-bg: #D6CBBB;
-      --accent-active-bg: #7D5A44;
-      --accent-active-text: #FAF6EE;
-      --link-color: #6A4C3A;
-      --link-hover-color: #7D5A44;
+      /* Core Palette - Warmer, Richer, More Cohesive */
+      --bg-main: #FDF6EC; /* Lighter, very warm cream for the overall background */
+      --bg-card: #FFFFFF; /* Clean white for cards, allows for better shadow play */
+      --bg-modal: #FCFBF9; /* Slightly off-white for modal */
+      
+      --text-headings: #5D4037; /* Rich, slightly desaturated brown */
+      --text-main: #4E342E; /* Darker, grounded brown for body text */
+      --text-meta: #795548; /* Softer brown for meta text, good readability */
+      
+      --accent-border: #D7CCC8; /* Softer, more subtle border color */
+      --accent-highlight: #B08D57; /* Muted Gold/Brass - kept as it's a good accent */
+      --accent-button-bg: #F5F0E6; /* Light beige for secondary buttons/tags */
+      --accent-button-hover-bg: #E0D8CD; /* Darker beige for hover */
+
+      --accent-active-bg: var(--text-headings); /* Using heading color for strong active states */
+      --accent-active-text: var(--bg-card); /* White text on active elements */
+      
+      --link-color: var(--text-headings);
+      --link-hover-color: var(--accent-highlight);
+
+      /* RGB versions for consistent RGBA usage */
+      --text-main-rgb: 78, 52, 46;
+      --text-headings-rgb: 93, 64, 55;
+      --accent-highlight-rgb: 176, 141, 87;
+      --black-rgb: 0,0,0;
+
+      --animation-speed-fast: 0.2s;
+      --animation-speed-medium: 0.35s;
+      --animation-speed-slow: 0.5s;
+      --easing-smooth: cubic-bezier(0.4, 0, 0.2, 1);
+      --easing-bounce: cubic-bezier(0.68, -0.55, 0.265, 1.55);
+      
+      --font-heading: 'Merriweather', Georgia, 'Times New Roman', Times, serif;
+      --font-body: 'Lato', -apple-system, BlinkMacSystemFont, "San Francisco", "SF Pro Text", "SF UI Text", "Helvetica Neue", Helvetica, Arial, sans-serif;
+      
+      --shadow-sm: 0 2px 4px rgba(var(--text-main-rgb), 0.04);
+      --shadow-md: 0 4px 10px rgba(var(--text-main-rgb), 0.06);
+      --shadow-lg: 0 10px 25px rgba(var(--text-main-rgb), 0.08);
+      --shadow-xl: 0 15px 35px rgba(var(--text-main-rgb), 0.1);
+      --shadow-highlight: 0 6px 15px rgba(var(--accent-highlight-rgb), 0.2);
     }
+
+    *, *::before, *::after {
+        box-sizing: border-box;
+    }
+
     body {
-      font-family: -apple-system, BlinkMacSystemFont, "San Francisco", "SF Pro Text", "SF UI Text", "Helvetica Neue", Helvetica, Arial, sans-serif;
-      line-height: 1.7;
-      padding: 1.5rem;
-      max-width: 1024px;
+      font-family: var(--font-body);
+      font-weight: 400; /* Regular weight for Lato */
+      line-height: 1.8; /* Increased for better readability */
+      padding: 3rem; /* More generous padding */
+      max-width: 1200px; /* Wider content area */
       margin: 0 auto;
       background-color: var(--bg-main);
       color: var(--text-main);
+      transition: background-color var(--animation-speed-medium) var(--easing-smooth);
+      overflow-x: hidden;
+      letter-spacing: 0.1px; /* Subtle letter spacing */
     }
-    header, footer { text-align: center; margin-bottom: 2.5rem; }
-    h1 { font-size: 2.8rem; font-weight: 600; margin-bottom: 0.75rem; color: var(--text-headings); }
-    header p { font-size: 1.15rem; color: var(--text-meta); }
-    nav { display: flex; justify-content: center; gap: 1rem; margin: 1.5rem 0 2.5rem; padding-bottom: 1rem; border-bottom: 2px solid var(--accent-border); }
-    nav a { text-decoration: none; color: var(--text-meta); padding: 0.5rem 1rem; border-radius: 0.375rem; font-weight: 500; transition: background-color 0.2s ease, color 0.2s ease; }
-    nav a:hover, nav a.active { background-color: var(--accent-border); color: var(--text-main); }
-    hr.section-divider { border: none; height: 2px; background-color: var(--accent-border); margin: 2.5rem 0; }
-    section { margin-bottom: 3rem; }
-    .section-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; padding-bottom: 0.75rem; border-bottom: 2px solid var(--accent-border); }
-    .section-header h2 { font-size: 2.2rem; font-weight: 600; margin-bottom: 0; color: var(--text-headings); }
-    .controls button, .tag-filter-container button.tag { background-color: var(--accent-button-bg); color: var(--text-headings); border: 1px solid var(--accent-border); padding: 0.5rem 1rem; margin-left: 0.5rem; border-radius: 0.375rem; cursor: pointer; font-size: 0.9rem; font-weight: 500; transition: background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease; }
-    .controls button:hover, .tag-filter-container button.tag:hover { background-color: var(--accent-button-hover-bg); border-color: #C9BDB0; color: var(--text-main); }
-    .tag-filter-container { margin-bottom: 1.5rem; padding: 0.75rem; display: flex; flex-wrap: wrap; gap: 0.6rem; align-items: center; background-color: var(--bg-main); border-radius: 0.5rem; border: 1px solid var(--accent-border); }
-    .tag-filter-container .tag-filter-label { font-weight: 600; margin-right: 0.75rem; color: var(--text-headings); }
-    .tag-filter-container button.active-tag-filter { background-color: var(--accent-active-bg); color: var(--accent-active-text); border-color: #7D5A44; font-weight: 600; }
-    ul.paper-list { list-style: none; display: grid; gap: 2rem; padding: 0; }
-    li.paper-entry { border: 1px solid var(--accent-border); padding: 1.5rem; border-radius: 0.6rem; background-color: var(--bg-card); box-shadow: 0 4px 8px rgba(125, 90, 68, 0.08); display: flex; flex-direction: column; transition: box-shadow 0.2s ease, transform 0.2s ease; cursor: pointer; }
-    li.paper-entry:hover { box-shadow: 0 6px 12px rgba(125, 90, 68, 0.12); transform: translateY(-3px); }
+
+    header, footer { text-align: center; margin-bottom: 4rem; }
+    h1 {
+      font-family: var(--font-heading);
+      font-size: 3.4rem; /* Slightly larger H1 */
+      font-weight: 700; /* Merriweather bold */
+      letter-spacing: -0.8px; /* Tighter for display fonts */
+      margin-bottom: 1.2rem;
+      color: var(--text-headings);
+      text-shadow: 1px 1px 3px rgba(var(--text-main-rgb), 0.05);
+    }
+    header p { font-size: 1.25rem; color: var(--text-meta); margin-bottom: 2.5rem; font-style: italic; font-weight: 300; }
+
+    nav {
+      display: flex;
+      justify-content: center;
+      gap: 1rem; /* Reduced gap as padding on items increased */
+      margin: 2.5rem 0 3.5rem;
+      padding: 0.5rem;
+      border-bottom: 1px solid var(--accent-border);
+      background-color: rgba(var(--black-rgb), 0.02); /* Subtle background for nav area */
+      border-radius: 8px;
+    }
+    nav a {
+      text-decoration: none;
+      color: var(--text-meta);
+      padding: 0.8rem 1.6rem; /* More padding */
+      border-radius: 6px;
+      font-weight: 700; /* Lato bold */
+      font-family: var(--font-body);
+      transition: background-color var(--animation-speed-fast) var(--easing-smooth),
+                  color var(--animation-speed-fast) var(--easing-smooth),
+                  transform var(--animation-speed-fast) var(--easing-smooth),
+                  box-shadow var(--animation-speed-fast) var(--easing-smooth);
+    }
+    nav a:hover {
+      background-color: var(--accent-button-bg);
+      color: var(--text-headings);
+      transform: translateY(-2px);
+    }
+    nav a.active {
+      background-color: var(--accent-highlight);
+      color: var(--bg-card); /* White text on active gold */
+      transform: translateY(-2px);
+      box-shadow: var(--shadow-highlight);
+    }
+
+    hr.section-divider {
+      border: none;
+      height: 1px; /* Thinner */
+      background-color: var(--accent-border);
+      margin: 4.5rem 0; /* More space around dividers */
+    }
+
+    section { margin-bottom: 4rem; } /* Increased section margin */
+
+    .section-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 2.5rem;
+      padding-bottom: 1.2rem;
+      border-bottom: 1px solid var(--accent-border);
+    }
+    .section-header h2 {
+      font-family: var(--font-heading);
+      font-size: 2.8rem; /* Larger section titles */
+      font-weight: 700;
+      letter-spacing: -0.6px;
+      margin-bottom: 0;
+      color: var(--text-headings);
+      text-shadow: 1px 1px 2px rgba(var(--text-main-rgb), 0.05);
+    }
+
+    .controls button, .tag-filter-container button.tag {
+      background-color: transparent;
+      color: var(--text-meta);
+      border: 1.5px solid var(--accent-border);
+      padding: 0.7rem 1.4rem;
+      margin-left: 0.8rem;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 0.9rem;
+      font-weight: 700; /* Lato bold */
+      font-family: var(--font-body);
+      transition: all var(--animation-speed-fast) var(--easing-smooth);
+    }
+    .controls button:hover, .tag-filter-container button.tag:hover {
+      background-color: var(--accent-highlight);
+      border-color: var(--accent-highlight);
+      color: var(--bg-card);
+      transform: translateY(-3px) scale(1.03);
+      box-shadow: var(--shadow-highlight);
+    }
+
+    .tag-filter-container {
+      margin-bottom: 2.5rem;
+      padding: 1.2rem;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.8rem;
+      align-items: center;
+      background-color: rgba(var(--black-rgb),0.015); /* Subtle background for filter area */
+      border-radius: 8px;
+      border: 1px solid var(--accent-border);
+      box-shadow: inset 0 1px 2px rgba(var(--black-rgb),0.03);
+    }
+    .tag-filter-container .tag-filter-label {
+      font-family: var(--font-body);
+      font-weight: 700;
+      margin-right: 1rem;
+      color: var(--text-headings);
+      font-size: 0.95rem;
+    }
+    .tag-filter-container button.active-tag-filter {
+      background-color: var(--accent-active-bg);
+      color: var(--accent-active-text);
+      border-color: var(--accent-active-bg);
+      font-weight: 700;
+    }
+    .tag-filter-container button.tag.show-all { /* Specific styling for show-all if needed */
+        /* border-style: dashed; */ /* Example */
+    }
+
+
+    ul.paper-list {
+      list-style: none;
+      display: grid;
+      gap: 3rem; /* Increased gap */
+      padding: 0;
+    }
+
+    li.paper-entry {
+      border: 1px solid var(--accent-border); /* Softer initial border */
+      padding: 2.5rem; /* More padding in cards */
+      border-radius: 12px; /* More rounded */
+      background-color: var(--bg-card);
+      box-shadow: var(--shadow-md);
+      display: flex;
+      flex-direction: column;
+      cursor: pointer;
+      opacity: 0;
+      transform: translateY(30px);
+      transition: opacity var(--animation-speed-medium) var(--easing-smooth),
+                  transform var(--animation-speed-medium) var(--easing-smooth),
+                  box-shadow var(--animation-speed-fast) var(--easing-smooth),
+                  border-color var(--animation-speed-fast) var(--easing-smooth);
+    }
+    li.paper-entry.in-view {
+      opacity: 1;
+      transform: translateY(0);
+    }
+    li.paper-entry:hover {
+      box-shadow: var(--shadow-lg);
+      transform: translateY(-8px) scale(1.015); /* Enhanced lift */
+      border-color: var(--accent-highlight); /* Highlight border on hover */
+    }
     li.paper-entry.hidden { display: none; }
-    .paper-title a, .modal-paper-title { font-weight: 600; font-size: 1.25rem; color: var(--link-color); text-decoration: none; }
-    .paper-title a:hover { text-decoration: underline; color: var(--link-hover-color); }
-    .paper-meta, .modal-paper-meta { font-size: 0.85rem; color: var(--text-meta); margin-bottom: 0.75rem; }
-    .paper-tags, .modal-paper-tags { margin-bottom: 1rem; display: flex; flex-wrap: wrap; gap: 0.5rem; }
-    .paper-tags .tag, .modal-paper-tags .tag { background-color: #EFEAE0; color: var(--text-meta); padding: 0.25rem 0.6rem; border-radius: 0.25rem; font-size: 0.8rem; border: 1px solid var(--accent-border); }
-    .paper-notes, .modal-paper-notes { font-size: 1rem; color: var(--text-main); margin-top: 1rem; padding-left: 0.75rem; border-left: 3px solid var(--accent-border); }
-    .paper-notes strong, .modal-paper-notes strong { font-weight: 600; color: var(--text-headings); }
-    .paper-detailed-info h4, .modal-detailed-info h4 { font-size: 1.1em; color: var(--text-headings); margin-top: 1.2em; margin-bottom: 0.5em; }
-    .paper-detailed-info p, .modal-detailed-info p { margin-bottom: 0.8em; }
-    .paper-actions { margin-top: 1.2rem; }
-    .paper-actions .bibtex-btn { background-color: var(--accent-button-bg); color: var(--text-headings); border: 1px solid var(--accent-border); }
-    .paper-actions .bibtex-btn:hover { background-color: var(--accent-button-hover-bg); color: var(--text-main); }
-    mjx-container[jax="SVG"][display="true"] { display: block; overflow-x: auto; padding: 0.75em 0; margin: 0.75em 0; text-align: center; }
-    footer { font-size: 0.9rem; color: var(--text-meta); margin-top: 3rem; padding-top: 1.5rem; border-top: 2px solid var(--accent-border); }
-    .modal { display: none; position: fixed; z-index: 1000; left: 0; top: 0; width: 100%; height: 100%; overflow: auto; background-color: rgba(0,0,0,0.6); align-items: center; justify-content: center; }
-    .modal.active { display: flex; }
-    .modal-content { background-color: var(--bg-card); margin: auto; padding: 2rem; border: 1px solid var(--accent-border); border-radius: 0.8rem; width: 85%; max-width: 800px; box-shadow: 0 5px 15px rgba(0,0,0,0.2); position: relative; max-height: 90vh; overflow-y: auto; }
-    .modal-close-btn { color: var(--text-meta); position: absolute; top: 1rem; right: 1.5rem; font-size: 2rem; font-weight: bold; line-height: 1; }
-    .modal-close-btn:hover, .modal-close-btn:focus { color: var(--text-main); text-decoration: none; cursor: pointer; }
-    .modal-paper-link { display: inline-block; margin-top: 1.5rem; padding: 0.6rem 1.2rem; background-color: var(--accent-active-bg); color: var(--accent-active-text); text-decoration: none; border-radius: 0.375rem; font-weight: 500; }
-    .modal-paper-link:hover { background-color: #6A4C3A; }
-    @media (min-width: 768px) { ul.paper-list { grid-template-columns: repeat(auto-fill, minmax(380px, 1fr)); } }
+
+    .paper-title a, .modal-paper-title {
+      font-family: var(--font-heading);
+      font-weight: 700;
+      font-size: 1.7rem; /* Increased title size */
+      color: var(--text-headings);
+      text-decoration: none;
+      transition: color var(--animation-speed-fast) var(--easing-smooth);
+    }
+    .paper-title a:hover {
+      text-decoration: none;
+      color: var(--accent-highlight);
+    }
+    .paper-meta, .modal-paper-meta {
+      font-size: 0.95rem;
+      color: var(--text-meta);
+      margin-bottom: 1.5rem; /* Increased margin */
+      font-weight: 400;
+    }
+    .paper-tags, .modal-paper-tags {
+      margin-bottom: 1.5rem; /* Increased margin */
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.7rem;
+    }
+    .paper-tags .tag, .modal-paper-tags .tag {
+      background-color: transparent; /* Cleaner look */
+      color: var(--text-meta);
+      padding: 0.4rem 0.9rem; /* Adjusted padding */
+      border-radius: 16px; /* Pill-shaped tags */
+      font-size: 0.8rem;
+      font-weight: 700; /* Lato bold */
+      border: 1px solid var(--accent-border);
+      transition: background-color var(--animation-speed-fast) var(--easing-smooth), color var(--animation-speed-fast) var(--easing-smooth), border-color var(--animation-speed-fast) var(--easing-smooth);
+    }
+    .paper-tags .tag:hover, .modal-paper-tags .tag:hover {
+      background-color: var(--accent-highlight);
+      color: var(--bg-card);
+      border-color: var(--accent-highlight);
+    }
+    .paper-notes, .modal-paper-notes {
+      font-size: 1.05rem; /* Slightly larger notes */
+      color: var(--text-main);
+      margin-top: 1.8rem; /* Increased margin */
+      padding-left: 1.5rem;
+      border-left: 3px solid var(--accent-highlight); /* Thicker, more prominent border */
+      font-weight: 400; /* Regular weight for notes */
+    }
+    .paper-notes strong, .modal-paper-notes strong {
+      font-weight: 700; /* Lato bold */
+      font-family: var(--font-body); /* Ensure body font for strong */
+      color: var(--text-headings);
+    }
+    .paper-detailed-info h4, .modal-detailed-info h4 {
+      font-family: var(--font-heading);
+      font-size: 1.3em; /* Larger sub-headings */
+      color: var(--text-headings);
+      margin-top: 2em;
+      margin-bottom: 0.8em;
+    }
+    .paper-detailed-info p, .modal-detailed-info p {
+      margin-bottom: 1.2em;
+      line-height: 1.75; /* Good line height for paragraphs */
+    }
+
+    mjx-container[jax="SVG"][display="true"] {
+      display: block;
+      overflow-x: auto;
+      padding: 1.5em; /* More padding */
+      margin: 1.5em 0;
+      text-align: center;
+      background: rgba(var(--text-main-rgb), 0.02); /* Themed background */
+      border-radius: 8px; /* Rounded corners */
+      border: 1px solid var(--accent-border);
+      box-shadow: inset 0 1px 3px rgba(var(--text-main-rgb), 0.04);
+    }
+
+    footer {
+      font-size: 0.9rem;
+      color: var(--text-meta);
+      margin-top: 5rem; /* Increased top margin */
+      padding-top: 3rem; /* Increased top padding */
+      border-top: 1px solid var(--accent-border);
+    }
+
+    /* Modal Styles with Enhanced Animation & Appearance */
+    .modal {
+        display: none;
+        position: fixed;
+        z-index: 1000;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        overflow: hidden;
+        background-color: rgba(var(--text-main-rgb), 0.85); /* Darker, richer backdrop */
+        align-items: center;
+        justify-content: center;
+        opacity: 0;
+        visibility: hidden;
+        transition: opacity var(--animation-speed-medium) var(--easing-smooth), visibility 0s var(--animation-speed-medium) var(--easing-smooth);
+    }
+    .modal.active {
+        display: flex;
+        opacity: 1;
+        visibility: visible;
+        transition-delay: 0s;
+    }
+    .modal-content {
+        background-color: var(--bg-modal);
+        margin: auto;
+        padding: 3rem; /* Generous padding */
+        border: 1px solid var(--accent-border); /* Softer border */
+        border-radius: 12px; /* Consistent rounded corners */
+        width: 90%;
+        max-width: 900px; /* Wider modal */
+        box-shadow: var(--shadow-xl); /* Richer shadow */
+        position: relative;
+        max-height: 90vh;
+        overflow-y: auto;
+        transform: translateY(20px) scale(0.97);
+        opacity: 0;
+        transition: transform var(--animation-speed-medium) var(--easing-bounce), opacity var(--animation-speed-medium) var(--easing-smooth);
+        transition-delay: 0.05s;
+    }
+    .modal.active .modal-content {
+        transform: translateY(0) scale(1);
+        opacity: 1;
+    }
+    .modal-close-btn {
+      color: var(--text-meta);
+      position: absolute;
+      top: 1.2rem; /* Adjusted position */
+      right: 1.5rem; /* Adjusted position */
+      font-size: 2.8rem; /* Larger close icon */
+      font-weight: 300; /* Lighter weight for 'x' */
+      line-height: 1;
+      transition: color var(--animation-speed-fast) var(--easing-smooth), transform var(--animation-speed-fast) var(--easing-smooth);
+    }
+    .modal-close-btn:hover, .modal-close-btn:focus {
+      color: var(--text-main);
+      text-decoration: none;
+      cursor: pointer;
+      transform: scale(1.15) rotate(90deg); /* Added rotate for a bit of flair */
+    }
+    .modal-paper-link {
+      display: inline-block;
+      margin-top: 2.5rem; /* Increased margin */
+      padding: 0.9rem 2rem; /* Larger button */
+      background-color: var(--accent-highlight);
+      color: var(--bg-card) !important; /* Ensure white text */
+      text-decoration: none;
+      border-radius: 6px;
+      font-weight: 700; /* Lato bold */
+      font-family: var(--font-body);
+      transition: background-color var(--animation-speed-fast) var(--easing-smooth), transform var(--animation-speed-fast) var(--easing-smooth), box-shadow var(--animation-speed-fast) var(--easing-smooth);
+    }
+    .modal-paper-link:hover {
+      background-color: var(--text-headings); /* Darken on hover */
+      transform: translateY(-3px) scale(1.03);
+      box-shadow: 0 5px 12px rgba(var(--text-headings-rgb), 0.25);
+    }
+
+    @media (min-width: 768px) {
+      ul.paper-list {
+        grid-template-columns: repeat(auto-fill, minmax(450px, 1fr)); /* Wider cards on larger screens, adjusted minmax */
+      }
+    }
+    @media (max-width: 600px) { /* Responsive adjustments for smaller screens */
+        body { padding: 1.5rem; }
+        h1 { font-size: 2.5rem; }
+        .section-header h2 { font-size: 2rem; }
+        nav { flex-direction: column; align-items: center; gap: 0.5rem; padding: 1rem; }
+        nav a { width: 100%; text-align: center; }
+        .controls button, .tag-filter-container button.tag { margin-left: 0; margin-bottom: 0.5rem; width: calc(50% - 0.4rem); } /* Adjust button layout */
+        .controls { display: flex; flex-wrap: wrap; justify-content: space-between; }
+        .paper-title a, .modal-paper-title { font-size: 1.4rem; }
+        li.paper-entry { padding: 1.5rem; }
+        .modal-content { padding: 1.5rem; max-width: 95%; }
+    }
   </style>
   <script> MathJax = { tex: { inlineMath: [['$', '$'], ['\\(', '\\)']], displayMath: [['$$', '$$'], ['\\[', '\\]']] }, svg: { fontCache: 'global' } }; </script>
   <script type="text/javascript" id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"></script>
@@ -87,275 +425,238 @@
 
   <hr class="section-divider"/>
   <section id="ai">
-    <div class="section-header"><h2>Artificial Intelligence</h2> <div class="controls"><button onclick="sortPapers('ai-papers', 'asc')">Year ↑</button><button onclick="sortPapers('ai-papers', 'desc')">Year ↓</button></div>
+    <div class="section-header"><h2>Artificial Intelligence</h2>
+      <div class="controls"><button onclick="sortPapers('ai-papers', 'asc')">Year ↑</button><button onclick="sortPapers('ai-papers', 'desc')">Year ↓</button></div>
     </div>
     <div class="tag-filter-container" id="ai-tag-filters"><span class="tag-filter-label">Filter:</span><button id="show-all-tags-ai" class="tag show-all" onclick="filterPapersByTag('ai-papers', null, 'ai-tag-filters')">Show All</button></div>
     <ul class="paper-list" id="ai-papers">
-      <li class="paper-entry" data-year="2017" data-tags='["Transformers", "NLP", "Deep Learning"]' data-link="https://arxiv.org/abs/1706.03762">
-        <div class="paper-title">Attention Is All You Need</div>
+      <li class="paper-entry" data-year="2012" data-tags='["CNNs", "ImageNet", "Deep Learning", "AlexNet"]' data-link="https://papers.nips.cc/paper/2012/file/c399862d3b9d6b76c8436e924a68c45b-Paper.pdf">
+        <div class="paper-title"><a href="https://papers.nips.cc/paper/2012/file/c399862d3b9d6b76c8436e924a68c45b-Paper.pdf" target="_blank" rel="noopener noreferrer">ImageNet Classification with Deep Convolutional Neural Networks</a></div>
+        <div class="paper-meta">Krizhevsky, Sutskever & Hinton, 2012</div>
+        <div class="paper-tags"><span class="tag">CNNs</span><span class="tag">ImageNet</span><span class="tag">AlexNet</span><span class="tag">Deep Learning</span></div>
+        <div class="paper-notes"><strong>My Take:</strong> AlexNet! The paper that arguably kicked off the deep learning revolution in computer vision by winning ImageNet LSVRC-2012. Showed GPUs + CNNs = magic.</div>
+        <div class="paper-detailed-info" style="display: none;">
+            <h4>Abstract Summary</h4>
+            <p>We trained a large, deep convolutional neural network to classify the 1.2 million high-resolution images in the ImageNet LSVRC-2010 contest into the 1000 different classes. On the test data, we achieved top-1 and top-5 error rates of 37.5% and 17.0% which is considerably better than the previous state-of-the-art. The neural network, which has 60 million parameters and 650,000 neurons, consists of five convolutional layers, some of which are followed by max-pooling layers, and three fully-connected layers with a final 1000-way softmax.</p>
+            <h4>Key Innovations & Insights</h4>
+            <p>1. <strong>ReLU Activation:</strong> Used Rectified Linear Units ($f(x) = \max(0, x)$) which trained several times faster than traditional saturating activation functions like tanh or sigmoid.</p>
+            <p>2. <strong>GPU Training:</strong> Crucially, they utilized NVIDIA GPUs for training, which was essential for handling the computational load of such a large model and dataset. This demonstrated the feasibility of training very deep networks.</p>
+            <p>3. <strong>Dropout:</strong> Implemented dropout in the fully-connected layers as a regularization technique to prevent overfitting. Dropout randomly sets a fraction of neuron activations to zero during training.</p>
+            <p>4. <strong>Data Augmentation:</strong> Employed extensive data augmentation techniques (e.g., image translations, horizontal reflections, PCA color augmentation) to artificially increase the size of the training dataset and improve generalization.</p>
+            <p>5. <strong>Local Response Normalization (LRN):</strong> A scheme that normalizes neuron activities in a local neighborhood across feature maps, inspired by lateral inhibition in neuroscience, though its benefits have been debated since.</p>
+            <p>The architecture itself, while seemingly standard now, was a significant step in scale and depth at the time.</p>
+        </div>
+      </li>
+      <li class="paper-entry" data-year="2017" data-tags='["Transformers", "NLP", "Deep Learning", "Attention"]' data-link="https://arxiv.org/abs/1706.03762">
+        <div class="paper-title"><a href="https://arxiv.org/abs/1706.03762" target="_blank" rel="noopener noreferrer">Attention Is All You Need</a></div>
         <div class="paper-meta">Vaswani et&nbsp;al., 2017</div>
-        <div class="paper-tags"><span class="tag">Transformers</span><span class="tag">NLP</span><span class="tag">Deep Learning</span></div>
-        <div class="paper-notes"><strong>My Take:</strong> Changed NLP! Ditching recurrence for self-attention was revolutionary.</div>
-        <div class="paper-detailed-info" style="display: none;">
-          <h4>Abstract Summary</h4>
-          <p>The dominant sequence transduction models are based on complex recurrent or convolutional neural networks in an encoder-decoder architecture. The best performing models also connect the encoder and decoder through an attention mechanism. We propose a new simple network architecture, the Transformer, based solely on attention mechanisms, dispensing with recurrence and convolutions entirely. Experiments on two machine translation tasks show these models to be superior in quality while being more parallelizable and requiring significantly less time to train.</p>
-          <h4>Further Insights & Key Math</h4>
-          <p>The core is the scaled dot-product attention:</p>
-          $$ \text{Attention}(Q, K, V) = \text{softmax}\left(\frac{QK^T}{\sqrt{d_k}}\right)V $$
-          <p>They also introduced Multi-Head Attention, allowing the model to jointly attend to information from different representation subspaces at different positions. An attention head computes: </p>
-          $$ \text{head}_i = \text{Attention}(QW_i^Q, KW_i^K, VW_i^V) $$
-          <p>where $W_i^Q, W_i^K, W_i^V$ are learned projection matrices. The outputs of the heads are concatenated and projected again.</p>
-        </div>
+        <div class="paper-tags"><span class="tag">Transformers</span><span class="tag">NLP</span><span class="tag">Deep Learning</span><span class="tag">Attention</span></div>
+        <div class="paper-notes"><strong>My Take:</strong> This one completely changed the game for NLP! The Transformer architecture and that "scaled dot-product attention" mechanism. Foundation for most modern LLMs.</div>
+        <div class="paper-detailed-info" style="display: none;"><h4>Abstract Summary</h4><p>The dominant sequence transduction models are based on complex recurrent or convolutional neural networks in an encoder-decoder architecture. The Transformer, our proposed model, eschews recurrence and instead relies entirely on an attention mechanism to draw global dependencies between input and output. The Transformer allows for significantly more parallelization and can reach a new state of the art in translation quality after being trained for as little as twelve hours on eight P100 GPUs.</p><h4>Further Insights & Key Math</h4><p>The core of the Transformer is the scaled dot-product attention mechanism:</p>$$ \text{Attention}(Q, K, V) = \text{softmax}\left(\frac{QK^T}{\sqrt{d_k}}\right)V $$<p>Where $Q$ (Query), $K$ (Key), and $V$ (Value) are matrices derived from the input embeddings, and $d_k$ is the dimension of the keys. This allows the model to weigh the importance of different parts of the input sequence when processing information.</p><p>Additionally, Multi-Head Attention is used to allow the model to jointly attend to information from different representation subspaces at different positions:</p>$$ \text{MultiHead}(Q, K, V) = \text{Concat}(\text{head}_1, ..., \text{head}_h)W^O $$ $$ \text{where head}_i = \text{Attention}(QW_i^Q, KW_i^K, VW_i^V) $$<p>The architecture also introduced positional encodings to inject information about the relative or absolute position of the tokens in the sequence, as the self-attention mechanism itself does not inherently process order.</p></div>
       </li>
-      <li class="paper-entry" data-year="2014" data-tags='["Generative Models", "Deep Learning"]' data-link="https://arxiv.org/abs/1406.2661">
-        <div class="paper-title">Generative Adversarial Nets</div>
+      <li class="paper-entry" data-year="2014" data-tags='["Generative Models", "Deep Learning", "GANs"]' data-link="https://arxiv.org/abs/1406.2661">
+        <div class="paper-title"><a href="https://arxiv.org/abs/1406.2661" target="_blank" rel="noopener noreferrer">Generative Adversarial Nets</a></div>
         <div class="paper-meta">Goodfellow et&nbsp;al., 2014</div>
-        <div class="paper-tags"><span class="tag">Generative Models</span><span class="tag">Deep Learning</span></div>
-        <div class="paper-notes"><strong>My Take:</strong> GANs! Two networks in a minimax game. Unlocked so much creativity.</div>
-        <div class="paper-detailed-info" style="display: none;">
-            <h4>Abstract Summary</h4>
-            <p>We propose a new framework for estimating generative models via an adversarial process, in which we simultaneously train two models: a generative model G that captures the data distribution, and a discriminative model D that estimates the probability that a sample came from the training data rather than G. The training procedure for G is to maximize the probability of D making a mistake. This framework corresponds to a minimax two-player game. In the space of arbitrary functions G and D, a unique solution exists, with G recovering the training data distribution and D equal to 1/2 everywhere.</p>
-            <h4>Further Insights & Key Math</h4>
-            <p>The minimax game objective function is central:</p>
-            $$ \min_G \max_D V(D,G) = \mathbb{E}_{x \sim p_{\text{data}}(x)}[\log D(x)] + \mathbb{E}_{z \sim p_z(z)}[\log(1 - D(G(z)))] $$
-            <p>The generator $G(z; \theta_g)$ maps noise $z$ to data space, and the discriminator $D(x; \theta_d)$ outputs the probability that $x$ is real. Training involves alternating updates to $D$ (to better distinguish real from fake) and $G$ (to better fool $D$).</p>
-        </div>
+        <div class="paper-tags"><span class="tag">Generative Models</span><span class="tag">Deep Learning</span><span class="tag">GANs</span></div>
+        <div class="paper-notes"><strong>My Take:</strong> GANs! Two networks (Generator & Discriminator) locked in a minimax game. This framework unlocked incredible creativity in AI image generation and beyond.</div>
+        <div class="paper-detailed-info" style="display: none;"><h4>Abstract Summary</h4><p>We propose a new framework for estimating generative models via an adversarial process, in which we simultaneously train two models: a generative model G that captures the data distribution, and a discriminative model D that estimates the probability that a sample came from the training data rather than G. The training procedure for G is to maximize the probability of D making a mistake. This framework corresponds to a minimax two-player game. In the space of arbitrary functions G and D, a unique solution exists, with G recovering the training data distribution and D equal to 1/2 everywhere.</p><h4>Further Insights & Key Math</h4><p>The core of GANs is the value function $V(D,G)$ that the two networks compete to optimize:</p>$$ \min_G \max_D V(D,G) = \mathbb{E}_{x \sim p_{\text{data}}(x)}[\log D(x)] + \mathbb{E}_{z \sim p_z(z)}[\log(1 - D(G(z)))] $$<p>Here:
+            <ul>
+                <li>$G(z)$ is the generator's output when given noise $z$.</li>
+                <li>$D(x)$ is the discriminator's estimate of the probability that real data instance $x$ is real.</li>
+                <li>$p_{\text{data}}(x)$ is the distribution of real data.</li>
+                <li>$p_z(z)$ is the distribution of the noise input to the generator.</li>
+            </ul>
+        The discriminator $D$ tries to maximize this objective (correctly classify real and fake samples), while the generator $G$ tries to minimize it (fool the discriminator).</p></div>
       </li>
-      <li class="paper-entry" data-year="2018" data-tags='["NLP", "Transformers", "BERT"]' data-link="https://arxiv.org/abs/1810.04805">
-        <div class="paper-title">BERT: Pre-training of Deep Bidirectional Transformers for Language Understanding</div>
-        <div class="paper-meta">Devlin, Chang, Lee & Toutanova, 2018</div>
-        <div class="paper-tags"><span class="tag">NLP</span><span class="tag">Transformers</span><span class="tag">BERT</span></div>
-        <div class="paper-notes">
-          <strong>My Take:</strong> BERT showed the power of pre-training large Transformer models on massive text corpora. The bidirectional nature using Masked Language Model (MLM) was key.
-        </div>
-        <div class="paper-detailed-info" style="display: none;">
-            <h4>Abstract Summary</h4>
-            <p>BERT stands for Bidirectional Encoder Representations from Transformers. Unlike previous models, BERT is designed to pre-train deep bidirectional representations from unlabeled text by jointly conditioning on both left and right context in all layers. As a result, the pre-trained BERT model can be fine-tuned with just one additional output layer to create state-of-the-art models for a wide range of tasks, such as question answering and language inference, without substantial task-specific architecture modifications.</p>
-            <h4>Further Insights & Key Math</h4>
-            <p>BERT uses two pre-training tasks:</p>
-            <p>1. <strong>Masked Language Model (MLM):</strong> Randomly masks some percentage of input tokens, and the objective is to predict the original vocabulary id of the masked word based only on its context. This allows for bidirectional context learning. Example: `Input: the man went to the [MASK] store. Labels: [MASK] = grocery`</p>
-            <p>2. <strong>Next Sentence Prediction (NSP):</strong> Predicts whether two sentences A and B are consecutive in the original text. This helps BERT understand sentence relationships.
-            The input representation for BERT involves summing Token Embeddings, Segment Embeddings (to distinguish sentences A and B), and Position Embeddings.</p>
-        </div>
-      </li>
-      <li class="paper-entry" data-year="2015" data-tags='["Deep Learning", "CNNs", "ResNet"]' data-link="https://arxiv.org/abs/1512.03385">
-        <div class="paper-title">Deep Residual Learning for Image Recognition</div>
+       <li class="paper-entry" data-year="2015" data-tags='["Deep Learning", "CNNs", "ResNet", "Image Recognition"]' data-link="https://arxiv.org/abs/1512.03385">
+        <div class="paper-title"><a href="https://arxiv.org/abs/1512.03385" target="_blank" rel="noopener noreferrer">Deep Residual Learning for Image Recognition</a></div>
         <div class="paper-meta">He, Zhang, Ren & Sun, 2015</div>
-        <div class="paper-tags"><span class="tag">Deep Learning</span><span class="tag">CNNs</span><span class="tag">ResNet</span></div>
-        <div class="paper-notes"><strong>My Take:</strong> ResNets tackled vanishing gradients in very deep networks with residual blocks $H(x) = F(x) + x$.</div>
-        <div class="paper-detailed-info" style="display: none;">
-            <h4>Abstract Summary</h4>
-            <p>Deeper neural networks are more difficult to train. We present a residual learning framework to ease the training of networks that are substantially deeper than those used previously. We explicitly reformulate the layers as learning residual functions with reference to the layer inputs, instead of learning unreferenced functions. We provide comprehensive empirical evidence showing that these residual networks are easier to optimize, and can gain accuracy from considerably increased depth.</p>
-            <h4>Further Insights & Key Math</h4>
-            <p>The core idea is the "shortcut connection" or "skip connection". If the desired underlying mapping is $H(x)$, the stacked non-linear layers are made to fit another mapping $F(x) := H(x) - x$. The original mapping is then recast into $F(x) + x$.
-            This formulation is realized by feedforward neural networks with shortcut connections. These connections simply perform identity mapping, and their outputs are added to the outputs of the stacked layers.
-            A building block is defined as:</p>
+        <div class="paper-tags"><span class="tag">Deep Learning</span><span class="tag">CNNs</span><span class="tag">ResNet</span><span class="tag">Image Recognition</span></div>
+        <div class="paper-notes"><strong>My Take:</strong> ResNets were a breakthrough for training *very* deep neural networks. They tackled the vanishing gradient problem by introducing "skip connections" or residual blocks, allowing networks of 100+ layers.</div>
+        <div class="paper-detailed-info" style="display: none;"><h4>Abstract Summary</h4><p>Deeper neural networks are more difficult to train. We present a residual learning framework to ease the training of networks that are substantially deeper than those used previously. We explicitly reformulate the layers as learning residual functions with reference to the layer inputs, instead of learning unreferenced functions. We provide comprehensive empirical evidence showing that these residual networks are easier to optimize, and can gain accuracy from considerably increased depth. On the ImageNet dataset we evaluate residual nets with a depth of up to 152 layers.</p><h4>Further Insights & Key Math</h4><p>The core idea is the "shortcut connection" or "skip connection". Instead of learning a direct mapping $H(x)$, a building block learns a residual mapping $F(x) = H(x) - x$. The original mapping is then recast as $F(x) + x$. The hypothesis is that it's easier to optimize the residual mapping than to optimize the original, unreferenced mapping, especially if the identity mapping is optimal or close to optimal.</p><p>A building block is defined as:
             $$ y = F(x, \{W_i\}) + x $$
-            <p>The dimensions of $x$ and $F$ must be equal. If not, a linear projection $W_s$ can be used by the shortcut to match the dimensions: $y = F(x, \{W_i\}) + W_s x$.</p>
-        </div>
+            Where $x$ and $y$ are the input and output vectors of the layers considered. The function $F(x, \{W_i\})$ represents the residual mapping to be learned. For example, $F$ might represent two or three convolutional layers. The $+ x$ operation is performed by a shortcut connection and element-wise addition. If the dimensions of $x$ and $F$ are different, a linear projection $W_s$ can be used on the shortcut connection to match the dimensions:
+            $$ y = F(x, \{W_i\}) + W_s x $$
+        This allowed for the successful training of networks far deeper than previously possible.</p></div>
       </li>
-      <li class="paper-entry" data-year="2016" data-tags='["Reinforcement Learning", "Deep Learning", "AlphaGo"]' data-link="https://www.nature.com/articles/nature16961">
-        <div class="paper-title">Mastering the game of Go with deep neural networks and tree search</div>
-        <div class="paper-meta">Silver et&nbsp;al. (DeepMind), 2016</div>
-        <div class="paper-tags"><span class="tag">Reinforcement Learning</span><span class="tag">Deep Learning</span><span class="tag">AlphaGo</span></div>
-        <div class="paper-notes">
-          <strong>My Take:</strong> AlphaGo beating Lee Sedol was a landmark moment. Combined deep NNs with Monte Carlo Tree Search (MCTS).
-        </div>
-         <div class="paper-detailed-info" style="display: none;">
-            <h4>Abstract Summary</h4>
-            <p>The game of Go has long been viewed as the most challenging of classic games for artificial intelligence owing to its enormous search space and the difficulty of evaluating board positions and moves. Here we introduce a new approach to computer Go that uses ‘value networks’ to evaluate board positions and ‘policy networks’ to select moves. These deep neural networks are trained by a novel combination of supervised learning from human expert games, and reinforcement learning from games of self-play. Without any lookahead search, the neural networks play Go at the level of state-of-the-art Monte Carlo tree search programs that simulate thousands of random games of self-play. We also introduce a new search algorithm that combines Monte Carlo simulation with value and policy networks.</p>
-            <h4>Further Insights</h4>
-            <p>AlphaGo's success relied on several components:</p>
-            <p>1. <strong>Policy Network ($p_\pi$):</strong> A convolutional network trained via supervised learning (SL) on expert human moves, then refined via reinforcement learning (RL) by playing against itself. It outputs probabilities for possible moves.</p>
-            <p>2. <strong>Value Network ($v_\theta$):</strong> Another convolutional network trained to predict the outcome (win/loss) from a given board position. This was trained on data generated from self-play games by the RL policy network.</p>
-            <p>3. <strong>Monte Carlo Tree Search (MCTS):</strong> MCTS uses the policy network to guide its simulations (reducing breadth of search) and the value network to evaluate positions (reducing depth of search). The action selection in MCTS considers both exploration and exploitation.</p>
-        </div>
+      <li class="paper-entry" data-year="2019" data-tags='["NLP", "Transformers", "GPT-2", "LLMs"]' data-link="https://d4mucfpksywv.cloudfront.net/better-language-models/language_models_are_unsupervised_multitask_learners.pdf">
+        <div class="paper-title"><a href="https://d4mucfpksywv.cloudfront.net/better-language-models/language_models_are_unsupervised_multitask_learners.pdf" target="_blank" rel="noopener noreferrer">Language Models are Unsupervised Multitask Learners</a></div>
+        <div class="paper-meta">Radford et al. (OpenAI), 2019</div>
+        <div class="paper-tags"><span class="tag">NLP</span><span class="tag">Transformers</span><span class="tag">GPT-2</span><span class="tag">LLMs</span></div>
+        <div class="paper-notes"><strong>My Take:</strong> GPT-2 was stunning. It demonstrated that a large enough language model, trained on a massive and diverse dataset (WebText), could perform a wide variety of NLP tasks zero-shot, without explicit task-specific training. A key step towards today's LLMs.</div>
+         <div class="paper-detailed-info" style="display: none;"><h4>Abstract Summary</h4><p>Natural language processing tasks, such as question answering, machine translation, reading comprehension, and summarization, are typically approached with supervised learning on taskspecific datasets. We demonstrate that language models begin to learn these tasks without any explicit supervision when trained on a new dataset of millions of webpages called WebText. When conditioned on a document plus questions, the answers generated by the language model reach F1 scores competitive with prior systems. Our largest model, GPT-2, is a 1.5B parameter Transformer that achieves state of the art results on 7 out of 8 tested language modeling datasets in a zero-shot setting.</p><h4>Key Concepts</h4><p>1. <strong>Transformer Decoder Architecture:</strong> GPT-2 is based on the decoder-only part of the Transformer architecture, stacking multiple layers of self-attention and feed-forward networks.</p><p>2. <strong>Large-Scale Unsupervised Pre-training:</strong> The model was trained on "WebText," a large corpus of text scraped from outbound Reddit links, emphasizing content quality.</p><p>3. <strong>Zero-Shot Task Transfer:</strong> The core finding was that the model could perform various NLP tasks by simply being prompted appropriately, without any fine-tuning on task-specific datasets. This capability emerged from its general language understanding learned during pre-training. The model is trained to predict the next word in a sequence:
+            $$P(x) = \prod_{i=1}^n P(x_i | x_1, ..., x_{i-1})$$
+            This simple objective, at scale, led to surprising emergent capabilities.</p>
+            <p>4. <strong>Scaling Hypothesis:</strong> The paper supported the idea that increasing the model size, dataset size, and training time leads to better performance and more generalizable abilities in language models.</p></div>
       </li>
-    </ul>
+      </ul>
   </section>
 
   <hr class="section-divider"/>
   <section id="physics">
-    <div class="section-header"><h2>Physics</h2> <div class="controls"><button onclick="sortPapers('physics-papers', 'asc')">Year ↑</button><button onclick="sortPapers('physics-papers', 'desc')">Year ↓</button></div>
+    <div class="section-header"><h2>Physics</h2>
+      <div class="controls"><button onclick="sortPapers('physics-papers', 'asc')">Year ↑</button><button onclick="sortPapers('physics-papers', 'desc')">Year ↓</button></div>
     </div>
     <div class="tag-filter-container" id="physics-tag-filters"><span class="tag-filter-label">Filter:</span><button id="show-all-tags-physics" class="tag show-all" onclick="filterPapersByTag('physics-papers', null, 'physics-tag-filters')">Show All</button></div>
     <ul class="paper-list" id="physics-papers">
-      <li class="paper-entry" data-year="1916" data-tags='["General Relativity", "Gravity"]' data-link="https://einsteinpapers.press.princeton.edu/vol6-trans/156">
-        <div class="paper-title">The Foundation of the General Theory of Relativity</div>
-        <div class="paper-meta">Einstein, 1916</div>
-        <div class="paper-tags"><span class="tag">General Relativity</span><span class="tag">Gravity</span></div>
-        <div class="paper-notes"><strong>My Take:</strong> Einstein's masterpiece. Gravity as spacetime curvature.</div>
-        <div class="paper-detailed-info" style="display: none;">
-            <h4>Summary</h4>
-            <p>This paper lays out the complete formulation of the general theory of relativity, where gravity is described as a manifestation of the curvature of spacetime. It generalizes special relativity and Newton's law of universal gravitation, providing a unified description of gravity as a geometric property of space and time.</p>
-            <h4>Further Insights & Key Math</h4>
-            <p>The Einstein Field Equations (EFE) are the core:</p>
-            $$ R_{\mu\nu} - \frac{1}{2}R g_{\mu\nu} + \Lambda g_{\mu\nu} = \frac{8\pi G}{c^4} T_{\mu\nu} $$
-            <p>Where:</p>
-            <ul>
-                <li>$R_{\mu\nu}$ is the Ricci curvature tensor.</li>
-                <li>$R$ is the scalar curvature.</li>
-                <li>$g_{\mu\nu}$ is the metric tensor.</li>
-                <li>$\Lambda$ is the cosmological constant.</li>
-                <li>$G$ is Newton's gravitational constant.</li>
-                <li>$c$ is the speed of light in vacuum.</li>
-                <li>$T_{\mu\nu}$ is the stress-energy tensor, which describes the density and flux of energy and momentum in spacetime. For example, for a perfect fluid, $T_{\mu\nu} = (\rho + p/c^2)u_\mu u_\nu + p g_{\mu\nu}$.</li>
-            </ul>
-            <p>The EFE is a set of 10 non-linear partial differential equations. Their solutions describe various gravitational phenomena, such as gravitational waves, black holes, and the expansion of the universe.</p>
-        </div>
-      </li>
-      <li class="paper-entry" data-year="1926" data-tags='["Quantum Mechanics", "Schrödinger Equation"]' data-link="http://matrixphysics.com/Schrodinger_Original_Paper_Annalen_translation.pdf">
-        <div class="paper-title">Quantisation as an Eigenvalue Problem</div>
-        <div class="paper-meta">Schrödinger, 1926</div>
-        <div class="paper-tags"><span class="tag">Quantum Mechanics</span><span class="tag">Schrödinger Equation</span></div>
-        <div class="paper-notes"><strong>My Take:</strong> The Schrödinger equation! Bedrock of non-relativistic QM.</div>
-        <div class="paper-detailed-info" style="display: none;">
-            <h4>Summary</h4>
-            <p>In this series of papers, Schrödinger introduced his wave equation, providing a description of quantum mechanics in terms of wave functions. This formulation was an alternative to Heisenberg's matrix mechanics but was later shown to be equivalent. It describes how the quantum state of a physical system changes over time.</p>
-            <h4>Further Insights & Key Math</h4>
-            <p>The time-dependent Schrödinger equation (TDSE):</p>
-            $$ i\hbar\frac{\partial}{\partial t}\Psi(\mathbf{r},t) = \hat{H}\Psi(\mathbf{r},t) $$
-            <p>The time-independent Schrödinger equation (TISE), for systems where the Hamiltonian $\hat{H}$ is not time-dependent, is derived by separation of variables, $\Psi(\mathbf{r},t) = \psi(\mathbf{r})e^{-iEt/\hbar}$:</p>
-            $$ \hat{H}\psi(\mathbf{r}) = E\psi(\mathbf{r}) $$
-            <p>This is an eigenvalue equation, where $E$ are the energy eigenvalues and $\psi(\mathbf{r})$ are the energy eigenfunctions (stationary states). The Hamiltonian operator for a single particle in a potential $V(\mathbf{r})$ is often:</p>
-            $$ \hat{H} = -\frac{\hbar^2}{2m}\nabla^2 + V(\mathbf{r}) $$
-            <p>The expectation value of an observable $A$ (represented by an operator $\hat{A}$) is given by $\langle A \rangle = \int \Psi^* \hat{A} \Psi \, d\tau$.</p>
-        </div>
-      </li>
-      <li class="paper-entry" data-year="1964" data-tags='["Particle Physics", "Higgs Mechanism"]' data-link="https://journals.aps.org/prl/abstract/10.1103/PhysRevLett.13.508">
-        <div class="paper-title">Broken Symmetry and the Mass of Gauge Bosons</div>
-        <div class="paper-meta">Higgs, 1964</div>
-        <div class="paper-tags"><span class="tag">Particle Physics</span><span class="tag">Higgs Mechanism</span></div>
-        <div class="paper-notes"><strong>My Take:</strong> Explained how particles acquire mass via spontaneous symmetry breaking. The potential $V(\phi) = -\mu^2 |\phi|^2 + \lambda |\phi|^4$ is key.</div>
-        <div class="paper-detailed-info" style="display: none;">
-            <h4>Abstract Summary (Conceptual)</h4>
-            <p>This paper (and others by Brout & Englert; Guralnik, Hagen & Kibble) proposed a mechanism by which fundamental particles, particularly gauge bosons in gauge theories, can acquire mass. It involves a scalar field (the Higgs field) that permeates all space and has a non-zero vacuum expectation value. Interactions with this field give particles their mass. This resolved a major issue in the formulation of the Standard Model of particle physics, where gauge invariance initially implied massless gauge bosons.</p>
-            <h4>Further Insights & Key Math</h4>
-            <p>The Higgs mechanism involves a scalar field $\phi$ with a "mexican hat" potential:</p>
-            $$ V(\phi) = -\frac{1}{2}\mu^2 |\phi|^2 + \frac{1}{4}\lambda (|\phi|^2)^2 $$
-            <p>When $\mu^2 > 0$, the minimum of the potential is not at $\phi=0$, but at $|\phi_0|^2 = \frac{\mu^2}{\lambda} = v^2$. This non-zero vacuum expectation value $v$ breaks the electroweak symmetry spontaneously.
-            When gauge bosons (like W and Z bosons) couple to this Higgs field, they acquire a mass term in the Lagrangian. For example, for a U(1) gauge boson $A_\mu$ coupling to a complex scalar $\phi = \frac{1}{\sqrt{2}}(\phi_1 + i\phi_2)$, if $\phi_1$ acquires a VEV $v$, the kinetic term for $\phi$ $(D_\mu \phi)^\dagger (D^\mu \phi)$ where $D_\mu = \partial_\mu - igA_\mu$, yields a mass term for $A_\mu$ of the form $\frac{1}{2} g^2 v^2 A_\mu A^\mu$. The Higgs boson itself is the quantum excitation of the Higgs field around its VEV.</p>
-        </div>
-      </li>
-      <li class="paper-entry" data-year="1957" data-tags='["Condensed Matter", "Superconductivity", "BCS Theory"]' data-link="https://journals.aps.org/pr/abstract/10.1103/PhysRev.108.1175">
-        <div class="paper-title">Theory of Superconductivity</div>
-        <div class="paper-meta">Bardeen, Cooper & Schrieffer, 1957</div>
-        <div class="paper-tags"><span class="tag">Condensed Matter</span><span class="tag">Superconductivity</span></div>
-        <div class="paper-notes"><strong>My Take:</strong> BCS Theory explained superconductivity via Cooper pairs of electrons, leading to an energy gap $\Delta$.</div>
+      <li class="paper-entry" data-year="2016" data-tags='["Gravitational Waves", "Astrophysics", "LIGO", "General Relativity"]' data-link="https://journals.aps.org/prl/abstract/10.1103/PhysRevLett.116.061102">
+        <div class="paper-title"><a href="https://journals.aps.org/prl/abstract/10.1103/PhysRevLett.116.061102" target="_blank" rel="noopener noreferrer">Observation of Gravitational Waves from a Binary Black Hole Merger</a></div>
+        <div class="paper-meta">Abbott et al. (LIGO Scientific Collaboration and Virgo Collaboration), 2016</div>
+        <div class="paper-tags"><span class="tag">Gravitational Waves</span><span class="tag">Astrophysics</span><span class="tag">LIGO</span><span class="tag">General Relativity</span></div>
+        <div class="paper-notes"><strong>My Take:</strong> Monumental! The first direct detection of gravitational waves (GW150914), confirming Einstein's century-old prediction from General Relativity. Opened a new era of astronomy – gravitational wave astronomy.</div>
         <div class="paper-detailed-info" style="display: none;">
             <h4>Abstract Summary</h4>
-            <p>This theory explains conventional superconductivity as a microscopic effect caused by a condensation of Cooper pairs into a boson-like state. These Cooper pairs consist of two electrons that are indirectly attracted to each other through their interaction with the crystal lattice (phonons). This pairing opens up an energy gap in the density of states at the Fermi level, which is crucial for the properties of superconductors, such as zero electrical resistance and the Meissner effect.</p>
-            <h4>Further Insights & Key Math</h4>
-            <p>Key concepts include:</p>
-            <p>1. <strong>Cooper Pairs:</strong> Two electrons with opposite momenta and spins can form a bound state (a Cooper pair) due to an attractive interaction mediated by lattice vibrations (phonons), even if the direct Coulomb interaction is repulsive.</p>
-            <p>2. <strong>Energy Gap ($\Delta$):</strong> The formation of Cooper pairs leads to an energy gap $\Delta$ in the electronic excitation spectrum at the Fermi energy $E_F$. The energy of an excitation (quasiparticle) is $E_k = \sqrt{\epsilon_k^2 + \Delta^2}$, where $\epsilon_k$ is the single-particle energy relative to $E_F$. This gap prevents small-energy scattering events that would normally cause resistance.</p>
-            <p>3. <strong>BCS Ground State Wavefunction:</strong> The ground state is a coherent superposition of states with different numbers of Cooper pairs.
-            The critical temperature $T_c$ below which superconductivity occurs is related to the energy gap by $2\Delta(0) \approx 3.53 k_B T_c$ at $T=0$. The gap $\Delta$ itself depends on temperature and vanishes at $T_c$.
-            </p>
+            <p>On September 14, 2015 at 09:50:45 UTC, the two detectors of the Laser Interferometer Gravitational-Wave Observatory (LIGO) simultaneously observed a transient gravitational-wave signal. The signal sweeps upwards in frequency from 35 to 250 Hz with a peak gravitational-wave strain of $1.0 \times 10^{-21}$. It matches the waveform predicted by general relativity for the inspiral and merger of a pair of black holes and the ringdown of the resulting single black hole. The signal was observed with a matched-filter signal-to-noise ratio of 24 and a false alarm rate estimated to be less than 1 event per 203,000 years, equivalent to a significance greater than $5.1\sigma$.</p>
+            <h4>Key Findings & Math</h4>
+            <p>The source was located at a luminosity distance of $410^{+160}_{-180}$ Mpc, corresponding to a redshift $z \approx 0.09$. The event was the merger of two black holes with initial masses $m_1 = 36^{+5}_{-4} M_\odot$ and $m_2 = 29^{+4}_{-4} M_\odot$ (solar masses) into a final black hole of $M_f = 62^{+4}_{-4} M_\odot$. Approximately $3.0^{+0.5}_{-0.5} M_\odot c^2$ (three solar masses times the speed of light squared) was radiated as gravitational energy, making it one of the most luminous events ever observed.</p>
+            <p>The strain $h(t)$ is the fractional change in arm length of the interferometer: $\Delta L / L$. For the inspiral phase of two point masses, the frequency evolution (chirp) is approximately given by:</p>
+            $$ f(t) \approx \frac{1}{\pi} \left( \frac{5}{256} \frac{c^3}{G\mathcal{M}_c} \right)^{3/8} (t_c - t)^{-3/8} $$
+            <p>where $\mathcal{M}_c = \frac{(m_1 m_2)^{3/5}}{(m_1+m_2)^{1/5}}$ is the chirp mass, $G$ is the gravitational constant, $c$ is the speed of light, and $t_c$ is the time of coalescence. This characteristic "chirp" waveform was crucial for identifying the signal.</p>
         </div>
       </li>
-    </ul>
+      <li class="paper-entry" data-year="1916" data-tags='["General Relativity", "Gravity", "Spacetime"]' data-link="https://einsteinpapers.press.princeton.edu/vol6-trans/156">
+        <div class="paper-title"><a href="https://einsteinpapers.press.princeton.edu/vol6-trans/156" target="_blank" rel="noopener noreferrer">The Foundation of the General Theory of Relativity</a></div>
+        <div class="paper-meta">Einstein, 1916 (Original German: "Die Grundlage der allgemeinen Relativitätstheorie")</div>
+        <div class="paper-tags"><span class="tag">General Relativity</span><span class="tag">Gravity</span><span class="tag">Spacetime</span></div>
+        <div class="paper-notes"><strong>My Take:</strong> Einstein's masterpiece. This paper laid out the full mathematical formulation of General Relativity, describing gravity not as a force, but as the curvature of spacetime caused by mass and energy. Profoundly changed our understanding of the universe.</div>
+        <div class="paper-detailed-info" style="display: none;"><h4>Summary</h4><p>This seminal paper presents the complete formulation of Albert Einstein's theory of general relativity. It describes gravity as a geometric property of four-dimensional spacetime, which is curved by the presence of matter and energy. The paper builds upon the principle of equivalence (gravity is indistinguishable from acceleration) and extends special relativity to include gravity.</p><h4>Further Insights & Key Math</h4><p>The cornerstone of the theory is the Einstein Field Equations (EFE). In their most common form (with the cosmological constant $\Lambda$), they are:
+        </p>$$ R_{\mu\nu} - \frac{1}{2}R g_{\mu\nu} + \Lambda g_{\mu\nu} = \frac{8\pi G}{c^4} T_{\mu\nu} $$
+        <p>Where:
+            <ul>
+                <li>$R_{\mu\nu}$ is the Ricci curvature tensor, describing how the volume of a small ball of matter changes in spacetime.</li>
+                <li>$R$ is the scalar curvature (the trace of the Ricci tensor), representing the overall curvature of spacetime at a point.</li>
+                <li>$g_{\mu\nu}$ is the metric tensor, which defines distances and angles in spacetime.</li>
+                <li>$\Lambda$ is the cosmological constant, representing the energy density of empty space (dark energy).</li>
+                <li>$G$ is Newton's gravitational constant.</li>
+                <li>$c$ is the speed of light in vacuum.</li>
+                <li>$T_{\mu\nu}$ is the stress-energy tensor (or energy-momentum tensor), which describes the density and flux of energy and momentum in spacetime (i.e., the distribution of matter and energy).</li>
+            </ul>
+        Essentially, the left side describes the geometry of spacetime, and the right side describes the matter and energy content. The equations show how matter/energy tells spacetime how to curve, and curved spacetime tells matter how to move.</p></div>
+      </li>
+      <li class="paper-entry" data-year="1926" data-tags='["Quantum Mechanics", "Schrödinger Equation", "Wave Mechanics"]' data-link="http://matrixphysics.com/Schrodinger_Original_Paper_Annalen_translation.pdf">
+        <div class="paper-title"><a href="http://matrixphysics.com/Schrodinger_Original_Paper_Annalen_translation.pdf" target="_blank" rel="noopener noreferrer">Quantisation as an Eigenvalue Problem</a></div>
+        <div class="paper-meta">Schrödinger, 1926 (Original German: "Quantisierung als Eigenwertproblem")</div>
+        <div class="paper-tags"><span class="tag">Quantum Mechanics</span><span class="tag">Schrödinger Equation</span><span class="tag">Wave Mechanics</span></div>
+        <div class="paper-notes"><strong>My Take:</strong> The Schrödinger equation! This paper (one of a series) introduced the fundamental equation of wave mechanics, describing how the quantum state of a physical system changes over time. A cornerstone of non-relativistic quantum mechanics.</div>
+        <div class="paper-detailed-info" style="display: none;"><h4>Summary</h4><p>In this landmark paper (the first of four parts published in 1926), Erwin Schrödinger introduced his wave equation for quantum systems. This provided an alternative formulation of quantum mechanics to Heisenberg's matrix mechanics, though Schrödinger later showed them to be equivalent. He treated particles like electrons as waves, described by a wave function $\Psi$. The allowed energy levels of a quantum system (e.g., an atom) emerge as eigenvalues of a differential equation.</p><h4>Further Insights & Key Math</h4><p>The most famous forms of the Schrödinger equation are:</p><p>1. <strong>Time-dependent Schrödinger equation (TDSE):</strong> Describes how the wave function $\Psi$ evolves in time.
+        </p>$$ i\hbar\frac{\partial}{\partial t}\Psi(\mathbf{r},t) = \hat{H}\Psi(\mathbf{r},t) $$
+        <p>2. <strong>Time-independent Schrödinger equation (TISE):</strong> Used for systems where the Hamiltonian operator $\hat{H}$ is not explicitly time-dependent. It describes stationary states (states with definite energy $E$).
+        </p>$$ \hat{H}\psi(\mathbf{r}) = E\psi(\mathbf{r}) $$
+        <p>Where:
+            <ul>
+                <li>$i$ is the imaginary unit.</li>
+                <li>$\hbar = h / (2\pi)$ is the reduced Planck constant.</li>
+                <li>$\Psi(\mathbf{r},t)$ is the wave function of the system, a function of position $\mathbf{r}$ and time $t$.</li>
+                <li>$\psi(\mathbf{r})$ is the spatial part of the wave function for stationary states.</li>
+                <li>$\hat{H}$ is the Hamiltonian operator, which corresponds to the total energy of the system. For a single non-relativistic particle in a potential $V(\mathbf{r})$:</li>
+            </ul>
+        </p>$$ \hat{H} = -\frac{\hbar^2}{2m}\nabla^2 + V(\mathbf{r}) $$
+        <p>Here, $m$ is the mass of the particle, and $\nabla^2$ is the Laplacian operator (representing kinetic energy).</p></div>
+      </li>
+      <li class="paper-entry" data-year="1932" data-tags='["Particle Physics", "Neutron", "Nuclear Physics"]' data-link="https://royalsocietypublishing.org/doi/10.1098/rspa.1932.0082">
+        <div class="paper-title"><a href="https://royalsocietypublishing.org/doi/10.1098/rspa.1932.0082" target="_blank" rel="noopener noreferrer">Possible Existence of a Neutron</a></div>
+        <div class="paper-meta">Chadwick, 1932</div>
+        <div class="paper-tags"><span class="tag">Particle Physics</span><span class="tag">Neutron</span><span class="tag">Nuclear Physics</span></div>
+        <div class="paper-notes"><strong>My Take:</strong> Chadwick's experimental discovery of the neutron was crucial. It resolved anomalies in atomic structure (explaining isotopes) and paved the way for understanding nuclear forces and phenomena like fission.</div>
+        <div class="paper-detailed-info" style="display: none;">
+            <h4>Abstract Summary (Conceptual - original is a short letter)</h4>
+            <p>This paper reports experiments investigating a highly penetrating radiation emitted from beryllium when bombarded by alpha particles (from polonium). Previous interpretations suggested this radiation was high-energy gamma rays. However, Chadwick's experiments, particularly observing the recoil of protons from paraffin wax struck by this radiation, demonstrated that the gamma-ray hypothesis was untenable. Instead, he proposed that the radiation consisted of uncharged particles with a mass approximately equal to that of the proton – the neutron.</p>
+            <h4>Experimental Approach & Significance</h4>
+            <p>Chadwick bombarded various elements with the beryllium radiation and measured the energies of the recoiling atomic nuclei. By applying conservation of energy and momentum, he deduced the mass of the penetrating particle.
+            If the radiation were photons (gamma rays), the energy required to produce the observed proton recoils would be far greater than what was available from the alpha-beryllium reaction ($E_\gamma \approx 50 \text{ MeV}$, which was too high).
+            However, if the radiation consisted of neutral particles with mass similar to protons, the kinematics worked out consistently.
+            The mass of the neutron was calculated to be very close to the proton's mass.
+            </p><p>The discovery of the neutron was pivotal:
+            <ul>
+                <li>It provided a complete model of the atomic nucleus, consisting of protons and neutrons.</li>
+                <li>It explained the existence of isotopes (atoms of the same element with different masses due to varying numbers of neutrons).</li>
+                <li>It was essential for the later development of nuclear physics, including the understanding of nuclear reactions, fission, and fusion.</li>
+            </ul></p>
+        </div>
+      </li>
+      </ul>
   </section>
 
   <hr class="section-divider"/>
   <section id="robotics">
-     <div class="section-header"><h2>Robotics</h2> <div class="controls"><button onclick="sortPapers('robotics-papers', 'asc')">Year ↑</button><button onclick="sortPapers('robotics-papers', 'desc')">Year ↓</button></div>
+     <div class="section-header"><h2>Robotics</h2>
+      <div class="controls"><button onclick="sortPapers('robotics-papers', 'asc')">Year ↑</button><button onclick="sortPapers('robotics-papers', 'desc')">Year ↓</button></div>
     </div>
     <div class="tag-filter-container" id="robotics-tag-filters"><span class="tag-filter-label">Filter:</span><button id="show-all-tags-robotics" class="tag show-all" onclick="filterPapersByTag('robotics-papers', null, 'robotics-tag-filters')">Show All</button></div>
     <ul class="paper-list" id="robotics-papers">
-       <li class="paper-entry" data-year="1960" data-tags='["Control Theory", "Estimation", "Kalman Filter"]' data-link="https://decibel.ni.com/content/docs/DOC-24744">
-        <div class="paper-title">A New Approach to Linear Filtering and Prediction Problems</div>
+      <li class="paper-entry" data-year="2009" data-tags='["Robotics", "Software Framework", "ROS", "Open Source"]' data-link="https://www.willowgarage.com/sites/default/files/icra09-ros.pdf">
+        <div class="paper-title"><a href="https://www.willowgarage.com/sites/default/files/icra09-ros.pdf" target="_blank" rel="noopener noreferrer">ROS: an open-source Robot Operating System</a></div>
+        <div class="paper-meta">Quigley et al. (Willow Garage), 2009</div>
+        <div class="paper-tags"><span class="tag">Robotics</span><span class="tag">Software</span><span class="tag">ROS</span><span class="tag">Open Source</span></div>
+        <div class="paper-notes"><strong>My Take:</strong> ROS has been absolutely foundational for robotics development. It provided a standardized software framework (message-passing, tools, libraries) that accelerated research, education, and collaboration immensely. Hard to overstate its impact.</div>
+        <div class="paper-detailed-info" style="display: none;">
+            <h4>Abstract Summary</h4>
+            <p>This paper introduces ROS (Robot Operating System), an open-source, meta-operating system for robots. ROS provides services expected from an operating system, including hardware abstraction, low-level device control, implementation of commonly-used functionality, message-passing between processes, and package management. It is based on a graph architecture where processing takes place in nodes that may receive, post and multiplex sensor, control, state, planning, actuator and other messages.</p>
+            <h4>Key Components & Philosophy of ROS</h4>
+            <p>1. <strong>Nodes:</strong> Executable processes that perform computation. Each node is typically responsible for a specific task (e.g., camera driver, path planner).</p>
+            <p>2. <strong>Master:</strong> Provides naming and registration services for the rest of the nodes in the ROS system. It tracks publishers and subscribers to topics, and providers of services.</p>
+            <p>3. <strong>Topics:</strong> Named buses over which nodes exchange messages. Topics use a publish/subscribe model, allowing for asynchronous, decoupled communication.</p>
+            <p>4. <strong>Services:</strong> Provide synchronous request/reply interaction between nodes. One node offers a service, and another node uses it by sending a request and waiting for a reply.</p>
+            <p>5. <strong>Messages (.msg):</strong> Typed data structures for communication over topics. ROS has standard message types, and users can define custom ones.</p>
+            <p>6. <strong>Parameters:</strong> A shared, multi-variate dictionary that is accessible via network APIs. Nodes use this for storing and retrieving configuration parameters at runtime.</p>
+            <p>7. <strong>Packages & Metapackages:</strong> The main unit for organizing and distributing ROS software. A package might contain ROS nodes, a ROS-independent library, a dataset, configuration files, or anything else that logically constitutes a useful module.</p>
+            <p>ROS aimed to support code reusability in robotics research and development. Its distributed, peer-to-peer nature, along with its rich ecosystem of tools and libraries, significantly lowered the barrier to entry for complex robotics projects and fostered a large, active community.</p>
+        </div>
+      </li>
+      <li class="paper-entry" data-year="1960" data-tags='["Control Theory", "Estimation", "Kalman Filter", "State Estimation"]' data-link="https://decibel.ni.com/content/docs/DOC-24744"> <div class="paper-title"><a href="https://decibel.ni.com/content/docs/DOC-24744" target="_blank" rel="noopener noreferrer">A New Approach to Linear Filtering and Prediction Problems</a></div>
         <div class="paper-meta">Kalman, 1960</div>
-        <div class="paper-tags"><span class="tag">Control Theory</span><span class="tag">Estimation</span><span class="tag">Kalman Filter</span></div>
-        <div class="paper-notes"><strong>My Take:</strong> The Kalman Filter! Essential for state estimation.</div>
-        <div class="paper-detailed-info" style="display: none;">
-            <h4>Summary</h4>
-            <p>This paper introduced an optimal recursive data processing algorithm, the Kalman filter. It's used to estimate the state of a linear dynamic system from a series of noisy measurements. It operates by propagating the mean and covariance of the state estimate forward in time based on a system model (prediction step) and then updating this estimate using new measurements (update step).</p>
-            <h4>Further Insights & Key Math</h4>
-            <p>The Kalman filter operates in a two-step process:</p>
-            <p>1. <strong>Prediction Step:</strong></p>
-            <p>Predicted state estimate: $\hat{x}_k^- = A \hat{x}_{k-1} + B u_{k-1}$</p>
-            <p>Predicted error covariance: $P_k^- = A P_{k-1} A^T + Q$</p>
-            <p>2. <strong>Update Step:</strong></p>
-            <p>Kalman Gain: $K_k = P_k^- H^T (H P_k^- H^T + R)^{-1}$</p>
-            <p>Updated state estimate: $\hat{x}_k = \hat{x}_k^- + K_k (z_k - H \hat{x}_k^-)$</p>
-            <p>Updated error covariance: $P_k = (I - K_k H) P_k^-$</p>
-            <p>Where: $\hat{x}$ is the state estimate, $P$ is the error covariance, $A$ is the state transition matrix, $B$ is the control input matrix, $u$ is the control input, $Q$ is the process noise covariance, $H$ is the observation matrix, $R$ is the measurement noise covariance, $z_k$ is the measurement at time $k$, and $K_k$ is the Kalman gain.</p>
+        <div class="paper-tags"><span class="tag">Control Theory</span><span class="tag">Estimation</span><span class="tag">Kalman Filter</span><span class="tag">State Estimation</span></div>
+        <div class="paper-notes"><strong>My Take:</strong> The Kalman Filter! An incredibly powerful and versatile algorithm for estimating the state of a dynamic system from a series of noisy measurements. Ubiquitous in robotics, aerospace, economics, and many other fields.</div>
+        <div class="paper-detailed-info" style="display: none;"><h4>Summary</h4><p>This paper introduced a recursive algorithm for optimally estimating the state of a linear dynamic system from noisy measurements. The Kalman filter processes measurements over time, incorporating new data to update the estimate of the current state, while also accounting for system dynamics and measurement noise. It is optimal in the sense that it minimizes the mean square error of the estimated parameters.</p><h4>Further Insights & Key Math (Discrete Time)</h4><p>The Kalman filter operates in a two-step process: predict and update.</p><p><strong>System Model:</strong>
+        <ul>
+            <li>State equation: $x_k = A x_{k-1} + B u_{k-1} + w_{k-1}$</li>
+            <li>Measurement equation: $z_k = H x_k + v_k$</li>
+        </ul>
+        Where $x_k$ is the state vector at time $k$, $u_k$ is the control input, $z_k$ is the measurement. $w_k \sim N(0, Q)$ is the process noise, and $v_k \sim N(0, R)$ is the measurement noise. $A, B, H$ are system matrices. $Q$ and $R$ are noise covariance matrices.</p>
+        <p><strong>Predict Step:</strong> Project the current state estimate and error covariance forward.
+        </p>$$ \hat{x}_k^- = A \hat{x}_{k-1} + B u_{k-1} \quad (\text{a priori state estimate})$$
+        $$ P_k^- = A P_{k-1} A^T + Q \quad (\text{a priori error covariance})$$
+        <p><strong>Update Step:</strong> Incorporate the new measurement $z_k$.
+        </p>$$ K_k = P_k^- H^T (H P_k^- H^T + R)^{-1} \quad (\text{Kalman gain})$$
+        $$ \hat{x}_k = \hat{x}_k^- + K_k (z_k - H \hat{x}_k^-) \quad (\text{a posteriori state estimate})$$
+        $$ P_k = (I - K_k H) P_k^- \quad (\text{a posteriori error covariance})$$
+        The Kalman gain $K_k$ determines how much weight is given to the measurement versus the prediction. The filter recursively updates these estimates as new measurements arrive.
         </div>
       </li>
-      <li class="paper-entry" data-year="1986" data-tags='["Motion Planning", "Potential Fields"]' data-link="https://www.cs.cmu.edu/~motionplanning/papers/sbp_papers/integrated_planning_and_control/khatib_ Echtzeit-HindernisvermeidungfuerManipulatorenundmobileRoboter.pdf">
-        <div class="paper-title">Real-Time Obstacle Avoidance for Manipulators and Mobile Robots</div>
+      <li class="paper-entry" data-year="1986" data-tags='["Motion Planning", "Potential Fields", "Obstacle Avoidance"]' data-link="https://www.cs.cmu.edu/~motionplanning/papers/sbp_papers/integrated_planning_and_control/khatib_ Echtzeit-HindernisvermeidungfuerManipulatorenundmobileRoboter.pdf">
+        <div class="paper-title"><a href="https://www.cs.cmu.edu/~motionplanning/papers/sbp_papers/integrated_planning_and_control/khatib_ Echtzeit-HindernisvermeidungfuerManipulatorenundmobileRoboter.pdf" target="_blank" rel="noopener noreferrer">Real-Time Obstacle Avoidance for Manipulators and Mobile Robots</a></div>
         <div class="paper-meta">Khatib, 1986</div>
-        <div class="paper-tags"><span class="tag">Motion Planning</span><span class="tag">Potential Fields</span></div>
-        <div class="paper-notes"><strong>My Take:</strong> Potential fields for path planning! Robot pulled to goal, pushed from obstacles. Elegant.</div>
+        <div class="paper-tags"><span class="tag">Motion Planning</span><span class="tag">Potential Fields</span><span class="tag">Obstacle Avoidance</span></div>
+        <div class="paper-notes"><strong>My Take:</strong> The Artificial Potential Field method for robot path planning. Elegant concept: the robot is "pulled" towards the goal by an attractive potential and "pushed" away from obstacles by repulsive potentials. Great for real-time reactive control, though can suffer from local minima.</div>
+        <div class="paper-detailed-info" style="display: none;"><h4>Abstract Summary</h4><p>This paper presents the artificial potential field approach for real-time obstacle avoidance for manipulators and mobile robots. The robot moves in a field of forces, where the goal position generates an attractive potential pulling the robot towards it, and obstacles generate repulsive potentials pushing the robot away. The superposition of these potentials defines the overall field, and the robot's motion is determined by the negative gradient of this field.</p><h4>Further Insights & Key Math</h4><p>The total potential $U(q)$ at a configuration $q$ (e.g., robot position/orientation) is the sum of an attractive potential $U_{att}(q)$ and a repulsive potential $U_{rep}(q)$:
+        </p>$$ U(q) = U_{att}(q) + U_{rep}(q) $$
+        <p>1. <strong>Attractive Potential:</strong> Typically a simple quadratic function of the distance to the goal $q_{goal}$:
+        </p>$$ U_{att}(q) = \frac{1}{2} \zeta \rho^2(q, q_{goal}) $$
+        <p>Where $\zeta$ is a positive scaling factor, and $\rho(q, q_{goal})$ is the Euclidean distance between $q$ and $q_{goal}$. This creates an attractive force $F_{att}(q) = -\nabla U_{att}(q) = -\zeta \rho(q, q_{goal}) \nabla \rho(q, q_{goal})$, which is proportional to the distance to the goal.</p>
+        <p>2. <strong>Repulsive Potential:</strong> Designed to be very high near an obstacle and fall off to zero at a certain distance of influence $\rho_0$. For a single obstacle, one common form is:
+        </p>$$ U_{rep}(q) = \begin{cases} \frac{1}{2} \eta \left(\frac{1}{\rho(q, q_{obs})} - \frac{1}{\rho_0}\right)^2 & \text{if } \rho(q, q_{obs}) \le \rho_0 \\ 0 & \text{if } \rho(q, q_{obs}) > \rho_0 \end{cases} $$
+        <p>Where $\eta$ is a positive scaling factor, $\rho(q, q_{obs})$ is the minimum distance from the robot at configuration $q$ to the obstacle. The repulsive force $F_{rep}(q) = -\nabla U_{rep}(q)$ pushes the robot away from the obstacle.</p>
+        <p>The total force applied to the robot is $F(q) = -\nabla U(q)$. This force is then used to control the robot's motion. While effective for real-time avoidance, this method can get stuck in local minima where $F(q)=0$ but $q \neq q_{goal}$.</p></div>
+      </li>
+      <li class="paper-entry" data-year="2017" data-tags='["Humanoid Robotics", "Dynamic Locomotion", "Control", "MPC", "Boston Dynamics"]' data-link="https://arxiv.org/abs/1709.09605"> <div class="paper-title"><a href="https://arxiv.org/abs/1709.09605" target="_blank" rel="noopener noreferrer">Planning and Execution for Dynamic Humanoid Locomotion</a></div> <div class="paper-meta">Paine et al. (Boston Dynamics related work often features authors from IHMC, MIT etc.), 2017</div>
+        <div class="paper-tags"><span class="tag">Humanoid Robotics</span><span class="tag">Dynamic Locomotion</span><span class="tag">Control</span><span class="tag">MPC</span></div>
+        <div class="paper-notes"><strong>My Take:</strong> Boston Dynamics' work on Atlas is legendary for dynamic humanoid locomotion. Papers from them and affiliated groups delve into the complex hierarchical control systems, often involving Model Predictive Control (MPC) and Whole-Body Control (WBC), to achieve such agility.</div>
         <div class="paper-detailed-info" style="display: none;">
-            <h4>Abstract Summary</h4>
-            <p>This paper presents the artificial potential field approach for real-time obstacle avoidance for manipulators and mobile robots. The robot moves in a field of forces, where it is attracted to its goal configuration and repelled by obstacles. The resulting motion is generated by the sum of these forces, allowing for smooth, reactive path generation.</p>
-            <h4>Further Insights & Key Math</h4>
-            <p>The total potential field $U(q)$ at a configuration $q$ is the sum of an attractive potential $U_{att}(q)$ pulling the robot towards the goal $q_{goal}$, and a repulsive potential $U_{rep}(q)$ pushing the robot away from obstacles.</p>
-            $$ U(q) = U_{att}(q) + U_{rep}(q) $$
-            <p>A common form for the attractive potential is parabolic:</p>
-            $$ U_{att}(q) = \frac{1}{2} \zeta \rho^2(q, q_{goal}) $$
-            <p>where $\zeta$ is a positive scaling factor and $\rho(q, q_{goal})$ is the distance to the goal.</p>
-            <p>A common form for the repulsive potential from an obstacle is:</p>
-            $$ U_{rep}(q) = \begin{cases} \frac{1}{2} \eta \left(\frac{1}{\rho(q, q_{obs})} - \frac{1}{\rho_0}\right)^2 & \text{if } \rho(q, q_{obs}) \le \rho_0 \\ 0 & \text{if } \rho(q, q_{obs}) > \rho_0 \end{cases} $$
-            <p>where $\eta$ is a positive scaling factor, $\rho(q, q_{obs})$ is the minimum distance to the obstacle, and $\rho_0$ is the distance of influence of the obstacle.</p>
-            <p>The "force" applied to the robot is the negative gradient of the total potential: $F(q) = -\nabla U(q)$. This force can then be used to control the robot's velocity or acceleration.</p>
-            <p>A major challenge with potential fields is the problem of local minima, where the robot can get stuck even if a path to the goal exists.</p>
+            <h4>Conceptual Overview (Representative of BD-style approaches)</h4>
+            <p>Achieving dynamic and agile locomotion in humanoid robots like Atlas involves a sophisticated hierarchical control architecture. This typically integrates perception, high-level planning (e.g., footstep placement), trajectory optimization, and real-time feedback control to maintain balance and execute tasks. These systems must handle underactuation, contacts with the environment, and significant dynamic effects.</p>
+            <h4>Key Control Concepts Often Employed:</h4>
+            <p>1. <strong>Model Predictive Control (MPC):</strong> MPC is frequently used for generating dynamically feasible reference trajectories for the robot's Center of Mass (CoM) and footsteps. MPC optimizes control inputs over a finite future time horizon by predicting the robot's behavior based on a simplified model (e.g., Linear Inverted Pendulum Model - LIPM, or centroidal dynamics).
+            </p><p>2. <strong>Whole-Body Control (WBC):</strong> Given reference trajectories from MPC or a higher-level planner, WBC calculates the necessary joint torques or accelerations to track these trajectories while satisfying various constraints (joint limits, friction cone constraints, task objectives like balance and posture). WBC often formulates this as a constrained optimization problem, minimizing a cost function subject to equality and inequality constraints derived from the robot's dynamics and task requirements.
+            </p><p>3. <strong>State Estimation:</strong> Accurate estimation of the robot's state (e.g., CoM position and velocity, orientation, contact forces) is crucial. This is typically achieved by fusing data from various sensors like IMUs, encoders, and force/torque sensors, often using algorithms like Extended Kalman Filters (EKF) or Unscented Kalman Filters (UKF).</p>
+            <h4>Key Math (Zero Moment Point - ZMP)</h4>
+            <p>The relationship between the Center of Mass (CoM) and the Zero Moment Point (ZMP) is fundamental for bipedal balance. The ZMP is the point on the ground where the net moment due to gravity and inertial forces is zero. For a simplified planar model, the ZMP position ($x_{ZMP}$) is related to the CoM position ($x_{CoM}$) and acceleration ($\ddot{x}_{CoM}$) by:
+            </p>$$ x_{ZMP} = x_{CoM} - \frac{z_{CoM}}{g + \ddot{z}_{CoM}} \ddot{x}_{CoM} $$
+            <p>Or, if vertical CoM acceleration $\ddot{z}_{CoM}$ is negligible compared to gravity $g$:
+            </p>$$ x_{ZMP} \approx x_{CoM} - \frac{z_{CoM}}{g} \ddot{x}_{CoM} $$
+            <p>Maintaining the ZMP within the support polygon (the area defined by the feet in contact with the ground) is a key criterion for dynamic balance. Control strategies often aim to regulate the ZMP to ensure stability.</p>
         </div>
       </li>
-      <li class="paper-entry" data-year="1971" data-tags='["AI Planning", "Robotics", "STRIPS"]' data-link="https://ai.stanford.edu/users/nilsson/OnlinePubs-Nils/PublishedPapers/strips.pdf">
-        <div class="paper-title">STRIPS: A New Approach to the Application of Theorem Proving to Problem Solving</div>
-        <div class="paper-meta">Fikes & Nilsson, 1971</div>
-        <div class="paper-tags"><span class="tag">AI Planning</span><span class="tag">Robotics</span><span class="tag">STRIPS</span></div>
-        <div class="paper-notes">
-          <strong>My Take:</strong> STRIPS was a foundational planner, used in Shakey. Represented states and actions logically.
-        </div>
-        <div class="paper-detailed-info" style="display: none;">
-            <h4>Abstract Summary</h4>
-            <p>This paper describes the STRIPS (Stanford Research Institute Problem Solver) system, a problem solver designed for controlling autonomous robots like Shakey. STRIPS represents the world as a set of first-order logic formulas and actions as operators that modify this state. It uses a means-ends analysis approach combined with theorem proving to find a sequence of actions to achieve a goal state from an initial state.</p>
-            <h4>Further Insights</h4>
-            <p>Key components of STRIPS representation:</p>
-            <p>1. <strong>State Representation:</strong> A state is represented by a set of ground literals (positive atomic formulas) that are true in that state. Anything not listed is assumed false (Closed World Assumption).</p>
-            <p>2. <strong>Goal Representation:</strong> A goal is also represented by a set of ground literals. The system aims to find a state where all goal literals are true.</p>
-            <p>3. <strong>Action Representation (Operators):</strong> Each action is defined by:</p>
-            <ul>
-                <li><strong>Action Name:</strong> e.g., `pickup(X)`</li>
-                <li><strong>Preconditions:</strong> A set of literals that must be true for the action to be applicable. e.g., `on_table(X), clear(X), hand_empty`.</li>
-                <li><strong>Add List:</strong> A set of literals that become true after the action is performed. e.g., `holding(X)`.</li>
-                <li><strong>Delete List:</strong> A set of literals that become false (are removed from the state) after the action. e.g., `on_table(X), clear(X), hand_empty`.</li>
-            </ul>
-            <p>STRIPS uses a search algorithm (means-ends analysis) where it tries to reduce the differences between the current state and the goal state by selecting applicable operators. It was a significant step in automated planning and influenced many subsequent planning systems.</p>
-        </div>
-      </li>
-      <li class="paper-entry" data-year="1990" data-tags='["SLAM", "Probabilistic Robotics"]' data-link="https://www.researchgate.net/publication/220506788_Estimating_uncertain_spatial_relationships_in_robotics">
-        <div class="paper-title">Estimating Uncertain Spatial Relationships in Robotics</div>
-        <div class="paper-meta">Smith, Self & Cheeseman, 1990</div>
-        <div class="paper-tags"><span class="tag">SLAM</span><span class="tag">Probabilistic Robotics</span><span class="tag">EKF SLAM</span></div>
-        <div class="paper-notes">
-          <strong>My Take:</strong> Seminal for SLAM, especially EKF SLAM. Representing map and robot pose with uncertainties (covariances) was key.
-        </div>
-        <div class="paper-detailed-info" style="display: none;">
-            <h4>Abstract Summary (Conceptual)</h4>
-            <p>This paper (and related works like "Representing and Estimating Spatial Uncertainty" by Smith and Cheeseman, 1986) laid crucial groundwork for Simultaneous Localization and Mapping (SLAM). It focused on how to represent and manage uncertainty in the spatial relationships between a robot and features in its environment. The key idea was to use stochastic maps, where the positions of features and the robot's own pose are described by probability distributions (typically Gaussians, characterized by means and covariance matrices). This allowed for a mathematically rigorous way to fuse sensor information and update the map and robot pose over time.</p>
-            <h4>Further Insights & Key Math</h4>
-            <p>The core of EKF-SLAM involves augmenting the robot's state vector $x_v$ with the locations of all observed map features $m_i$: $x_a = [x_v^T, m_1^T, m_2^T, ..., m_N^T]^T$. The uncertainty is captured in a large covariance matrix $P_a$.</p>
-            <p><strong>Prediction Step (Robot Motion):</strong></p>
-            <p>When the robot moves, its pose estimate $\hat{x}_v$ is updated using a motion model $f(\cdot)$, and its covariance $P_{vv}$ is updated:
-            $$ \hat{x}_v(k|k-1) = f(\hat{x}_v(k-1|k-1), u(k)) $$
-            $$ P_{vv}(k|k-1) = \nabla_x f P_{vv}(k-1|k-1) \nabla_x f^T + Q(k) $$
-            Map feature estimates and their covariances (and cross-covariances with the robot) are also propagated.</p>
-            <p><strong>Update Step (Observation of a Feature):</strong></p>
-            <p>When a feature $m_j$ is observed with measurement $z_j$, the innovation (difference between expected and actual measurement) is $ \nu_j = z_j - h(\hat{x}_v(k|k-1), \hat{m}_j(k|k-1)) $.
-            The innovation covariance is $S_j = \nabla h P_a(k|k-1) \nabla h^T + R_j$.
-            The Kalman gain is $K_j = P_a(k|k-1) \nabla h^T S_j^{-1}$.
-            The state vector and covariance matrix are updated:
-            $$ \hat{x}_a(k|k) = \hat{x}_a(k|k-1) + K_j \nu_j $$
-            $$ P_a(k|k) = (I - K_j \nabla h) P_a(k|k-1) $$
-            <p>A key challenge was managing the growing size and computational complexity of the covariance matrix $P_a$ and correctly handling data association (matching observations to existing map features).</p>
-        </div>
-      </li>
-    </ul>
+      </ul>
   </section>
   <hr class="section-divider"/>
 
@@ -366,13 +667,13 @@
       <p id="modalMeta" class="modal-paper-meta"></p>
       <div id="modalTags" class="modal-paper-tags"></div>
       <div id="modalNotes" class="modal-paper-notes"></div>
-      <div id="modalDetailedInfo" class="modal-detailed-info" style="margin-top: 1.5em;">
-        </div>
-      <a id="modalLink" href="#" target="_blank" class="modal-paper-link">Read Paper (External Link)</a>
+      <div id="modalDetailedInfo" class="modal-detailed-info" style="margin-top: 1.5em;"></div>
+      <a id="modalLink" href="#" target="_blank" rel="noopener noreferrer" class="modal-paper-link">Read Paper (External Link)</a>
     </div>
   </div>
 
-  <footer> Built by Me • Last updated: <span id="last-updated"></span>
+  <footer>
+    Built by Me • Last updated: <span id="last-updated"></span>
     <p style="font-size: 0.8em; margin-top: 1em;"><em>Disclaimer: All external links are provided as examples and should be verified by the user. Content represents personal selections. Math rendering by MathJax.</em></p>
   </footer>
 
@@ -386,67 +687,139 @@
     const modalLink = document.getElementById('modalLink');
 
     function openModal(paperElement) {
-        const title = paperElement.querySelector('.paper-title').innerText;
+        // For title, try to get it from the link text if available, otherwise from the div
+        const titleLinkElement = paperElement.querySelector('.paper-title a');
+        const titleText = titleLinkElement ? titleLinkElement.innerText : paperElement.querySelector('.paper-title').innerText;
+        
         const meta = paperElement.querySelector('.paper-meta').innerText;
         const tagsHTML = paperElement.querySelector('.paper-tags').innerHTML;
         const notesHTML = paperElement.querySelector('.paper-notes').innerHTML;
         const link = paperElement.dataset.link || '#';
         
         const detailedInfoElement = paperElement.querySelector('.paper-detailed-info');
-        const detailedInfoHTML = detailedInfoElement ? detailedInfoElement.innerHTML : '<p>More detailed information will be available soon.</p>';
+        const detailedInfoHTML = detailedInfoElement ? detailedInfoElement.innerHTML : '<p>More detailed information will be available soon for this paper.</p>';
 
-        modalTitle.innerText = title;
+        modalTitle.innerText = titleText;
         modalMeta.innerText = meta;
         modalTags.innerHTML = tagsHTML;
         modalNotes.innerHTML = notesHTML;
         modalDetailedInfo.innerHTML = detailedInfoHTML;
         modalLink.href = link;
         
-        modalLink.style.display = (link === '#') ? 'none' : 'inline-block';
+        modalLink.style.display = (link === '#' || !link) ? 'none' : 'inline-block';
+        
+        document.body.style.overflow = 'hidden';
         modal.classList.add('active');
         
-        if (window.MathJax) {
-            MathJax.typesetPromise([modalNotes, modalDetailedInfo]).catch(function (err) { console.error('MathJax Typesetting Error:', err); });
+        // Ensure MathJax typesets any new content in the modal
+        if (window.MathJax && (notesHTML.includes('$') || detailedInfoHTML.includes('$') || notesHTML.includes('\\(') || detailedInfoHTML.includes('\\(') || notesHTML.includes('\\[') || detailedInfoHTML.includes('\\['))) {
+            MathJax.typesetPromise([modalNotes, modalDetailedInfo]).catch(function (err) { console.error('MathJax Typesetting Error in Modal:', err); });
         }
     }
 
-    function closeModal() { modal.classList.remove('active'); }
-    window.onclick = function(event) { if (event.target == modal) { closeModal(); } }
+    function closeModal() {
+        document.body.style.overflow = '';
+        modal.classList.remove('active');
+    }
+
+    window.onclick = function(event) {
+        if (event.target == modal) {
+            closeModal();
+        }
+    }
+    window.addEventListener('keydown', function (event) {
+        if (event.key === 'Escape' && modal.classList.contains('active')) {
+            closeModal();
+        }
+    });
     
     document.addEventListener('DOMContentLoaded', () => {
-        document.querySelectorAll('li.paper-entry').forEach(item => {
+        const animatedItems = document.querySelectorAll('li.paper-entry');
+        const observerOptions = {
+            root: null, // relative to the viewport
+            rootMargin: '0px',
+            threshold: 0.1 // 10% of item visible
+        };
+
+        const observer = new IntersectionObserver((entries, obs) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('in-view');
+                    // Optional: unobserve after animation to save resources
+                    // obs.unobserve(entry.target); 
+                }
+            });
+        }, observerOptions);
+
+        animatedItems.forEach(item => {
+            observer.observe(item);
             item.addEventListener('click', function(event) {
-                if (event.target.tagName === 'A' && event.target.closest('.paper-title')) { return; }
-                if (event.target.classList.contains('bibtex-btn')) { return; } // Assuming you might re-add this
+                let currentTarget = event.target;
+                // Check if the click originated from an actual link inside the card title or tags
+                while(currentTarget && currentTarget !== this) {
+                    if (currentTarget.tagName === 'A' && (currentTarget.closest('.paper-title') || currentTarget.closest('.paper-tags .tag'))) {
+                        // If it's a link within the title or a tag that is a link itself, let the browser handle it
+                        return; 
+                    }
+                    currentTarget = currentTarget.parentElement;
+                }
                 openModal(this);
             });
         });
 
         const navLinks = document.querySelectorAll('nav a');
         const sections = document.querySelectorAll('section');
-        function changeNav() {
-          let index = sections.length;
-          while(--index >= 0 && window.scrollY + (window.innerHeight * 0.3) < sections[index].offsetTop) {} 
-          navLinks.forEach((link) => link.classList.remove('active'));
-          if (index >= 0 && navLinks[index]) { navLinks[index].classList.add('active'); }
-          else if (sections.length > 0 && window.scrollY < sections[0].offsetTop) { if (navLinks[0]) navLinks[0].classList.add('active'); }
+        
+        function changeNavActiveState() {
+          let currentSectionId = '';
+          sections.forEach(section => {
+            const sectionTop = section.offsetTop;
+            if (window.scrollY >= sectionTop - (window.innerHeight * 0.4) ) { // Adjust offset as needed
+              currentSectionId = section.getAttribute('id');
+            }
+          });
+
+          navLinks.forEach(link => {
+            link.classList.remove('active');
+            if (link.getAttribute('href') === '#' + currentSectionId) {
+              link.classList.add('active');
+            }
+          });
+          // Default to first link if no section is matched (e.g., at the very top)
+          if (!currentSectionId && navLinks.length > 0 && window.scrollY < sections[0].offsetTop) {
+              navLinks.forEach(l => l.classList.remove('active'));
+              navLinks[0].classList.add('active');
+          }
         }
-        navLinks.forEach(link => { link.addEventListener('click', function() { navLinks.forEach(l => l.classList.remove('active')); this.classList.add('active'); }); });
-        window.addEventListener('scroll', changeNav);
-        if (sections.length > 0) { changeNav(); }
+
+        navLinks.forEach(link => {
+          link.addEventListener('click', function(e) {
+            // The href will navigate, this just updates class for immediate feedback if scroll is slow
+            navLinks.forEach(l => l.classList.remove('active'));
+            this.classList.add('active');
+          });
+        });
+        window.addEventListener('scroll', changeNavActiveState);
+        if (sections.length > 0) { changeNavActiveState(); } // Initial check
 
         const lastUpdatedSpan = document.getElementById('last-updated');
-        if(lastUpdatedSpan) { lastUpdatedSpan.textContent = new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' }); }
+        if(lastUpdatedSpan) { 
+            lastUpdatedSpan.textContent = new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' }); 
+        }
 
         populateTagFilters();
+        // Initialize all sections with "Show All" active
         document.querySelectorAll('.tag-filter-container').forEach(container => {
             const listId = container.id.replace('-tag-filters', '-papers');
             const paperList = document.getElementById(listId);
-            if (paperList) { filterPapersByTag(listId, null, container.id); }
+            const showAllButton = container.querySelector('button.tag.show-all');
+            if (paperList && showAllButton) {
+                 filterPapersByTag(listId, null, container.id); // Ensure "Show All" is active
+            }
         });
     });
 
-    function sortPapers(listId, order) { /* ... (sorting logic same as before) ... */ 
+    function sortPapers(listId, order) {
       const list = document.getElementById(listId);
       if (!list) return;
       const items = Array.from(list.getElementsByClassName('paper-entry'));
@@ -455,54 +828,83 @@
         const yearB = parseInt(b.dataset.year);
         return order === 'asc' ? yearA - yearB : yearB - yearA;
       });
-      items.forEach(item => list.appendChild(item));
+      items.forEach(item => list.appendChild(item)); // Re-append sorted items
     }
-    function populateTagFilters() { /* ... (tag filter population logic same as before) ... */ 
+
+    function populateTagFilters() {
         document.querySelectorAll('.tag-filter-container').forEach(container => {
             const listId = container.id.replace('-tag-filters', '-papers');
             const paperList = document.getElementById(listId);
             if (!paperList) return;
+
             const papersInSection = paperList.getElementsByClassName('paper-entry');
             const tagsInSection = new Set();
             Array.from(papersInSection).forEach(paper => {
-                 const tags = JSON.parse(paper.dataset.tags || '[]');
-                 tags.forEach(tag => tagsInSection.add(tag));
+                 try {
+                    const tags = JSON.parse(paper.dataset.tags || '[]');
+                    tags.forEach(tag => tagsInSection.add(tag.trim()));
+                 } catch (e) {
+                    console.error("Error parsing tags for paper: ", paper, e);
+                 }
             });
+
+            // Remove old tag buttons except "Show All"
             container.querySelectorAll('button.tag:not(.show-all)').forEach(btn => btn.remove());
-            const sortedTags = Array.from(tagsInSection).sort();
+            
+            const sortedTags = Array.from(tagsInSection).sort((a, b) => a.toLowerCase().localeCompare(b.toLowerCase()));
             const showAllButton = container.querySelector('button.tag.show-all');
             let insertAfterElement = showAllButton || container.querySelector('.tag-filter-label');
+
             sortedTags.forEach(tag => {
+                if (!tag) return; // Skip empty tags
                 const button = document.createElement('button');
                 button.classList.add('tag');
                 button.textContent = tag;
                 button.onclick = () => filterPapersByTag(listId, tag, container.id);
-                if (insertAfterElement && insertAfterElement.nextSibling) { container.insertBefore(button, insertAfterElement.nextSibling); }
-                else if (insertAfterElement) { container.appendChild(button); }
-                else { container.appendChild(button); }
-                insertAfterElement = button;
+                
+                // Insert after the 'Show All' button or the label
+                if (insertAfterElement && insertAfterElement.nextSibling) {
+                    container.insertBefore(button, insertAfterElement.nextSibling);
+                } else if (insertAfterElement) {
+                    container.appendChild(button);
+                } else { // Fallback if no label or showAll button (shouldn't happen with current HTML)
+                    container.appendChild(button);
+                }
+                insertAfterElement = button; // Next button will be inserted after this one
             });
         });
     }
-    function filterPapersByTag(listId, tag, filterContainerId) { /* ... (filtering logic same as before) ... */ 
+
+    function filterPapersByTag(listId, tagToFilter, filterContainerId) {
       const list = document.getElementById(listId);
       if (!list) return;
       const items = Array.from(list.getElementsByClassName('paper-entry'));
       const filterButtonsContainer = document.getElementById(filterContainerId);
       if (!filterButtonsContainer) return;
+
       const filterButtons = filterButtonsContainer.querySelectorAll('button.tag');
       filterButtons.forEach(button => button.classList.remove('active-tag-filter'));
-      if (tag === null) {
+
+      if (tagToFilter === null) { // Show all
         items.forEach(item => item.classList.remove('hidden'));
         const showAllBtn = filterButtonsContainer.querySelector('button.tag.show-all');
         if (showAllBtn) showAllBtn.classList.add('active-tag-filter');
       } else {
         items.forEach(item => {
-          const itemTags = JSON.parse(item.dataset.tags || '[]');
-          if (itemTags.includes(tag)) { item.classList.remove('hidden'); }
-          else { item.classList.add('hidden'); }
+          let itemTags = [];
+          try {
+            itemTags = JSON.parse(item.dataset.tags || '[]');
+          } catch (e) {
+            console.error("Error parsing tags for item: ", item, e);
+          }
+          if (itemTags.map(t => t.trim()).includes(tagToFilter.trim())) {
+            item.classList.remove('hidden');
+          } else {
+            item.classList.add('hidden');
+          }
         });
-        Array.from(filterButtons).find(button => button.textContent === tag && !button.classList.contains('show-all'))?.classList.add('active-tag-filter');
+        // Activate the clicked tag button
+        Array.from(filterButtons).find(button => button.textContent.trim() === tagToFilter.trim() && !button.classList.contains('show-all'))?.classList.add('active-tag-filter');
       }
     }
   </script>
