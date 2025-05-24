@@ -1,1771 +1,510 @@
 <!DOCTYPE html>
-<html lang="en" class="scroll-smooth">
+<html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>San Hashim - I like Ai and physics  </title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.css">
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    colors: {
-                        primary: '#ffffff',
-                        secondary: '#f8fafc',
-                        accent: '#3b82f6',
-                        accentDark: '#1d4ed8',
-                        accentSecondary: '#8b5cf6',
-                        text: '#1e293b',
-                        darkBg: '#0f172a',
-                    },
-                    fontFamily: {
-                        sans: ['Inter', 'sans-serif'],
-                        display: ['Poppins', 'sans-serif'],
-                    },
-                    animation: {
-                        'gradient': 'gradient 15s ease infinite',
-                        'float': 'float 6s ease-in-out infinite',
-                        'pulse-slow': 'pulse 4s cubic-bezier(0.4, 0, 0.6, 1) infinite',
-                        'spin-slow': 'spin 8s linear infinite',
-                        'bounce-slow': 'bounce 3s infinite',
-                        'wiggle': 'wiggle 1s ease-in-out infinite',
-                        'fade-in': 'fadeIn 1.5s ease-out forwards',
-                        'slide-up': 'slideUp 0.7s ease-out forwards',
-                        'slide-down': 'slideDown 0.7s ease-out forwards',
-                        'scale-in': 'scaleIn 0.7s ease-out forwards',
-                        'slide-in-right': 'slideInRight 0.7s ease-out forwards',
-                        'slide-in-left': 'slideInLeft 0.7s ease-out forwards',
-                    },
-                    keyframes: {
-                        gradient: {
-                            '0%, 100%': {
-                                'background-position': '0% 50%'
-                            },
-                            '50%': {
-                                'background-position': '100% 50%'
-                            }
-                        },
-                        float: {
-                            '0%, 100%': { transform: 'translateY(0px)' },
-                            '50%': { transform: 'translateY(-20px)' },
-                        },
-                        wiggle: {
-                            '0%, 100%': { transform: 'rotate(-3deg)' },
-                            '50%': { transform: 'rotate(3deg)' },
-                        },
-                        fadeIn: {
-                            '0%': { opacity: '0' },
-                            '100%': { opacity: '1' },
-                        },
-                        slideUp: {
-                            '0%': { transform: 'translateY(30px)', opacity: '0' },
-                            '100%': { transform: 'translateY(0)', opacity: '1' },
-                        },
-                        slideDown: {
-                            '0%': { transform: 'translateY(-30px)', opacity: '0' },
-                            '100%': { transform: 'translateY(0)', opacity: '1' },
-                        },
-                        scaleIn: {
-                            '0%': { transform: 'scale(0.9)', opacity: '0' },
-                            '100%': { transform: 'scale(1)', opacity: '1' },
-                        },
-                        slideInRight: {
-                            '0%': { transform: 'translateX(30px)', opacity: '0' },
-                            '100%': { transform: 'translateX(0)', opacity: '1' },
-                        },
-                        slideInLeft: {
-                            '0%': { transform: 'translateX(-30px)', opacity: '0' },
-                            '100%': { transform: 'translateX(0)', opacity: '1' },
-                        },
-                    },
-                    backgroundImage: {
-                        'radial-gradient': 'radial-gradient(circle, var(--tw-gradient-stops))',
-                    },
-                }
-            }
-        }
-    </script>
-    <style>
-        /* Smooth scrolling */
-        html {
-            scroll-behavior: smooth;
-        }
-        
-        /* Improved gradient text */
-        .gradient-text {
-            background: linear-gradient(to right, #3b82f6, #8b5cf6);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            text-fill-color: transparent;
-        }
-        
-        /* Enhanced hero background */
-        .bg-gradient-hero {
-            background: linear-gradient(135deg, #3b82f6 0%, #4f46e5 50%, #8b5cf6 100%);
-            background-size: 200% 200%;
-        }
-        
-        /* Improved card hover */
-        .card-hover {
-            transition: all 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-        }
-        
-        .card-hover:hover {
-            transform: translateY(-10px) scale(1.02);
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
-        }
-        
-        /* Glass morphism effect */
-        .glass-effect {
-            background: rgba(255, 255, 255, 0.2);
-            backdrop-filter: blur(12px);
-            -webkit-backdrop-filter: blur(12px);
-            border: 1px solid rgba(255, 255, 255, 0.3);
-        }
-        
-        /* For the particle background */
-        #particles-js {
-            position: absolute;
-            width: 100%;
-            height: 100%;
-            top: 0;
-            left: 0;
-            z-index: 0;
-        }
-        
-        /* Scrollbar styling */
-        ::-webkit-scrollbar {
-            width: 6px;
-            height: 6px;
-        }
-        
-        ::-webkit-scrollbar-track {
-            background: #f1f5f9;
-        }
-        
-        ::-webkit-scrollbar-thumb {
-            background: #94a3b8;
-            border-radius: 4px;
-        }
-        
-        ::-webkit-scrollbar-thumb:hover {
-            background: #64748b;
-        }
-        
-        /* Enhanced animations for links */
-        .nav-link {
-            position: relative;
-        }
-        
-        .nav-link::after {
-            content: '';
-            position: absolute;
-            bottom: -5px;
-            left: 0;
-            width: 0;
-            height: 2px;
-            background-color: #3b82f6;
-            transition: width 0.3s ease;
-        }
-        
-        .nav-link:hover::after {
-            width: 100%;
-        }
-        
-        /* 3D Button effect */
-        .btn-3d {
-            transform-style: preserve-3d;
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
-        }
-        
-        .btn-3d:hover {
-            transform: translateY(-5px) scale(1.03);
-            box-shadow: 0 10px 25px -5px rgba(59, 130, 246, 0.5), 0 8px 10px -6px rgba(59, 130, 246, 0.3);
-        }
-        
-        .btn-3d:active {
-            transform: translateY(-2px) scale(1.01);
-        }
-        
-        /* Animated background */
-        .animated-bg {
-            background: linear-gradient(-45deg, #3b82f6, #4f46e5, #8b5cf6, #6366f1);
-            background-size: 400% 400%;
-            animation: gradient 15s ease infinite;
-        }
-        
-        @keyframes gradient {
-            0% {
-                background-position: 0% 50%;
-            }
-            50% {
-                background-position: 100% 50%;
-            }
-            100% {
-                background-position: 0% 50%;
-            }
-        }
-        
-        /* Floating elements */
-        .floating {
-            animation: floating 3s ease-in-out infinite;
-        }
-        
-        @keyframes floating {
-            0%, 100% { transform: translateY(0); }
-            50% { transform: translateY(-10px); }
-        }
-        
-        /* Timeline styling */
-        .timeline-container {
-            position: relative;
-        }
-        
-        .timeline-container::after {
-            content: '';
-            position: absolute;
-            width: 4px;
-            background-color: rgba(59, 130, 246, 0.3);
-            top: 0;
-            bottom: 0;
-            left: 20px;
-            margin-left: -2px;
-        }
-        
-        .timeline-item {
-            position: relative;
-            padding-left: 60px;
-        }
-        
-        .timeline-dot {
-            position: absolute;
-            top: 8px;
-            left: 10px;
-            width: 20px;
-            height: 20px;
-            border-radius: 50%;
-            background-color: #3b82f6;
-            z-index: 1;
-            box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.2);
-        }
-        
-        /* Neon glow effect */
-        .neon-glow {
-            box-shadow: 0 0 15px rgba(59, 130, 246, 0.5), 0 0 30px rgba(59, 130, 246, 0.3);
-        }
-        
-        /* Badge pulsing animation */
-        .badge-pulse {
-            animation: pulse 2s infinite;
-        }
-        
-        @keyframes pulse {
-            0% {
-                box-shadow: 0 0 0 0 rgba(59, 130, 246, 0.7);
-            }
-            70% {
-                box-shadow: 0 0 0 10px rgba(59, 130, 246, 0);
-            }
-            100% {
-                box-shadow: 0 0 0 0 rgba(59, 130, 246, 0);
-            }
-        }
-        
-        /* Shiny effect on cards */
-        .shiny {
-            position: relative;
-            overflow: hidden;
-        }
-        
-        .shiny::after {
-            content: '';
-            position: absolute;
-            top: -50%;
-            left: -50%;
-            width: 200%;
-            height: 200%;
-            background: linear-gradient(
-                to right,
-                rgba(255, 255, 255, 0) 0%,
-                rgba(255, 255, 255, 0.1) 50%,
-                rgba(255, 255, 255, 0) 100%
-            );
-            transform: rotate(30deg);
-            transition: transform 1.5s;
-        }
-        
-        .shiny:hover::after {
-            transform: rotate(30deg) translate(300px, 0);
-        }
-        
-        /* Preloader */
-        .preloader {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100vw;
-            height: 100vh;
-            background: #0f172a;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            z-index: 9999;
-            transition: opacity 0.5s ease, visibility 0.5s ease;
-        }
-        
-        .preloader.loaded {
-            opacity: 0;
-            visibility: hidden;
-        }
-        
-        /* Smooth transition between sections */
-        section {
-            transition: background-color 0.5s ease;
-        }
-        
-        /* Hover lift effect */
-        .hover-lift {
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
-        }
-        
-        .hover-lift:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
-        }
-    </style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>My Curated Paper Insights</title>
+  <style>
+    :root {
+      --bg-main: #F0E6D2; /* Deeper Cream */
+      --bg-card: #FAF6EE; /* Lighter Cream for cards */
+      --text-main: #544B3D; /* Darker Brown/Gray for main text */
+      --text-headings: #7D5A44; /* Muted, Richer Brown for headings */
+      --text-meta: #8C7B70; /* Softer Brown for meta/less prominent text */
+      --accent-border: #D6CBBB; /* Mid Beige-Brown for borders, accents */
+      --accent-button-bg: #E9E0D4;
+      --accent-button-hover-bg: #D6CBBB;
+      --accent-active-bg: #7D5A44;
+      --accent-active-text: #FAF6EE;
+      --link-color: #6A4C3A;
+      --link-hover-color: #7D5A44;
+    }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "San Francisco", "SF Pro Text", "SF UI Text", "Helvetica Neue", Helvetica, Arial, sans-serif;
+      line-height: 1.7;
+      padding: 1.5rem;
+      max-width: 1024px;
+      margin: 0 auto;
+      background-color: var(--bg-main);
+      color: var(--text-main);
+    }
+    header, footer { text-align: center; margin-bottom: 2.5rem; }
+    h1 { font-size: 2.8rem; font-weight: 600; margin-bottom: 0.75rem; color: var(--text-headings); }
+    header p { font-size: 1.15rem; color: var(--text-meta); }
+    nav { display: flex; justify-content: center; gap: 1rem; margin: 1.5rem 0 2.5rem; padding-bottom: 1rem; border-bottom: 2px solid var(--accent-border); }
+    nav a { text-decoration: none; color: var(--text-meta); padding: 0.5rem 1rem; border-radius: 0.375rem; font-weight: 500; transition: background-color 0.2s ease, color 0.2s ease; }
+    nav a:hover, nav a.active { background-color: var(--accent-border); color: var(--text-main); }
+    hr.section-divider { border: none; height: 2px; background-color: var(--accent-border); margin: 2.5rem 0; }
+    section { margin-bottom: 3rem; }
+    .section-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; padding-bottom: 0.75rem; border-bottom: 2px solid var(--accent-border); }
+    .section-header h2 { font-size: 2.2rem; font-weight: 600; margin-bottom: 0; color: var(--text-headings); }
+    .controls button, .tag-filter-container button.tag { background-color: var(--accent-button-bg); color: var(--text-headings); border: 1px solid var(--accent-border); padding: 0.5rem 1rem; margin-left: 0.5rem; border-radius: 0.375rem; cursor: pointer; font-size: 0.9rem; font-weight: 500; transition: background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease; }
+    .controls button:hover, .tag-filter-container button.tag:hover { background-color: var(--accent-button-hover-bg); border-color: #C9BDB0; color: var(--text-main); }
+    .tag-filter-container { margin-bottom: 1.5rem; padding: 0.75rem; display: flex; flex-wrap: wrap; gap: 0.6rem; align-items: center; background-color: var(--bg-main); border-radius: 0.5rem; border: 1px solid var(--accent-border); }
+    .tag-filter-container .tag-filter-label { font-weight: 600; margin-right: 0.75rem; color: var(--text-headings); }
+    .tag-filter-container button.active-tag-filter { background-color: var(--accent-active-bg); color: var(--accent-active-text); border-color: #7D5A44; font-weight: 600; }
+    ul.paper-list { list-style: none; display: grid; gap: 2rem; padding: 0; }
+    li.paper-entry { border: 1px solid var(--accent-border); padding: 1.5rem; border-radius: 0.6rem; background-color: var(--bg-card); box-shadow: 0 4px 8px rgba(125, 90, 68, 0.08); display: flex; flex-direction: column; transition: box-shadow 0.2s ease, transform 0.2s ease; cursor: pointer; }
+    li.paper-entry:hover { box-shadow: 0 6px 12px rgba(125, 90, 68, 0.12); transform: translateY(-3px); }
+    li.paper-entry.hidden { display: none; }
+    .paper-title a, .modal-paper-title { font-weight: 600; font-size: 1.25rem; color: var(--link-color); text-decoration: none; }
+    .paper-title a:hover { text-decoration: underline; color: var(--link-hover-color); }
+    .paper-meta, .modal-paper-meta { font-size: 0.85rem; color: var(--text-meta); margin-bottom: 0.75rem; }
+    .paper-tags, .modal-paper-tags { margin-bottom: 1rem; display: flex; flex-wrap: wrap; gap: 0.5rem; }
+    .paper-tags .tag, .modal-paper-tags .tag { background-color: #EFEAE0; color: var(--text-meta); padding: 0.25rem 0.6rem; border-radius: 0.25rem; font-size: 0.8rem; border: 1px solid var(--accent-border); }
+    .paper-notes, .modal-paper-notes { font-size: 1rem; color: var(--text-main); margin-top: 1rem; padding-left: 0.75rem; border-left: 3px solid var(--accent-border); }
+    .paper-notes strong, .modal-paper-notes strong { font-weight: 600; color: var(--text-headings); }
+    .paper-detailed-info h4, .modal-detailed-info h4 { font-size: 1.1em; color: var(--text-headings); margin-top: 1.2em; margin-bottom: 0.5em; }
+    .paper-detailed-info p, .modal-detailed-info p { margin-bottom: 0.8em; }
+    .paper-actions { margin-top: 1.2rem; }
+    .paper-actions .bibtex-btn { background-color: var(--accent-button-bg); color: var(--text-headings); border: 1px solid var(--accent-border); }
+    .paper-actions .bibtex-btn:hover { background-color: var(--accent-button-hover-bg); color: var(--text-main); }
+    mjx-container[jax="SVG"][display="true"] { display: block; overflow-x: auto; padding: 0.75em 0; margin: 0.75em 0; text-align: center; }
+    footer { font-size: 0.9rem; color: var(--text-meta); margin-top: 3rem; padding-top: 1.5rem; border-top: 2px solid var(--accent-border); }
+    .modal { display: none; position: fixed; z-index: 1000; left: 0; top: 0; width: 100%; height: 100%; overflow: auto; background-color: rgba(0,0,0,0.6); align-items: center; justify-content: center; }
+    .modal.active { display: flex; }
+    .modal-content { background-color: var(--bg-card); margin: auto; padding: 2rem; border: 1px solid var(--accent-border); border-radius: 0.8rem; width: 85%; max-width: 800px; box-shadow: 0 5px 15px rgba(0,0,0,0.2); position: relative; max-height: 90vh; overflow-y: auto; }
+    .modal-close-btn { color: var(--text-meta); position: absolute; top: 1rem; right: 1.5rem; font-size: 2rem; font-weight: bold; line-height: 1; }
+    .modal-close-btn:hover, .modal-close-btn:focus { color: var(--text-main); text-decoration: none; cursor: pointer; }
+    .modal-paper-link { display: inline-block; margin-top: 1.5rem; padding: 0.6rem 1.2rem; background-color: var(--accent-active-bg); color: var(--accent-active-text); text-decoration: none; border-radius: 0.375rem; font-weight: 500; }
+    .modal-paper-link:hover { background-color: #6A4C3A; }
+    @media (min-width: 768px) { ul.paper-list { grid-template-columns: repeat(auto-fill, minmax(380px, 1fr)); } }
+  </style>
+  <script> MathJax = { tex: { inlineMath: [['$', '$'], ['\\(', '\\)']], displayMath: [['$$', '$$'], ['\\[', '\\]']] }, svg: { fontCache: 'global' } }; </script>
+  <script type="text/javascript" id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"></script>
 </head>
-<body class="bg-white text-text font-sans overflow-x-hidden">
-    <!-- Preloader -->
-    <div class="preloader">
-        <div class="flex flex-col items-center">
-            <div class="w-16 h-16 border-4 border-accent border-t-transparent rounded-full animate-spin mb-4"></div>
-            <div class="text-white text-xl font-display">Loading...</div>
-        </div>
+<body>
+  <header>
+    <h1>My Curated Paper Insights</h1>
+    <p>A selection of impactful papers in AI, Physics, and Robotics. <em>(Click on a paper card for more details. Links are examples - please verify.)</em></p>
+  </header>
+
+  <nav>
+    <a href="#ai" class="active">AI</a>
+    <a href="#physics">Physics</a>
+    <a href="#robotics">Robotics</a>
+  </nav>
+
+  <hr class="section-divider"/>
+  <section id="ai">
+    <div class="section-header"><h2>Artificial Intelligence</h2> <div class="controls"><button onclick="sortPapers('ai-papers', 'asc')">Year ↑</button><button onclick="sortPapers('ai-papers', 'desc')">Year ↓</button></div>
     </div>
-
-    <!-- Cursor follower (for desktop) -->
-    <div id="cursor-follower" class="hidden md:block fixed w-12 h-12 rounded-full border-2 border-accent/50 pointer-events-none z-50 -translate-x-1/2 -translate-y-1/2 opacity-0 transition-opacity duration-300"></div>
-
-    <!-- Navbar -->
-    <header class="fixed w-full bg-white bg-opacity-90 backdrop-filter backdrop-blur-lg z-50 transition-all duration-500 shadow-sm">
-        <nav class="container mx-auto px-6 md:px-12 py-4">
-            <div class="flex justify-between items-center">
-                <a href="#" class="text-2xl font-bold font-display relative group">
-                    <span class="gradient-text">San Hashim</span>
-                    <span class="absolute -bottom-1 left-0 w-0 h-0.5 bg-gradient-to-r from-blue-500 to-purple-600 group-hover:w-full transition-all duration-500"></span>
-                </a>
-                <div class="hidden md:flex space-x-8">
-                    <a href="#about" class="text-text hover:text-accent transition-colors duration-300 font-medium text-sm nav-link">About</a>
-                    <a href="#experience" class="text-text hover:text-accent transition-colors duration-300 font-medium text-sm nav-link">Experience</a>
-                    <a href="#skills" class="text-text hover:text-accent transition-colors duration-300 font-medium text-sm nav-link">Skills</a>
-                    <a href="#certifications" class="text-text hover:text-accent transition-colors duration-300 font-medium text-sm nav-link">Certifications</a>
-                    <a href="#projects" class="text-text hover:text-accent transition-colors duration-300 font-medium text-sm nav-link">Projects</a>
-                    <a href="#papers" class="text-text hover:text-accent transition-colors duration-300 font-medium text-sm nav-link">Papers</a>
-                    <a href="#contact" class="text-text hover:text-accent transition-colors duration-300 font-medium text-sm nav-link">Contact</a>
-                </div>
-                <div class="hidden md:block">
-                    <a href="mailto:sanhashim12@outlook.com" class="px-5 py-2.5 bg-accent hover:bg-accentDark text-white font-medium rounded-lg transition-all duration-300 text-sm btn-3d">
-                        <i class="fas fa-envelope mr-2"></i> Connect
-                    </a>
-                </div>
-                <button class="md:hidden text-text focus:outline-none" id="menu-toggle">
-                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7"></path>
-                    </svg>
-                </button>
-            </div>
-        </nav>
-        <div class="md:hidden hidden bg-white shadow-xl rounded-b-2xl" id="mobile-menu">
-            <div class="px-4 pt-2 pb-6 space-y-3">
-                <a href="#about" class="block py-2.5 px-4 text-base font-medium text-text hover:bg-secondary hover:text-accent rounded-xl transition-all">About</a>
-                <a href="#experience" class="block py-2.5 px-4 text-base font-medium text-text hover:bg-secondary hover:text-accent rounded-xl transition-all">Experience</a>
-                <a href="#skills" class="block py-2.5 px-4 text-base font-medium text-text hover:bg-secondary hover:text-accent rounded-xl transition-all">Skills</a>
-                <a href="#certifications" class="block py-2.5 px-4 text-base font-medium text-text hover:bg-secondary hover:text-accent rounded-xl transition-all">Certifications</a>
-                <a href="#projects" class="block py-2.5 px-4 text-base font-medium text-text hover:bg-secondary hover:text-accent rounded-xl transition-all">Projects</a>
-                <a href="#papers" class="block py-2.5 px-4 text-base font-medium text-text hover:bg-secondary hover:text-accent rounded-xl transition-all">Papers</a>
-                <a href="#contact" class="block py-2.5 px-4 text-base font-medium text-text hover:bg-secondary hover:text-accent rounded-xl transition-all">Contact</a>
-                <a href="mailto:sanhashim12@outlook.com" class="block text-center mt-4 py-2.5 bg-accent hover:bg-accentDark text-white font-medium rounded-xl transition-all duration-300">Get In Touch</a>
-            </div>
+    <div class="tag-filter-container" id="ai-tag-filters"><span class="tag-filter-label">Filter:</span><button id="show-all-tags-ai" class="tag show-all" onclick="filterPapersByTag('ai-papers', null, 'ai-tag-filters')">Show All</button></div>
+    <ul class="paper-list" id="ai-papers">
+      <li class="paper-entry" data-year="2017" data-tags='["Transformers", "NLP", "Deep Learning"]' data-link="https://arxiv.org/abs/1706.03762">
+        <div class="paper-title">Attention Is All You Need</div>
+        <div class="paper-meta">Vaswani et&nbsp;al., 2017</div>
+        <div class="paper-tags"><span class="tag">Transformers</span><span class="tag">NLP</span><span class="tag">Deep Learning</span></div>
+        <div class="paper-notes"><strong>My Take:</strong> Changed NLP! Ditching recurrence for self-attention was revolutionary.</div>
+        <div class="paper-detailed-info" style="display: none;">
+          <h4>Abstract Summary</h4>
+          <p>The dominant sequence transduction models are based on complex recurrent or convolutional neural networks in an encoder-decoder architecture. The best performing models also connect the encoder and decoder through an attention mechanism. We propose a new simple network architecture, the Transformer, based solely on attention mechanisms, dispensing with recurrence and convolutions entirely. Experiments on two machine translation tasks show these models to be superior in quality while being more parallelizable and requiring significantly less time to train.</p>
+          <h4>Further Insights & Key Math</h4>
+          <p>The core is the scaled dot-product attention:</p>
+          $$ \text{Attention}(Q, K, V) = \text{softmax}\left(\frac{QK^T}{\sqrt{d_k}}\right)V $$
+          <p>They also introduced Multi-Head Attention, allowing the model to jointly attend to information from different representation subspaces at different positions. An attention head computes: </p>
+          $$ \text{head}_i = \text{Attention}(QW_i^Q, KW_i^K, VW_i^V) $$
+          <p>where $W_i^Q, W_i^K, W_i^V$ are learned projection matrices. The outputs of the heads are concatenated and projected again.</p>
         </div>
-    </header>
+      </li>
+      <li class="paper-entry" data-year="2014" data-tags='["Generative Models", "Deep Learning"]' data-link="https://arxiv.org/abs/1406.2661">
+        <div class="paper-title">Generative Adversarial Nets</div>
+        <div class="paper-meta">Goodfellow et&nbsp;al., 2014</div>
+        <div class="paper-tags"><span class="tag">Generative Models</span><span class="tag">Deep Learning</span></div>
+        <div class="paper-notes"><strong>My Take:</strong> GANs! Two networks in a minimax game. Unlocked so much creativity.</div>
+        <div class="paper-detailed-info" style="display: none;">
+            <h4>Abstract Summary</h4>
+            <p>We propose a new framework for estimating generative models via an adversarial process, in which we simultaneously train two models: a generative model G that captures the data distribution, and a discriminative model D that estimates the probability that a sample came from the training data rather than G. The training procedure for G is to maximize the probability of D making a mistake. This framework corresponds to a minimax two-player game. In the space of arbitrary functions G and D, a unique solution exists, with G recovering the training data distribution and D equal to 1/2 everywhere.</p>
+            <h4>Further Insights & Key Math</h4>
+            <p>The minimax game objective function is central:</p>
+            $$ \min_G \max_D V(D,G) = \mathbb{E}_{x \sim p_{\text{data}}(x)}[\log D(x)] + \mathbb{E}_{z \sim p_z(z)}[\log(1 - D(G(z)))] $$
+            <p>The generator $G(z; \theta_g)$ maps noise $z$ to data space, and the discriminator $D(x; \theta_d)$ outputs the probability that $x$ is real. Training involves alternating updates to $D$ (to better distinguish real from fake) and $G$ (to better fool $D$).</p>
+        </div>
+      </li>
+      <li class="paper-entry" data-year="2018" data-tags='["NLP", "Transformers", "BERT"]' data-link="https://arxiv.org/abs/1810.04805">
+        <div class="paper-title">BERT: Pre-training of Deep Bidirectional Transformers for Language Understanding</div>
+        <div class="paper-meta">Devlin, Chang, Lee & Toutanova, 2018</div>
+        <div class="paper-tags"><span class="tag">NLP</span><span class="tag">Transformers</span><span class="tag">BERT</span></div>
+        <div class="paper-notes">
+          <strong>My Take:</strong> BERT showed the power of pre-training large Transformer models on massive text corpora. The bidirectional nature using Masked Language Model (MLM) was key.
+        </div>
+        <div class="paper-detailed-info" style="display: none;">
+            <h4>Abstract Summary</h4>
+            <p>BERT stands for Bidirectional Encoder Representations from Transformers. Unlike previous models, BERT is designed to pre-train deep bidirectional representations from unlabeled text by jointly conditioning on both left and right context in all layers. As a result, the pre-trained BERT model can be fine-tuned with just one additional output layer to create state-of-the-art models for a wide range of tasks, such as question answering and language inference, without substantial task-specific architecture modifications.</p>
+            <h4>Further Insights & Key Math</h4>
+            <p>BERT uses two pre-training tasks:</p>
+            <p>1. <strong>Masked Language Model (MLM):</strong> Randomly masks some percentage of input tokens, and the objective is to predict the original vocabulary id of the masked word based only on its context. This allows for bidirectional context learning. Example: `Input: the man went to the [MASK] store. Labels: [MASK] = grocery`</p>
+            <p>2. <strong>Next Sentence Prediction (NSP):</strong> Predicts whether two sentences A and B are consecutive in the original text. This helps BERT understand sentence relationships.
+            The input representation for BERT involves summing Token Embeddings, Segment Embeddings (to distinguish sentences A and B), and Position Embeddings.</p>
+        </div>
+      </li>
+      <li class="paper-entry" data-year="2015" data-tags='["Deep Learning", "CNNs", "ResNet"]' data-link="https://arxiv.org/abs/1512.03385">
+        <div class="paper-title">Deep Residual Learning for Image Recognition</div>
+        <div class="paper-meta">He, Zhang, Ren & Sun, 2015</div>
+        <div class="paper-tags"><span class="tag">Deep Learning</span><span class="tag">CNNs</span><span class="tag">ResNet</span></div>
+        <div class="paper-notes"><strong>My Take:</strong> ResNets tackled vanishing gradients in very deep networks with residual blocks $H(x) = F(x) + x$.</div>
+        <div class="paper-detailed-info" style="display: none;">
+            <h4>Abstract Summary</h4>
+            <p>Deeper neural networks are more difficult to train. We present a residual learning framework to ease the training of networks that are substantially deeper than those used previously. We explicitly reformulate the layers as learning residual functions with reference to the layer inputs, instead of learning unreferenced functions. We provide comprehensive empirical evidence showing that these residual networks are easier to optimize, and can gain accuracy from considerably increased depth.</p>
+            <h4>Further Insights & Key Math</h4>
+            <p>The core idea is the "shortcut connection" or "skip connection". If the desired underlying mapping is $H(x)$, the stacked non-linear layers are made to fit another mapping $F(x) := H(x) - x$. The original mapping is then recast into $F(x) + x$.
+            This formulation is realized by feedforward neural networks with shortcut connections. These connections simply perform identity mapping, and their outputs are added to the outputs of the stacked layers.
+            A building block is defined as:</p>
+            $$ y = F(x, \{W_i\}) + x $$
+            <p>The dimensions of $x$ and $F$ must be equal. If not, a linear projection $W_s$ can be used by the shortcut to match the dimensions: $y = F(x, \{W_i\}) + W_s x$.</p>
+        </div>
+      </li>
+      <li class="paper-entry" data-year="2016" data-tags='["Reinforcement Learning", "Deep Learning", "AlphaGo"]' data-link="https://www.nature.com/articles/nature16961">
+        <div class="paper-title">Mastering the game of Go with deep neural networks and tree search</div>
+        <div class="paper-meta">Silver et&nbsp;al. (DeepMind), 2016</div>
+        <div class="paper-tags"><span class="tag">Reinforcement Learning</span><span class="tag">Deep Learning</span><span class="tag">AlphaGo</span></div>
+        <div class="paper-notes">
+          <strong>My Take:</strong> AlphaGo beating Lee Sedol was a landmark moment. Combined deep NNs with Monte Carlo Tree Search (MCTS).
+        </div>
+         <div class="paper-detailed-info" style="display: none;">
+            <h4>Abstract Summary</h4>
+            <p>The game of Go has long been viewed as the most challenging of classic games for artificial intelligence owing to its enormous search space and the difficulty of evaluating board positions and moves. Here we introduce a new approach to computer Go that uses ‘value networks’ to evaluate board positions and ‘policy networks’ to select moves. These deep neural networks are trained by a novel combination of supervised learning from human expert games, and reinforcement learning from games of self-play. Without any lookahead search, the neural networks play Go at the level of state-of-the-art Monte Carlo tree search programs that simulate thousands of random games of self-play. We also introduce a new search algorithm that combines Monte Carlo simulation with value and policy networks.</p>
+            <h4>Further Insights</h4>
+            <p>AlphaGo's success relied on several components:</p>
+            <p>1. <strong>Policy Network ($p_\pi$):</strong> A convolutional network trained via supervised learning (SL) on expert human moves, then refined via reinforcement learning (RL) by playing against itself. It outputs probabilities for possible moves.</p>
+            <p>2. <strong>Value Network ($v_\theta$):</strong> Another convolutional network trained to predict the outcome (win/loss) from a given board position. This was trained on data generated from self-play games by the RL policy network.</p>
+            <p>3. <strong>Monte Carlo Tree Search (MCTS):</strong> MCTS uses the policy network to guide its simulations (reducing breadth of search) and the value network to evaluate positions (reducing depth of search). The action selection in MCTS considers both exploration and exploitation.</p>
+        </div>
+      </li>
+    </ul>
+  </section>
 
-    <main>
-        <!-- Hero Section -->
-        <section id="hero" class="relative min-h-screen flex items-center justify-center overflow-hidden animated-bg">
-            <div id="particles-js"></div>
-            <div class="absolute inset-0 bg-gradient-to-b from-black/50 to-black/20 z-10"></div>
-            <div class="container mx-auto px-6 md:px-12 py-24 relative z-20">
-                <div class="flex flex-col md:flex-row items-center justify-between">
-                    <div class="md:w-1/2 text-center md:text-left" data-aos="fade-right" data-aos-delay="200">
-                        <div class="inline-block mb-3 px-4 py-1.5 rounded-full glass-effect text-white text-sm font-medium backdrop-blur-md">
-                            <span class="mr-2">⭐</span>
-                            <span>AI/ML Engineer & AWS Certified Cloud Architect</span>
-                        </div>
-                        <h1 class="text-5xl md:text-6xl lg:text-7xl font-bold mb-6 text-white font-display leading-tight">
-                            <span>San</span>
-                            <span>Hashim</span>
-                        </h1>
-                        <p class="text-xl md:text-2xl mb-8 text-white opacity-90 font-light max-w-xl">
-
-                        
-                        </p>
-                        <div class="flex flex-col sm:flex-row gap-4 justify-center md:justify-start">
-                            <a href="#contact" class="bg-white text-accent px-8 py-3.5 rounded-xl hover:bg-accent hover:text-white transition-all duration-300 shadow-lg hover:shadow-xl transform hover:scale-105 font-medium group">
-                                <span class="relative z-10 flex items-center justify-center">
-                                    <i class="fas fa-envelope mr-2 group-hover:animate-bounce"></i> 
-                                    Connect with Me
-                                </span>
-                            </a>
-                            <a href="https://github.com/sanowl" target="_blank" class="glass-effect text-white px-8 py-3.5 rounded-xl hover:bg-white/10 transition-all duration-300 font-medium">
-                                <i class="fab fa-github mr-2"></i> GitHub Profile
-                            </a>
-                        </div>
-                    </div>
-                    <div class="hidden md:block md:w-1/2 mt-12 md:mt-0" data-aos="fade-left" data-aos-delay="300">
-                        <div class="relative mx-auto w-72 h-72 lg:w-96 lg:h-96">
-                            <div class="absolute inset-0 bg-gradient-to-r from-blue-500 to-purple-600 rounded-full blur-3xl opacity-70 animate-pulse-slow"></div>
-                            <div class="absolute inset-8 bg-white rounded-full shadow-xl"></div>
-                            <div class="absolute inset-0 flex items-center justify-center">
-                                <div class="rotate-3d">
-                                    <svg class="w-40 h-40 lg:w-56 lg:h-56 text-accent icon-3d" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                        <path d="M12 16C8.13401 16 5 12.866 5 9C5 5.13401 8.13401 2 12 2C15.866 2 19 5.13401 19 9C19 12.866 15.866 16 12 16Z" stroke="currentColor" stroke-width="1.5"/>
-                                        <path d="M12 16V22" stroke="currentColor" stroke-width="1.5"/>
-                                        <path d="M8 19H16" stroke="currentColor" stroke-width="1.5"/>
-                                        <path d="M12 6V12" stroke="currentColor" stroke-width="1.5"/>
-                                        <path d="M12 12L15 9" stroke="currentColor" stroke-width="1.5"/>
-                                    </svg>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            
-            <div class="absolute bottom-8 left-0 right-0 flex justify-center z-20">
-                <a href="#about" class="animate-bounce bg-white p-2 w-10 h-10 rounded-full shadow-lg flex items-center justify-center">
-                    <svg class="w-6 h-6 text-accent" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 14l-7 7m0 0l-7-7m7 7V3"></path>
-                    </svg>
-                </a>
-            </div>
-        </section>
-
-        <!-- About Section -->
-        <section id="about" class="py-24 bg-white">
-            <div class="container mx-auto px-6 md:px-12" data-aos="fade-up" data-aos-duration="1000">
-                <div class="text-center mb-16">
-                    <h2 class="text-4xl font-bold font-display gradient-text inline-block">About Me</h2>
-                    <div class="w-24 h-1 bg-accent mx-auto mt-4 rounded-full"></div>
-                </div>
-                
-                <div class="max-w-4xl mx-auto" data-aos="fade-up" data-aos-delay="300">
-                    <div class="inline-flex items-center px-4 py-2 bg-blue-50 text-blue-600 rounded-full text-sm font-medium mb-4">
-                        <i class="fas fa-certificate mr-2"></i> AWS Certified Cloud Architect
-                    </div>
-                    <h3 class="text-2xl font-bold mb-4 text-text">AI/ML Engineer & NLP Specialist</h3>
-                    <p class="text-lg leading-relaxed mb-6 text-text/80">
-                        i like to code just that nothing fancy
-                    </p>
-                    <p class="text-lg leading-relaxed mb-8 text-text/80">
-                        also reading Ai papers and physics papers
-                    </p>
-                    
-                    <div class="grid grid-cols-2 md:grid-cols-4 gap-6 mt-8">
-                        <div class="flex items-center hover-lift p-3 rounded-xl">
-                            <div class="flex-shrink-0 w-12 h-12 bg-blue-100 rounded-xl flex items-center justify-center mr-4">
-                                <i class="fas fa-brain text-accent text-xl"></i>
-                            </div>
-                            <div>
-                                <h4 class="font-semibold">AI Specialist</h4>
-                                <p class="text-sm text-text/70">Deep Learning</p>
-                            </div>
-                        </div>
-                        <div class="flex items-center hover-lift p-3 rounded-xl">
-                            <div class="flex-shrink-0 w-12 h-12 bg-blue-100 rounded-xl flex items-center justify-center mr-4">
-                                <i class="fas fa-cloud text-accent text-xl"></i>
-                            </div>
-                            <div>
-                                <h4 class="font-semibold">Cloud Architect</h4>
-                                <p class="text-sm text-text/70">AWS Certified</p>
-                            </div>
-                        </div>
-                        <div class="flex items-center hover-lift p-3 rounded-xl">
-                            <div class="flex-shrink-0 w-12 h-12 bg-blue-100 rounded-xl flex items-center justify-center mr-4">
-                                <i class="fas fa-comment-dots text-accent text-xl"></i>
-                            </div>
-                            <div>
-                                <h4 class="font-semibold">NLP Engineer</h4>
-                                <p class="text-sm text-text/70">Language Processing</p>
-                            </div>
-                        </div>
-                        <div class="flex items-center hover-lift p-3 rounded-xl">
-                            <div class="flex-shrink-0 w-12 h-12 bg-blue-100 rounded-xl flex items-center justify-center mr-4">
-                                <i class="fas fa-code text-accent text-xl"></i>
-                            </div>
-                            <div>
-                                <h4 class="font-semibold">Full Stack</h4>
-                                <p class="text-sm text-text/70">End-to-End Developer</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- Experience Section -->
-        <section id="experience" class="py-24 bg-secondary">
-            <div class="container mx-auto px-6 md:px-12" data-aos="fade-up" data-aos-duration="1000">
-                <div class="text-center mb-16">
-                    <h2 class="text-4xl font-bold font-display gradient-text inline-block">Professional Experience</h2>
-                    <div class="w-24 h-1 bg-accent mx-auto mt-4 rounded-full"></div>
-                    <p class="text-lg text-text/70 mt-6 max-w-2xl mx-auto">My journey through AI research, deep learning, and software engineering.</p>
-                </div>
-                
-                <div class="timeline-container">
-                    <!-- Co-Founder & CTO at Flyaway -->
-                    <div class="timeline-item mb-16" data-aos="fade-up" data-aos-delay="100">
-                        <div class="timeline-dot"></div>
-                        <div class="bg-white rounded-2xl shadow-xl p-8 card-hover">
-                            <div class="flex flex-col md:flex-row md:items-center md:justify-between mb-6">
-                                <div>
-                                    <h3 class="text-2xl font-semibold text-accent">Co-Founder & CTO</h3>
-                                    <p class="text-lg text-gray-600">Flyaway</p>
-                                </div>
-                                <div class="mt-2 md:mt-0">
-                                    <span class="px-4 py-1.5 bg-blue-100 text-accent rounded-lg text-sm font-medium">April 2024 - Present</span>
-                                </div>
-                            </div>
-                            <div class="mb-4 flex items-center text-sm text-gray-500">
-                                <i class="fas fa-map-marker-alt text-accent/70 mr-2"></i>
-                                <span>Sulaymaniyah, Iraq - Hybrid</span>
-                                <span class="mx-2">•</span>
-                                <span class="bg-green-100 text-green-600 px-2 py-0.5 rounded-full text-xs">Full-time</span>
-                            </div>
-                            <p class="text-text/70 leading-relaxed mb-6">
-                                Currently working on building recommendation systems and integrating LLM APIs to enable seamless customer interaction and dynamic query handling. Developing analytics systems for extracting actionable insights and improving overall performance. Additionally, working on image compression methods using Rust, focusing on optimization techniques such as quantization and efficient encoding algorithms to enhance storage and transmission efficiency.
-                            </p>
-                            <div class="flex flex-wrap gap-2 mb-6">
-                                <span class="badge px-3 py-1.5 bg-blue-50 text-blue-600 rounded-lg text-xs font-medium">Artificial Intelligence</span>
-                                <span class="badge px-3 py-1.5 bg-blue-50 text-blue-600 rounded-lg text-xs font-medium">Data Analysis</span>
-                                <span class="badge px-3 py-1.5 bg-blue-50 text-blue-600 rounded-lg text-xs font-medium">Data Science</span>
-                                <span class="badge px-3 py-1.5 bg-blue-50 text-blue-600 rounded-lg text-xs font-medium">Python</span>
-                                <span class="badge px-3 py-1.5 bg-blue-50 text-blue-600 rounded-lg text-xs font-medium">PyTorch</span>
-                                <span class="badge px-3 py-1.5 bg-blue-50 text-blue-600 rounded-lg text-xs font-medium">Hugging Face</span>
-                                <span class="badge px-3 py-1.5 bg-blue-50 text-blue-600 rounded-lg text-xs font-medium">Fine Tuning</span>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <!-- Deep Learning Engineer -->
-                    <div class="timeline-item mb-16" data-aos="fade-up" data-aos-delay="200">
-                        <div class="timeline-dot"></div>
-                        <div class="bg-white rounded-2xl shadow-xl p-8 card-hover">
-                            <div class="flex flex-col md:flex-row md:items-center md:justify-between mb-6">
-                                <div>
-                                    <h3 class="text-2xl font-semibold text-accent">Deep Learning Engineer</h3>
-                                    <p class="text-lg text-gray-600">Burton Algorithms</p>
-                                </div>
-                                <div class="mt-2 md:mt-0">
-                                    <span class="px-4 py-1.5 bg-blue-100 text-accent rounded-lg text-sm font-medium">November 2024 - Present</span>
-                                </div>
-                            </div>
-                            <div class="mb-4 flex items-center text-sm text-gray-500">
-                                <i class="fas fa-map-marker-alt text-accent/70 mr-2"></i>
-                                <span>Dallas, Texas, United States</span>
-                                <span class="mx-2">•</span>
-                                <span class="bg-green-100 text-green-600 px-2 py-0.5 rounded-full text-xs">Full-time</span>
-                            </div>
-                            <p class="text-text/70 leading-relaxed mb-6">
-                                Leading deep learning initiatives focused on computer vision and natural language processing applications. Designing and implementing neural network architectures for complex pattern recognition and predictive analytics solutions.
-                            </p>
-                        </div>
-                    </div>
-                    
-                    <!-- Lead AI Engineer -->
-                    <div class="timeline-item mb-16" data-aos="fade-up" data-aos-delay="300">
-                        <div class="timeline-dot"></div>
-                        <div class="bg-white rounded-2xl shadow-xl p-8 card-hover">
-                            <div class="flex flex-col md:flex-row md:items-center md:justify-between mb-6">
-                                <div>
-                                    <h3 class="text-2xl font-semibold text-accent">Lead AI Engineer</h3>
-                                    <p class="text-lg text-gray-600">Futura Sourcings</p>
-                                </div>
-                                <div class="mt-2 md:mt-0">
-                                    <span class="px-4 py-1.5 bg-blue-100 text-accent rounded-lg text-sm font-medium">June 2024 - November 2024</span>
-                                </div>
-                            </div>
-                            <div class="mb-4 flex items-center text-sm text-gray-500">
-                                <i class="fas fa-map-marker-alt text-accent/70 mr-2"></i>
-                                <span>United States - Remote</span>
-                                <span class="mx-2">•</span>
-                                <span class="bg-green-100 text-green-600 px-2 py-0.5 rounded-full text-xs">Full-time</span>
-                            </div>
-                            <p class="text-text/70 leading-relaxed mb-6">
-                                Collaborated on the development of an image generation model integrating Transformer and CNN architectures, focusing on optimizing training pipelines and improving model efficiency. Managed a team to oversee key aspects, including data preprocessing (cleaning, augmentation, and annotation), hyperparameter tuning, and experiment tracking. Facilitated coordination and innovation within the team to refine model outputs effectively.
-                            </p>
-                            <div class="flex flex-wrap gap-2 mb-6">
-                                <span class="badge px-3 py-1.5 bg-blue-50 text-blue-600 rounded-lg text-xs font-medium">Analytical Skills</span>
-                                <span class="badge px-3 py-1.5 bg-blue-50 text-blue-600 rounded-lg text-xs font-medium">Artificial Intelligence</span>
-                                <span class="badge px-3 py-1.5 bg-blue-50 text-blue-600 rounded-lg text-xs font-medium">PyTorch</span>
-                                <span class="badge px-3 py-1.5 bg-blue-50 text-blue-600 rounded-lg text-xs font-medium">Pandas</span>
-                                <span class="badge px-3 py-1.5 bg-blue-50 text-blue-600 rounded-lg text-xs font-medium">CNN</span>
-                                <span class="badge px-3 py-1.5 bg-blue-50 text-blue-600 rounded-lg text-xs font-medium">Transformers</span>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <!-- AI Software Engineer Intern -->
-                    <div class="timeline-item mb-16" data-aos="fade-up" data-aos-delay="400">
-                        <div class="timeline-dot"></div>
-                        <div class="bg-white rounded-2xl shadow-xl p-8 card-hover">
-                            <div class="flex flex-col md:flex-row md:items-center md:justify-between mb-6">
-                                <div>
-                                    <h3 class="text-2xl font-semibold text-accent">AI Software Engineer</h3>
-                                    <p class="text-lg text-gray-600">TUBLIAN</p>
-                                </div>
-                                <div class="mt-2 md:mt-0">
-                                    <span class="px-4 py-1.5 bg-blue-100 text-accent rounded-lg text-sm font-medium">May 2024 - June 2024</span>
-                                </div>
-                            </div>
-                            <div class="mb-4 flex items-center text-sm text-gray-500">
-                                <i class="fas fa-map-marker-alt text-accent/70 mr-2"></i>
-                                <span>Columbus, Ohio, United States - Remote</span>
-                                <span class="mx-2">•</span>
-                                <span class="bg-purple-100 text-purple-600 px-2 py-0.5 rounded-full text-xs">Internship</span>
-                            </div>
-                            <p class="text-text/70 leading-relaxed mb-6">
-                                Contributed to AI open-source projects, focusing on code management and development. Applied deep learning algorithms and architectures to solve complex problems. Worked with PyTorch frameworks to build and optimize neural network models.
-                            </p>
-                            <div class="flex flex-wrap gap-2 mb-6">
-                                <span class="badge px-3 py-1.5 bg-blue-50 text-blue-600 rounded-lg text-xs font-medium">Deep Learning</span>
-                                <span class="badge px-3 py-1.5 bg-blue-50 text-blue-600 rounded-lg text-xs font-medium">Core ML</span>
-                                <span class="badge px-3 py-1.5 bg-blue-50 text-blue-600 rounded-lg text-xs font-medium">PyTorch</span>
-                                <span class="badge px-3 py-1.5 bg-blue-50 text-blue-600 rounded-lg text-xs font-medium">CNN</span>
-                                <span class="badge px-3 py-1.5 bg-blue-50 text-blue-600 rounded-lg text-xs font-medium">RNN</span>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <!-- Backend Engineer Intern -->
-                    <div class="timeline-item mb-16" data-aos="fade-up" data-aos-delay="500">
-                        <div class="timeline-dot"></div>
-                        <div class="bg-white rounded-2xl shadow-xl p-8 card-hover">
-                            <div class="flex flex-col md:flex-row md:items-center md:justify-between mb-6">
-                                <div>
-                                    <h3 class="text-2xl font-semibold text-accent">Backend Engineer</h3>
-                                    <p class="text-lg text-gray-600">K&C (Krusche & Company)</p>
-                                </div>
-                                <div class="mt-2 md:mt-0">
-                                    <span class="px-4 py-1.5 bg-blue-100 text-accent rounded-lg text-sm font-medium">Oct 2023 - Mar 2024</span>
-                                </div>
-                            </div>
-                            <div class="mb-4 flex items-center text-sm text-gray-500">
-                                <i class="fas fa-map-marker-alt text-accent/70 mr-2"></i>
-                                <span>Munich, Bavaria, Germany</span>
-                                <span class="mx-2">•</span>
-                                <span class="bg-purple-100 text-purple-600 px-2 py-0.5 rounded-full text-xs">Internship</span>
-                            </div>
-                            <p class="text-text/70 leading-relaxed mb-6">
-                                Developed robust backend systems and APIs for enterprise applications. Implemented scalable architectures and optimized database performance to handle high-volume data processing needs.
-                            </p>
-                            <div class="flex flex-wrap gap-2 mb-6">
-                                <span class="badge px-3 py-1.5 bg-blue-50 text-blue-600 rounded-lg text-xs font-medium">Node.js</span>
-                                <span class="badge px-3 py-1.5 bg-blue-50 text-blue-600 rounded-lg text-xs font-medium">MySQL</span>
-                                <span class="badge px-3 py-1.5 bg-blue-50 text-blue-600 rounded-lg text-xs font-medium">JavaScript</span>
-                                <span class="badge px-3 py-1.5 bg-blue-50 text-blue-600 rounded-lg text-xs font-medium">Jira</span>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <!-- Founder at Evolvemind -->
-                    <div class="timeline-item" data-aos="fade-up" data-aos-delay="600">
-                        <div class="timeline-dot"></div>
-                        <div class="bg-white rounded-2xl shadow-xl p-8 card-hover">
-                            <div class="flex flex-col md:flex-row md:items-center md:justify-between mb-6">
-                                <div>
-                                    <h3 class="text-2xl font-semibold text-accent">Founder</h3>
-                                    <p class="text-lg text-gray-600">Evolvemind</p>
-                                </div>
-                                <div class="mt-2 md:mt-0">
-                                    <span class="px-4 py-1.5 bg-blue-100 text-accent rounded-lg text-sm font-medium">Jan 2021 - Sep 2023</span>
-                                </div>
-                            </div>
-                            <div class="mb-4 flex items-center text-sm text-gray-500">
-                                <i class="fas fa-map-marker-alt text-accent/70 mr-2"></i>
-                                <span>Sulaymaniyah, Iraq - Remote</span>
-                                <span class="mx-2">•</span>
-                                <span class="bg-indigo-100 text-indigo-600 px-2 py-0.5 rounded-full text-xs">Self-employed</span>
-                            </div>
-                            <p class="text-text/70 leading-relaxed mb-6">
-                                Led the development of EvolveMind, an AI-driven mental health application powered by ChatGPT API for personalized recommendations. Managed a team of 5, driving innovation and delivering impactful solutions to enhance mental well-being.
-                            </p>
-                            <div class="flex flex-wrap gap-2 mb-6">
-                                <span class="badge px-3 py-1.5 bg-blue-50 text-blue-600 rounded-lg text-xs font-medium">Knowledge Engineering</span>
-                                <span class="badge px-3 py-1.5 bg-blue-50 text-blue-600 rounded-lg text-xs font-medium">Project Management</span>
-                                <span class="badge px-3 py-1.5 bg-blue-50 text-blue-600 rounded-lg text-xs font-medium">Sales Management</span>
-                                <span class="badge px-3 py-1.5 bg-blue-50 text-blue-600 rounded-lg text-xs font-medium">Artificial Intelligence</span>
-                                <span class="badge px-3 py-1.5 bg-blue-50 text-blue-600 rounded-lg text-xs font-medium">Deep Learning</span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- Skills Section -->
-        <section id="skills" class="py-24 bg-white">
-            <div class="container mx-auto px-6 md:px-12" data-aos="fade-up" data-aos-duration="1000">
-                <div class="text-center mb-16">
-                    <h2 class="text-4xl font-bold font-display gradient-text inline-block">Skills & Expertise</h2>
-                    <div class="w-24 h-1 bg-accent mx-auto mt-4 rounded-full"></div>
-                    <p class="text-lg text-text/70 mt-6 max-w-2xl mx-auto">My specialized toolset combining cutting-edge AI research with deep technical knowledge.</p>
-                </div>
-                
-                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                    <!-- Technical Skills Card -->
-                    <div class="bg-white rounded-3xl shadow-xl overflow-hidden shiny" data-aos="fade-up" data-aos-delay="100">
-                        <div class="h-3 bg-blue-500 progress-bar"></div>
-                        <div class="p-8">
-                            <div class="w-14 h-14 bg-blue-100 rounded-2xl flex items-center justify-center mb-6">
-                                <i class="fas fa-microchip text-blue-500 text-2xl"></i>
-                            </div>
-                            <h3 class="text-xl font-semibold mb-4 text-text">AI & Machine Learning</h3>
-                            <ul class="space-y-4">
-                                <li class="text-text/70">Deep Learning</li>
-                                <li class="text-text/70">NLP & Transformers</li>
-                                <li class="text-text/70">Computer Vision</li>
-                                <li class="text-text/70">Reinforcement Learning</li>
-                                <li class="text-text/70">Neural Networks</li>
-                            </ul>
-                        </div>
-                    </div>
-                    
-                    <!-- Cloud & DevOps -->
-                    <div class="bg-white rounded-3xl shadow-xl overflow-hidden shiny" data-aos="fade-up" data-aos-delay="200">
-                        <div class="h-3 bg-purple-500 progress-bar"></div>
-                        <div class="p-8">
-                            <div class="w-14 h-14 bg-purple-100 rounded-2xl flex items-center justify-center mb-6">
-                                <i class="fas fa-cloud text-purple-500 text-2xl"></i>
-                            </div>
-                            <h3 class="text-xl font-semibold mb-4 text-text">Cloud & DevOps</h3>
-                            <ul class="space-y-4">
-                                <li class="text-text/70">AWS Services</li>
-                                <li class="text-text/70">CI/CD Pipelines</li>
-                                <li class="text-text/70">Docker & Kubernetes</li>
-                                <li class="text-text/70">Serverless Architecture</li>
-                                <li class="text-text/70">MLOps</li>
-                            </ul>
-                        </div>
-                    </div>
-                    
-                    <!-- Programming & Tools Card -->
-                    <div class="bg-white rounded-3xl shadow-xl overflow-hidden shiny" data-aos="fade-up" data-aos-delay="300">
-                        <div class="h-3 bg-green-500 progress-bar"></div>
-                        <div class="p-8">
-                            <div class="w-14 h-14 bg-green-100 rounded-2xl flex items-center justify-center mb-6">
-                                <i class="fas fa-code text-green-500 text-2xl"></i>
-                            </div>
-                            <h3 class="text-xl font-semibold mb-4 text-text">Programming & Frameworks</h3>
-                            <ul class="space-y-4">
-                                <li class="text-text/70">Python</li>
-                                <li class="text-text/70">PyTorch / TensorFlow</li>
-                                <li class="text-text/70">Node.js & JavaScript</li>
-                                <li class="text-text/70">SQL & NoSQL Databases</li>
-                                <li class="text-text/70">RESTful & GraphQL APIs</li>
-                            </ul>
-                        </div>
-                    </div>
-                </div>
-                
-                <!-- Technology Expertise -->
-                <div class="mt-16" data-aos="fade-up" data-aos-delay="300">
-                    <h3 class="text-2xl font-semibold mb-8 text-center">Technologies I Work With</h3>
-                    <div class="flex flex-wrap justify-center gap-6">
-                        <div class="bg-white shadow-md rounded-xl px-6 py-4 flex items-center space-x-3 hover-lift">
-                            <div class="w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center">
-                                <i class="fab fa-python text-blue-500"></i>
-                            </div>
-                            <span>Python</span>
-                        </div>
-                        <div class="bg-white shadow-md rounded-xl px-6 py-4 flex items-center space-x-3 hover-lift">
-                            <div class="w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center">
-                                <i class="fas fa-brain text-blue-500"></i>
-                            </div>
-                            <span>PyTorch</span>
-                        </div>
-                        <div class="bg-white shadow-md rounded-xl px-6 py-4 flex items-center space-x-3 hover-lift">
-                            <div class="w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center">
-                                <i class="fab fa-aws text-blue-500"></i>
-                            </div>
-                            <span>AWS</span>
-                        </div>
-                        <div class="bg-white shadow-md rounded-xl px-6 py-4 flex items-center space-x-3 hover-lift">
-                            <div class="w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center">
-                                <i class="fab fa-node-js text-blue-500"></i>
-                            </div>
-                            <span>Node.js</span>
-                        </div>
-                        <div class="bg-white shadow-md rounded-xl px-6 py-4 flex items-center space-x-3 hover-lift">
-                            <div class="w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center">
-                                <i class="fas fa-database text-blue-500"></i>
-                            </div>
-                            <span>MongoDB</span>
-                        </div>
-                        <div class="bg-white shadow-md rounded-xl px-6 py-4 flex items-center space-x-3 hover-lift">
-                            <div class="w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center">
-                                <i class="fab fa-docker text-blue-500"></i>
-                            </div>
-                            <span>Docker</span>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- Certifications Section -->
-        <section id="certifications" class="py-24 bg-secondary relative overflow-hidden">
-            <div class="absolute -top-20 right-0 w-96 h-96 bg-purple-400/10 rounded-full blur-3xl"></div>
-            <div class="absolute -bottom-20 left-0 w-96 h-96 bg-accent/10 rounded-full blur-3xl"></div>
-            
-            <div class="container mx-auto px-6 md:px-12 relative z-10" data-aos="fade-up" data-aos-duration="1000">
-                <div class="text-center mb-16">
-                    <h2 class="text-4xl font-bold font-display gradient-text inline-block">Licenses & Certifications</h2>
-                    <div class="w-24 h-1 bg-accent mx-auto mt-4 rounded-full"></div>
-                    <p class="text-lg text-text/70 mt-6 max-w-2xl mx-auto">Professional qualifications and specialized training in AI, cloud, and advanced technologies.</p>
-                </div>
-                
-                <!-- Category: AI & LLMs -->
-                <div class="mb-12">
-                    <h3 class="text-2xl font-semibold mb-8 inline-flex items-center">
-                        <span class="w-10 h-10 bg-blue-100 rounded-xl flex items-center justify-center mr-4">
-                            <i class="fas fa-brain text-blue-500"></i>
-                        </span>
-                        AI & Language Models
-                    </h3>
-                    
-                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                        <!-- Duke: LLMs -->
-                        <div class="bg-white rounded-2xl shadow-lg p-6 hover-lift shiny" data-aos="fade-up" data-aos-delay="100">
-                            <div class="flex items-start mb-4">
-                                <div class="bg-blue-50 p-3 rounded-xl mr-4 w-12 h-12 flex items-center justify-center">
-                                    <i class="fas fa-university text-blue-500 text-2xl"></i>
-                                </div>
-                                <div>
-                                    <h4 class="font-semibold text-lg">GenAI and LLMs on AWS</h4>
-                                    <p class="text-sm text-gray-600">Duke University</p>
-                                    <p class="text-xs text-gray-500 mt-1">Issued Sep 2024</p>
-                                </div>
-                            </div>
-                            <p class="text-sm text-gray-700">Advanced techniques for deploying and managing generative AI models on Amazon Web Services infrastructure.</p>
-                        </div>
-                        
-                        <!-- Duke: Databricks -->
-                        <div class="bg-white rounded-2xl shadow-lg p-6 hover-lift shiny" data-aos="fade-up" data-aos-delay="150">
-                            <div class="flex items-start mb-4">
-                                <div class="bg-blue-50 p-3 rounded-xl mr-4 w-12 h-12 flex items-center justify-center">
-                                    <i class="fas fa-university text-blue-500 text-2xl"></i>
-                                </div>
-                                <div>
-                                    <h4 class="font-semibold text-lg">Databricks to Local LLMs</h4>
-                                    <p class="text-sm text-gray-600">Duke University</p>
-                                    <p class="text-xs text-gray-500 mt-1">Issued Sep 2024</p>
-                                </div>
-                            </div>
-                            <p class="text-sm text-gray-700">Implementation of locally deployed language models using Databricks for efficient data processing and inference.</p>
-                        </div>
-                        
-                        <!-- IBM: Generative AI -->
-                        <div class="bg-white rounded-2xl shadow-lg p-6 hover-lift shiny" data-aos="fade-up" data-aos-delay="200">
-                            <div class="flex items-start mb-4">
-                                <div class="bg-blue-50 p-3 rounded-xl mr-4 w-12 h-12 flex items-center justify-center">
-                                    <i class="fas fa-laptop-code text-blue-500 text-2xl"></i>
-                                </div>
-                                <div>
-                                    <h4 class="font-semibold text-lg">Generative AI Language Modeling with Transformers</h4>
-                                    <p class="text-sm text-gray-600">IBM</p>
-                                    <p class="text-xs text-gray-500 mt-1">Issued Sep 2024</p>
-                                </div>
-                            </div>
-                            <p class="text-sm text-gray-700">Advanced training in transformer architecture for generative AI applications and language modeling.</p>
-                        </div>
-                        
-                        <!-- Duke: LLMOps -->
-                        <div class="bg-white rounded-2xl shadow-lg p-6 hover-lift shiny" data-aos="fade-up" data-aos-delay="250">
-                            <div class="flex items-start mb-4">
-                                <div class="bg-blue-50 p-3 rounded-xl mr-4 w-12 h-12 flex items-center justify-center">
-                                    <i class="fas fa-university text-blue-500 text-2xl"></i>
-                                </div>
-                                <div>
-                                    <h4 class="font-semibold text-lg">Large Language Model Operations Specialization</h4>
-                                    <p class="text-sm text-gray-600">Duke University</p>
-                                    <p class="text-xs text-gray-500 mt-1">Issued Sep 2024</p>
-                                </div>
-                            </div>
-                            <p class="text-sm text-gray-700">Comprehensive training on operational aspects of deploying and managing large language models at scale.</p>
-                        </div>
-                        
-                        <!-- Duke: Open Source LLMOps -->
-                        <div class="bg-white rounded-2xl shadow-lg p-6 hover-lift shiny" data-aos="fade-up" data-aos-delay="300">
-                            <div class="flex items-start mb-4">
-                                <div class="bg-blue-50 p-3 rounded-xl mr-4 w-12 h-12 flex items-center justify-center">
-                                    <i class="fas fa-university text-blue-500 text-2xl"></i>
-                                </div>
-                                <div>
-                                    <h4 class="font-semibold text-lg">Open Source LLMOps Solutions</h4>
-                                    <p class="text-sm text-gray-600">Duke University</p>
-                                    <p class="text-xs text-gray-500 mt-1">Issued Sep 2024</p>
-                                </div>
-                            </div>
-                            <p class="text-sm text-gray-700">Implementation of open-source tooling and frameworks for LLM operations and deployment.</p>
-                        </div>
-                        
-                        <!-- Duke: Azure LLMs -->
-                        <div class="bg-white rounded-2xl shadow-lg p-6 hover-lift shiny" data-aos="fade-up" data-aos-delay="350">
-                            <div class="flex items-start mb-4">
-                                <div class="bg-blue-50 p-3 rounded-xl mr-4 w-12 h-12 flex items-center justify-center">
-                                    <i class="fas fa-university text-blue-500 text-2xl"></i>
-                                </div>
-                                <div>
-                                    <h4 class="font-semibold text-lg">Operationalizing LLMs on Azure</h4>
-                                    <p class="text-sm text-gray-600">Duke University</p>
-                                    <p class="text-xs text-gray-500 mt-1">Issued Sep 2024</p>
-                                </div>
-                            </div>
-                            <p class="text-sm text-gray-700">Specialized techniques for deploying and scaling large language models on Microsoft Azure cloud infrastructure.</p>
-                        </div>
-                    </div>
-                </div>
-                
-                <!-- Category: Cloud & Engineering -->
-                <div class="mb-12">
-                    <h3 class="text-2xl font-semibold mb-8 inline-flex items-center">
-                        <span class="w-10 h-10 bg-blue-100 rounded-xl flex items-center justify-center mr-4">
-                            <i class="fas fa-cloud text-blue-500"></i>
-                        </span>
-                        Cloud & Data Engineering
-                    </h3>
-                    
-                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                        <!-- Google: Kubernetes -->
-                        <div class="bg-white rounded-2xl shadow-lg p-6 hover-lift shiny" data-aos="fade-up" data-aos-delay="100">
-                            <div class="flex items-start mb-4">
-                                <div class="bg-blue-50 p-3 rounded-xl mr-4 w-12 h-12 flex items-center justify-center">
-                                    <i class="fab fa-google text-blue-500 text-2xl"></i>
-                                </div>
-                                <div>
-                                    <h4 class="font-semibold text-lg">Architecting with Google Kubernetes Engine: Foundations</h4>
-                                    <p class="text-sm text-gray-600">Google Cloud Training</p>
-                                    <p class="text-xs text-gray-500 mt-1">Issued Sep 2024</p>
-                                </div>
-                            </div>
-                            <p class="text-sm text-gray-700">Fundamentals of container orchestration and cloud infrastructure management using Google Kubernetes Engine.</p>
-                        </div>
-                        
-                        <!-- Duke: Data Engineering -->
-                        <div class="bg-white rounded-2xl shadow-lg p-6 hover-lift shiny" data-aos="fade-up" data-aos-delay="150">
-                            <div class="flex items-start mb-4">
-                                <div class="bg-blue-50 p-3 rounded-xl mr-4 w-12 h-12 flex items-center justify-center">
-                                    <i class="fas fa-university text-blue-500 text-2xl"></i>
-                                </div>
-                                <div>
-                                    <h4 class="font-semibold text-lg">Advanced Data Engineering</h4>
-                                    <p class="text-sm text-gray-600">Duke University</p>
-                                    <p class="text-xs text-gray-500 mt-1">Issued Sep 2024</p>
-                                </div>
-                            </div>
-                            <p class="text-sm text-gray-700">Advanced techniques for building scalable data pipelines and architectures for large-scale data processing.</p>
-                        </div>
-                        
-                        <!-- Google: ML Systems -->
-                        <div class="bg-white rounded-2xl shadow-lg p-6 hover-lift shiny" data-aos="fade-up" data-aos-delay="200">
-                            <div class="flex items-start mb-4">
-                                <div class="bg-blue-50 p-3 rounded-xl mr-4 w-12 h-12 flex items-center justify-center">
-                                    <i class="fab fa-google text-blue-500 text-2xl"></i>
-                                </div>
-                                <div>
-                                    <h4 class="font-semibold text-lg">Production Machine Learning Systems</h4>
-                                    <p class="text-sm text-gray-600">Google Cloud Training</p>
-                                    <p class="text-xs text-gray-500 mt-1">Issued Sep 2024</p>
-                                </div>
-                            </div>
-                            <p class="text-sm text-gray-700">Implementation and management of production-ready machine learning systems and infrastructure.</p>
-                        </div>
-                    </div>
-                </div>
-                
-                <!-- Category: Science & Physics -->
-                <div>
-                    <h3 class="text-2xl font-semibold mb-8 inline-flex items-center">
-                        <span class="w-10 h-10 bg-blue-100 rounded-xl flex items-center justify-center mr-4">
-                            <i class="fas fa-atom text-blue-500"></i>
-                        </span>
-                        Advanced Sciences
-                    </h3>
-                    
-                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                        <!-- HKU: Physics -->
-                        <div class="bg-white rounded-2xl shadow-lg p-6 hover-lift shiny" data-aos="fade-up" data-aos-delay="100">
-                            <div class="flex items-start mb-4">
-                                <div class="bg-blue-50 p-3 rounded-xl mr-4 w-12 h-12 flex items-center justify-center">
-                                    <i class="fas fa-graduation-cap text-blue-500 text-2xl"></i>
-                                </div>
-                                <div>
-                                    <h4 class="font-semibold text-lg">Understanding Modern Physics III: Simplicity and Complexity</h4>
-                                    <p class="text-sm text-gray-600">The Hong Kong University of Science and Technology</p>
-                                    <p class="text-xs text-gray-500 mt-1">Issued Oct 2024</p>
-                                </div>
-                            </div>
-                            <p class="text-sm text-gray-700">Advanced concepts in modern physics focusing on complexity theory and emergent phenomena.</p>
-                        </div>
-                        
-                        <!-- Boulder: Quantum -->
-                        <div class="bg-white rounded-2xl shadow-lg p-6 hover-lift shiny" data-aos="fade-up" data-aos-delay="150">
-                            <div class="flex items-start mb-4">
-                                <div class="bg-blue-50 p-3 rounded-xl mr-4 w-12 h-12 flex items-center justify-center">
-                                    <i class="fas fa-flask text-blue-500 text-2xl"></i>
-                                </div>
-                                <div>
-                                    <h4 class="font-semibold text-lg">Quantum Mechanics</h4>
-                                    <p class="text-sm text-gray-600">University of Colorado Boulder</p>
-                                    <p class="text-xs text-gray-500 mt-1">Issued Oct 2024</p>
-                                </div>
-                            </div>
-                            <p class="text-sm text-gray-700">Fundamental principles and mathematical frameworks of quantum mechanics and their applications.</p>
-                        </div>
-                        
-                        <!-- Dartmouth: Reality -->
-                        <div class="bg-white rounded-2xl shadow-lg p-6 hover-lift shiny" data-aos="fade-up" data-aos-delay="200">
-                            <div class="flex items-start mb-4">
-                                <div class="bg-blue-50 p-3 rounded-xl mr-4 w-12 h-12 flex items-center justify-center">
-                                    <i class="fas fa-atom text-blue-500 text-2xl"></i>
-                                </div>
-                                <div>
-                                    <h4 class="font-semibold text-lg">Question Reality: Matter</h4>
-                                    <p class="text-sm text-gray-600">Dartmouth College</p>
-                                    <p class="text-xs text-gray-500 mt-1">Issued Oct 2024</p>
-                                </div>
-                            </div>
-                            <p class="text-sm text-gray-700">Philosophical and scientific exploration of the nature of matter and physical reality.</p>
-                        </div>
-                        
-                        <!-- Edinburgh: Philosophy -->
-                        <div class="bg-white rounded-2xl shadow-lg p-6 hover-lift shiny" data-aos="fade-up" data-aos-delay="250">
-                            <div class="flex items-start mb-4">
-                                <div class="bg-blue-50 p-3 rounded-xl mr-4 w-12 h-12 flex items-center justify-center">
-                                    <i class="fas fa-book text-blue-500 text-2xl"></i>
-                                </div>
-                                <div>
-                                    <h4 class="font-semibold text-lg">Philosophy, Science and Religion</h4>
-                                    <p class="text-sm text-gray-600">The University of Edinburgh</p>
-                                    <p class="text-xs text-gray-500 mt-1">Issued Oct 2024</p>
-                                </div>
-                            </div>
-                            <p class="text-sm text-gray-700">Interdisciplinary study of the relationships between philosophical thought, scientific method, and religious perspectives.</p>
-                        </div>
-                        
-                        <!-- Johns Hopkins: Cancer Biology -->
-                        <div class="bg-white rounded-2xl shadow-lg p-6 hover-lift shiny" data-aos="fade-up" data-aos-delay="300">
-                            <div class="flex items-start mb-4">
-                                <div class="bg-blue-50 p-3 rounded-xl mr-4 w-12 h-12 flex items-center justify-center">
-                                    <i class="fas fa-microscope text-blue-500 text-2xl"></i>
-                                </div>
-                                <div>
-                                    <h4 class="font-semibold text-lg">Cancer Biology</h4>
-                                    <p class="text-sm text-gray-600">The Johns Hopkins University</p>
-                                    <p class="text-xs text-gray-500 mt-1">Issued Feb 2025</p>
-                                </div>
-                            </div>
-                            <p class="text-sm text-gray-700">Fundamentals of cancer biology, including cellular mechanisms, genetics, and clinical applications.</p>
-                        </div>
-                        
-                        <!-- Imperial College: Mathematics -->
-                        <div class="bg-white rounded-2xl shadow-lg p-6 hover-lift shiny" data-aos="fade-up" data-aos-delay="350">
-                            <div class="flex items-start mb-4">
-                                <div class="bg-blue-50 p-3 rounded-xl mr-4 w-12 h-12 flex items-center justify-center">
-                                    <i class="fas fa-square-root-alt text-blue-500 text-2xl"></i>
-                                </div>
-                                <div>
-                                    <h4 class="font-semibold text-lg">Mathematics for Machine Learning: Multivariate Calculus</h4>
-                                    <p class="text-sm text-gray-600">Imperial College London</p>
-                                    <p class="text-xs text-gray-500 mt-1">Issued Feb 2025</p>
-                                </div>
-                            </div>
-                            <p class="text-sm text-gray-700">Advanced mathematical foundations critical for machine learning algorithms and optimization techniques.</p>
-                        </div>
-                    </div>
-                </div>
-                
-                <div class="text-center mt-16">
-                    <div class="inline-block px-6 py-3 bg-white shadow-md rounded-xl">
-                        <span class="text-gray-600">View all certifications on</span>
-                        <a href="https://www.linkedin.com/in/san-hashim/" target="_blank" class="text-blue-600 font-medium ml-2 flex items-center justify-center inline-flex">
-                            <i class="fab fa-linkedin text-blue-700 mr-2"></i> LinkedIn
-                        </a>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- Projects Section -->
-        <section id="projects" class="py-24 bg-white relative overflow-hidden">
-            <div class="container mx-auto px-6 md:px-12 relative z-10" data-aos="fade-up" data-aos-duration="1000">
-                <div class="text-center mb-16">
-                    <h2 class="text-4xl font-bold font-display gradient-text inline-block">Featured Projects</h2>
-                    <div class="w-24 h-1 bg-accent mx-auto mt-4 rounded-full"></div>
-                    <p class="text-lg text-text/70 mt-6 max-w-2xl mx-auto">Innovative research and development at the intersection of AI and software engineering.</p>
-                </div>
-                
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
-                    <!-- Project 1 -->
-                    <div class="bg-white rounded-3xl shadow-xl overflow-hidden card-hover" data-aos="fade-up" data-aos-delay="100">
-                        <div class="relative h-48 bg-gradient-to-r from-blue-400 to-purple-500">
-                            <div class="absolute inset-0 flex items-center justify-center">
-                                <i class="fas fa-comments text-white text-5xl"></i>
-                            </div>
-                        </div>
-                        <div class="p-8">
-                            <h3 class="text-2xl font-semibold mb-2 text-accent">LSLM</h3>
-                            <p class="text-lg font-medium mb-2">Listening-while-Speaking Language Model</p>
-                            <p class="mb-6 text-text/70">
-                                An innovative approach to real-time language processing and generation that allows models to adjust responses mid-generation based on new inputs, similar to human conversation.
-                            </p>
-                            <div class="flex flex-wrap gap-2 mb-6">
-                                <span class="badge px-3 py-1.5 bg-blue-50 text-blue-600 rounded-lg text-xs font-medium">NLP</span>
-                                <span class="badge px-3 py-1.5 bg-blue-50 text-blue-600 rounded-lg text-xs font-medium">Transformer</span>
-                                <span class="badge px-3 py-1.5 bg-blue-50 text-blue-600 rounded-lg text-xs font-medium">PyTorch</span>
-                            </div>
-                            <a href="https://github.com/sanowl/LSLM-Listening-while-Speaking-Language-Model" target="_blank" class="inline-flex items-center text-accent hover:text-blue-700 font-medium">
-                                Explore Project <i class="fas fa-arrow-right ml-2"></i>
-                            </a>
-                        </div>
-                    </div>
-                    
-                    <!-- Project 2 -->
-                    <div class="bg-white rounded-3xl shadow-xl overflow-hidden card-hover" data-aos="fade-up" data-aos-delay="200">
-                        <div class="relative h-48 bg-gradient-to-r from-indigo-400 to-blue-600">
-                            <div class="absolute inset-0 flex items-center justify-center">
-                                <i class="fas fa-project-diagram text-white text-5xl"></i>
-                            </div>
-                        </div>
-                        <div class="p-8">
-                            <h3 class="text-2xl font-semibold mb-2 text-accent">MoRA</h3>
-                            <p class="text-lg font-medium mb-2">High-Rank Matrix Adaptation</p>
-                            <p class="mb-6 text-text/70">
-                                A parameter-efficient fine-tuning technique for large language models that achieves superior performance through adaptive high-rank matrix transformations.
-                            </p>
-                            <div class="flex flex-wrap gap-2 mb-6">
-                                <span class="badge px-3 py-1.5 bg-blue-50 text-blue-600 rounded-lg text-xs font-medium">LLMs</span>
-                                <span class="badge px-3 py-1.5 bg-blue-50 text-blue-600 rounded-lg text-xs font-medium">PEFT</span>
-                                <span class="badge px-3 py-1.5 bg-blue-50 text-blue-600 rounded-lg text-xs font-medium">Transfer Learning</span>
-                            </div>
-                            <a href="https://github.com/sanowl/MoRA-High-Rank-Matrix-Adaptation-for-Parameter-Efficient-Fine-Tuning-of-Large-Language-Models" target="_blank" class="inline-flex items-center text-accent hover:text-blue-700 font-medium">
-                                Explore Project <i class="fas fa-arrow-right ml-2"></i>
-                            </a>
-                        </div>
-                    </div>
-                    
-                    <!-- Project 3 -->
-                    <div class="bg-white rounded-3xl shadow-xl overflow-hidden card-hover" data-aos="fade-up" data-aos-delay="300">
-                        <div class="relative h-48 bg-gradient-to-r from-purple-400 to-pink-500">
-                            <div class="absolute inset-0 flex items-center justify-center">
-                                <i class="fas fa-layer-group text-white text-5xl"></i>
-                            </div>
-                        </div>
-                        <div class="p-8">
-                            <h3 class="text-2xl font-semibold mb-2 text-accent">SARA</h3>
-                            <p class="text-lg font-medium mb-2">Singular Value-Based Adaptive Low-Rank Adaptation</p>
-                            <p class="mb-6 text-text/70">
-                                A novel approach to efficient model adaptation that utilizes singular value decomposition to dynamically adjust the rank of adaptation based on importance.
-                            </p>
-                            <div class="flex flex-wrap gap-2 mb-6">
-                                <span class="badge px-3 py-1.5 bg-blue-50 text-blue-600 rounded-lg text-xs font-medium">Matrix Factorization</span>
-                                <span class="badge px-3 py-1.5 bg-blue-50 text-blue-600 rounded-lg text-xs font-medium">SVD</span>
-                                <span class="badge px-3 py-1.5 bg-blue-50 text-blue-600 rounded-lg text-xs font-medium">Adaptive Computing</span>
-                            </div>
-                            <a href="https://github.com/sanowl/SARA-Singular-Value-Based-Adaptive-Low-Rank-Adaption" target="_blank" class="inline-flex items-center text-accent hover:text-blue-700 font-medium">
-                                Explore Project <i class="fas fa-arrow-right ml-2"></i>
-                            </a>
-                        </div>
-                    </div>
-                    
-                    <!-- Project 4 -->
-                    <div class="bg-white rounded-3xl shadow-xl overflow-hidden card-hover" data-aos="fade-up" data-aos-delay="400">
-                        <div class="relative h-48 bg-gradient-to-r from-green-400 to-teal-500">
-                            <div class="absolute inset-0 flex items-center justify-center">
-                                <i class="fas fa-book-open text-white text-5xl"></i>
-                            </div>
-                        </div>
-                        <div class="p-8">
-                            <h3 class="text-2xl font-semibold mb-2 text-accent">SEED Story</h3>
-                            <p class="text-lg font-medium mb-2">Multimodal Long Story Generation</p>
-                            <p class="mb-6 text-text/70">
-                                A framework for generating coherent and engaging long-form narratives using large language models with multimodal inputs to enhance storytelling capabilities.
-                            </p>
-                            <div class="flex flex-wrap gap-2 mb-6">
-                                <span class="badge px-3 py-1.5 bg-blue-50 text-blue-600 rounded-lg text-xs font-medium">Story Generation</span>
-                                <span class="badge px-3 py-1.5 bg-blue-50 text-blue-600 rounded-lg text-xs font-medium">Multimodal</span>
-                                <span class="badge px-3 py-1.5 bg-blue-50 text-blue-600 rounded-lg text-xs font-medium">LLMs</span>
-                            </div>
-                            <a href="https://github.com/sanowl/SEED-Story-Multimodal-Long-Story-Generation-with-Large-Language-Models" target="_blank" class="inline-flex items-center text-accent hover:text-blue-700 font-medium">
-                                Explore Project <i class="fas fa-arrow-right ml-2"></i>
-                            </a>
-                        </div>
-                    </div>
-                </div>
-                
-                <div class="text-center mt-12">
-                    <a href="https://github.com/sanowl" target="_blank" class="inline-flex items-center bg-accent hover:bg-blue-700 text-white py-3.5 px-8 rounded-xl font-medium transition-all duration-300 shadow-lg hover:shadow-xl btn-3d">
-                        <i class="fab fa-github mr-2"></i> View All Projects on GitHub
-                    </a>
-                </div>
-            </div>
-            
-            <!-- Abstract geometric decoration -->
-            <div class="absolute -top-20 right-0 w-96 h-96 bg-accent/10 rounded-full blur-3xl"></div>
-            <div class="absolute -bottom-20 left-0 w-96 h-96 bg-purple-400/10 rounded-full blur-3xl"></div>
-        </section>
-
-        <!-- Papers Section -->
-        <section id="papers" class="py-24 bg-white relative overflow-hidden">
-            <div class="container mx-auto px-6 md:px-12 relative z-10" data-aos="fade-up" data-aos-duration="1000">
-                <div class="text-center mb-16">
-                    <h2 class="text-4xl font-bold font-display gradient-text inline-block">My Favorite AI Papers</h2>
-                    <div class="w-24 h-1 bg-accent mx-auto mt-4 rounded-full"></div>
-                    <p class="text-lg text-text/70 mt-6 max-w-2xl mx-auto">Research that inspires and informs my approach to artificial intelligence.</p>
-                </div>
-                
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
-                    <!-- Paper 1 -->
-                    <div class="bg-white rounded-3xl shadow-xl overflow-hidden card-hover" data-aos="fade-up" data-aos-delay="100">
-                        <div class="relative h-48 bg-gradient-to-r from-blue-400 to-purple-500">
-                            <div class="absolute inset-0 flex items-center justify-center">
-                                <i class="fas fa-file-alt text-white text-5xl"></i>
-                            </div>
-                        </div>
-                        <div class="p-8">
-                            <h3 class="text-2xl font-semibold mb-2 text-accent">Attention Is All You Need</h3>
-                            <p class="text-lg font-medium mb-2">Vaswani et al., 2017</p>
-                            <p class="mb-6 text-text/70">
-                                This paper introduces the Transformer model, a novel architecture that eschews recurrence and instead relies entirely on self-attention mechanisms to draw global dependencies between input and output.
-                            </p>
-                            <a href="https://arxiv.org/abs/1706.03762" target="_blank" class="inline-flex items-center text-accent hover:text-blue-700 font-medium">
-                                Read Paper <i class="fas fa-arrow-right ml-2"></i>
-                            </a>
-                        </div>
-                    </div>
-                    
-                    <!-- Paper 2 -->
-                    <div class="bg-white rounded-3xl shadow-xl overflow-hidden card-hover" data-aos="fade-up" data-aos-delay="200">
-                        <div class="relative h-48 bg-gradient-to-r from-indigo-400 to-blue-600">
-                            <div class="absolute inset-0 flex items-center justify-center">
-                                <i class="fas fa-file-alt text-white text-5xl"></i>
-                            </div>
-                        </div>
-                        <div class="p-8">
-                            <h3 class="text-2xl font-semibold mb-2 text-accent">BERT: Pre-training of Deep Bidirectional Transformers for Language Understanding</h3>
-                            <p class="text-lg font-medium mb-2">Devlin et al., 2018</p>
-                            <p class="mb-6 text-text/70">
-                                BERT (Bidirectional Encoder Representations from Transformers) is designed to pre-train deep bidirectional representations by jointly conditioning on both left and right context in all layers.
-                            </p>
-                            <a href="https://arxiv.org/abs/1810.04805" target="_blank" class="inline-flex items-center text-accent hover:text-blue-700 font-medium">
-                                Read Paper <i class="fas fa-arrow-right ml-2"></i>
-                            </a>
-                        </div>
-                    </div>
-                    
-                    <!-- Paper 3 -->
-                    <div class="bg-white rounded-3xl shadow-xl overflow-hidden card-hover" data-aos="fade-up" data-aos-delay="300">
-                        <div class="relative h-48 bg-gradient-to-r from-purple-400 to-pink-500">
-                            <div class="absolute inset-0 flex items-center justify-center">
-                                <i class="fas fa-file-alt text-white text-5xl"></i>
-                            </div>
-                        </div>
-                        <div class="p-8">
-                            <h3 class="text-2xl font-semibold mb-2 text-accent">GPT-3: Language Models are Few-Shot Learners</h3>
-                            <p class="text-lg font-medium mb-2">Brown et al., 2020</p>
-                            <p class="mb-6 text-text/70">
-                                GPT-3 demonstrates that language models can perform a wide variety of tasks without the need for task-specific training data, simply by being prompted with a few examples of the task.
-                            </p>
-                            <a href="https://arxiv.org/abs/2005.14165" target="_blank" class="inline-flex items-center text-accent hover:text-blue-700 font-medium">
-                                Read Paper <i class="fas fa-arrow-right ml-2"></i>
-                            </a>
-                        </div>
-                    </div>
-                    
-                    <!-- Paper 4 -->
-                    <div class="bg-white rounded-3xl shadow-xl overflow-hidden card-hover" data-aos="fade-up" data-aos-delay="400">
-                        <div class="relative h-48 bg-gradient-to-r from-green-400 to-teal-500">
-                            <div class="absolute inset-0 flex items-center justify-center">
-                                <i class="fas fa-file-alt text-white text-5xl"></i>
-                            </div>
-                        </div>
-                        <div class="p-8">
-                            <h3 class="text-2xl font-semibold mb-2 text-accent">YOLOv4: Optimal Speed and Accuracy of Object Detection</h3>
-                            <p class="text-lg font-medium mb-2">Bochkovskiy et al., 2020</p>
-                            <p class="mb-6 text-text/70">
-                                YOLOv4 is a state-of-the-art object detection model that achieves a balance between speed and accuracy, making it suitable for real-time applications.
-                            </p>
-                            <a href="https://arxiv.org/abs/2004.10934" target="_blank" class="inline-flex items-center text-accent hover:text-blue-700 font-medium">
-                                Read Paper <i class="fas fa-arrow-right ml-2"></i>
-                            </a>
-                        </div>
-                    </div>
-                    
-                    <!-- Paper 5 -->
-                    <div class="bg-white rounded-3xl shadow-xl overflow-hidden card-hover" data-aos="fade-up" data-aos-delay="500">
-                        <div class="relative h-48 bg-gradient-to-r from-yellow-400 to-orange-500">
-                            <div class="absolute inset-0 flex items-center justify-center">
-                                <i class="fas fa-file-alt text-white text-5xl"></i>
-                            </div>
-                        </div>
-                        <div class="p-8">
-                            <h3 class="text-2xl font-semibold mb-2 text-accent">Neural Ordinary Differential Equations</h3>
-                            <p class="text-lg font-medium mb-2">Chen et al., 2018</p>
-                            <p class="mb-6 text-text/70">
-                                This paper introduces a new family of deep neural network models that can be interpreted as continuous transformations of data, providing a new perspective on neural network architectures.
-                            </p>
-                            <a href="https://arxiv.org/abs/1806.07366" target="_blank" class="inline-flex items-center text-accent hover:text-blue-700 font-medium">
-                                Read Paper <i class="fas fa-arrow-right ml-2"></i>
-                            </a>
-                        </div>
-                    </div>
-                    
-                    <!-- Paper 6 -->
-                    <div class="bg-white rounded-3xl shadow-xl overflow-hidden card-hover" data-aos="fade-up" data-aos-delay="600">
-                        <div class="relative h-48 bg-gradient-to-r from-red-400 to-pink-500">
-                            <div class="absolute inset-0 flex items-center justify-center">
-                                <i class="fas fa-file-alt text-white text-5xl"></i>
-                            </div>
-                        </div>
-                        <div class="p-8">
-                            <h3 class="text-2xl font-semibold mb-2 text-accent">StyleGAN: A Style-Based Generator Architecture for Generative Adversarial Networks</h3>
-                            <p class="text-lg font-medium mb-2">Karras et al., 2019</p>
-                            <p class="mb-6 text-text/70">
-                                StyleGAN introduces a new generator architecture for GANs that allows for control over the style of the generated images at different levels of detail, leading to high-quality image synthesis.
-                            </p>
-                            <a href="https://arxiv.org/abs/1812.04948" target="_blank" class="inline-flex items-center text-accent hover:text-blue-700 font-medium">
-                                Read Paper <i class="fas fa-arrow-right ml-2"></i>
-                            </a>
-                        </div>
-                    </div>
-                    
-                    <!-- Advanced Paper 1 -->
-                    <div class="bg-white rounded-3xl shadow-xl overflow-hidden card-hover" data-aos="fade-up" data-aos-delay="700">
-                        <div class="relative h-48 bg-gradient-to-r from-violet-400 to-indigo-500">
-                            <div class="absolute inset-0 flex items-center justify-center">
-                                <i class="fas fa-file-alt text-white text-5xl"></i>
-                            </div>
-                        </div>
-                        <div class="p-8">
-                            <h3 class="text-2xl font-semibold mb-2 text-accent">Scaling Laws for Neural Language Models</h3>
-                            <p class="text-lg font-medium mb-2">Kaplan et al., 2020</p>
-                            <p class="mb-6 text-text/70">
-                                Empirical analysis revealing power-law relationships between model size, dataset size, and computational budget in language model performance, providing crucial insights for efficient scaling.
-                            </p>
-                            <a href="https://arxiv.org/abs/2001.08361" target="_blank" class="inline-flex items-center text-accent hover:text-blue-700 font-medium">
-                                Read Paper <i class="fas fa-arrow-right ml-2"></i>
-                            </a>
-                        </div>
-                    </div>
-
-                    <!-- Advanced Paper 2 -->
-                    <div class="bg-white rounded-3xl shadow-xl overflow-hidden card-hover" data-aos="fade-up" data-aos-delay="800">
-                        <div class="relative h-48 bg-gradient-to-r from-rose-400 to-purple-500">
-                            <div class="absolute inset-0 flex items-center justify-center">
-                                <i class="fas fa-file-alt text-white text-5xl"></i>
-                            </div>
-                        </div>
-                        <div class="p-8">
-                            <h3 class="text-2xl font-semibold mb-2 text-accent">Constitutional AI: A Framework for Machine Learning Systems</h3>
-                            <p class="text-lg font-medium mb-2">Askell et al., 2023</p>
-                            <p class="mb-6 text-text/70">
-                                Introduces an innovative framework for developing AI systems with built-in safety constraints and ethical considerations, ensuring responsible AI development at scale.
-                            </p>
-                            <a href="https://arxiv.org/abs/2310.07301" target="_blank" class="inline-flex items-center text-accent hover:text-blue-700 font-medium">
-                                Read Paper <i class="fas fa-arrow-right ml-2"></i>
-                            </a>
-                        </div>
-                    </div>
-
-                    <!-- Advanced Paper 3 -->
-                    <div class="bg-white rounded-3xl shadow-xl overflow-hidden card-hover" data-aos="fade-up" data-aos-delay="900">
-                        <div class="relative h-48 bg-gradient-to-r from-cyan-400 to-blue-500">
-                            <div class="absolute inset-0 flex items-center justify-center">
-                                <i class="fas fa-file-alt text-white text-5xl"></i>
-                            </div>
-                        </div>
-                        <div class="p-8">
-                            <h3 class="text-2xl font-semibold mb-2 text-accent">Perceiver IO: A General Architecture for Structured Inputs & Outputs</h3>
-                            <p class="text-lg font-medium mb-2">Jaegle et al., 2021</p>
-                            <p class="mb-6 text-text/70">
-                                Presents a novel architecture that can handle arbitrary input and output formats through attention mechanisms, offering a unified approach to diverse ML tasks.
-                            </p>
-                            <a href="https://arxiv.org/abs/2107.14795" target="_blank" class="inline-flex items-center text-accent hover:text-blue-700 font-medium">
-                                Read Paper <i class="fas fa-arrow-right ml-2"></i>
-                            </a>
-                        </div>
-                    </div>
-
-                    <!-- Advanced Paper 4 -->
-                    <div class="bg-white rounded-3xl shadow-xl overflow-hidden card-hover" data-aos="fade-up" data-aos-delay="1000">
-                        <div class="relative h-48 bg-gradient-to-r from-emerald-400 to-teal-500">
-                            <div class="absolute inset-0 flex items-center justify-center">
-                                <i class="fas fa-file-alt text-white text-5xl"></i>
-                            </div>
-                        </div>
-                        <div class="p-8">
-                            <h3 class="text-2xl font-semibold mb-2 text-accent">PaLM: Scaling Language Modeling with Pathways</h3>
-                            <p class="text-lg font-medium mb-2">Chowdhery et al., 2022</p>
-                            <p class="mb-6 text-text/70">
-                                Details breakthrough techniques in scaling language models to 540B parameters, introducing novel methods for training efficiency and model performance improvements.
-                            </p>
-                            <a href="https://arxiv.org/abs/2204.02311" target="_blank" class="inline-flex items-center text-accent hover:text-blue-700 font-medium">
-                                Read Paper <i class="fas fa-arrow-right ml-2"></i>
-                            </a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            
-            <!-- Abstract geometric decoration -->
-            <div class="absolute -top-20 right-0 w-96 h-96 bg-accent/10 rounded-full blur-3xl"></div>
-            <div class="absolute -bottom-20 left-0 w-96 h-96 bg-purple-400/10 rounded-full blur-3xl"></div>
-        </section>
-
-        <!-- Open Source Contributions -->
-        <section id="open-source" class="py-24 bg-secondary">
-            <div class="container mx-auto px-6 md:px-12" data-aos="fade-up" data-aos-duration="1000">
-                <div class="text-center mb-16">
-                    <h2 class="text-4xl font-bold font-display gradient-text inline-block">Open Source Contributions</h2>
-                    <div class="w-24 h-1 bg-accent mx-auto mt-4 rounded-full"></div>
-                    <p class="text-lg text-text/70 mt-6 max-w-2xl mx-auto">Collaborations and contributions to innovative open source projects.</p>
-                </div>
-                
-       
-                    
-                    <!-- NASA -->
-                    <div class="bg-white p-8 rounded-3xl shadow-lg hover:shadow-xl transition-all duration-500 transform hover:-translate-y-3 hover:scale-105" data-aos="fade-up" data-aos-delay="200">
-                        <div class="flex items-center justify-center mb-6">
-                            <div class="w-16 h-16 rounded-full bg-blue-100 flex items-center justify-center">
-                                <i class="fas fa-rocket text-blue-700 text-2xl"></i>
-                            </div>
-                        </div>
-                        <h3 class="text-xl font-semibold mb-4 text-center text-accent">NASA</h3>
-                        <p class="text-center text-text/70">
-                            Improved test code readability and organization for the cmr-metadata-review project, enhancing the software quality and developer experience.
-                        </p>
-                    </div>
-                    
-                    <!-- Zou Group -->
-                    <div class="bg-white p-8 rounded-3xl shadow-lg hover:shadow-xl transition-all duration-500 transform hover:-translate-y-3 hover:scale-105" data-aos="fade-up" data-aos-delay="300">
-                        <div class="flex items-center justify-center mb-6">
-                            <div class="w-16 h-16 rounded-full bg-purple-100 flex items-center justify-center">
-                                <i class="fas fa-users text-purple-700 text-2xl"></i>
-                            </div>
-                        </div>
-                        <h3 class="text-xl font-semibold mb-4 text-center text-accent">Zou Group</h3>
-                        <p class="text-center text-text/70">
-                            Refactored and improved testing code for the textgrad library, enhancing readability, maintainability, and adherence to Python coding standards.
-                        </p>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- Contact Section -->
-        <!-- Contact Section -->
-<section id="contact" class="py-24 bg-white relative overflow-hidden">
-    <div class="absolute inset-0 bg-gradient-to-br from-accent/5 to-accentSecondary/5"></div>
-    <div class="container mx-auto px-6 md:px-12 text-center relative z-10" data-aos="fade-up" data-aos-duration="1000">
-        <div class="max-w-3xl mx-auto">
-            <div class="inline-block mb-4 px-4 py-1 bg-accent/10 text-accent rounded-full text-sm font-medium">
-                <i class="fas fa-paper-plane mr-2"></i> Get In Touch
-            </div>
-            <h2 class="text-4xl font-bold font-display gradient-text inline-block">Let's Collaborate</h2>
-            <div class="w-24 h-1 bg-accent mx-auto mt-4 rounded-full"></div>
-            <p class="text-xl mt-8 mb-12 text-text/80">
-                Interested in AI research, deep learning solutions, or developing innovative applications? Let's connect and create something amazing together.
+  <hr class="section-divider"/>
+  <section id="physics">
+    <div class="section-header"><h2>Physics</h2> <div class="controls"><button onclick="sortPapers('physics-papers', 'asc')">Year ↑</button><button onclick="sortPapers('physics-papers', 'desc')">Year ↓</button></div>
+    </div>
+    <div class="tag-filter-container" id="physics-tag-filters"><span class="tag-filter-label">Filter:</span><button id="show-all-tags-physics" class="tag show-all" onclick="filterPapersByTag('physics-papers', null, 'physics-tag-filters')">Show All</button></div>
+    <ul class="paper-list" id="physics-papers">
+      <li class="paper-entry" data-year="1916" data-tags='["General Relativity", "Gravity"]' data-link="https://einsteinpapers.press.princeton.edu/vol6-trans/156">
+        <div class="paper-title">The Foundation of the General Theory of Relativity</div>
+        <div class="paper-meta">Einstein, 1916</div>
+        <div class="paper-tags"><span class="tag">General Relativity</span><span class="tag">Gravity</span></div>
+        <div class="paper-notes"><strong>My Take:</strong> Einstein's masterpiece. Gravity as spacetime curvature.</div>
+        <div class="paper-detailed-info" style="display: none;">
+            <h4>Summary</h4>
+            <p>This paper lays out the complete formulation of the general theory of relativity, where gravity is described as a manifestation of the curvature of spacetime. It generalizes special relativity and Newton's law of universal gravitation, providing a unified description of gravity as a geometric property of space and time.</p>
+            <h4>Further Insights & Key Math</h4>
+            <p>The Einstein Field Equations (EFE) are the core:</p>
+            $$ R_{\mu\nu} - \frac{1}{2}R g_{\mu\nu} + \Lambda g_{\mu\nu} = \frac{8\pi G}{c^4} T_{\mu\nu} $$
+            <p>Where:</p>
+            <ul>
+                <li>$R_{\mu\nu}$ is the Ricci curvature tensor.</li>
+                <li>$R$ is the scalar curvature.</li>
+                <li>$g_{\mu\nu}$ is the metric tensor.</li>
+                <li>$\Lambda$ is the cosmological constant.</li>
+                <li>$G$ is Newton's gravitational constant.</li>
+                <li>$c$ is the speed of light in vacuum.</li>
+                <li>$T_{\mu\nu}$ is the stress-energy tensor, which describes the density and flux of energy and momentum in spacetime. For example, for a perfect fluid, $T_{\mu\nu} = (\rho + p/c^2)u_\mu u_\nu + p g_{\mu\nu}$.</li>
+            </ul>
+            <p>The EFE is a set of 10 non-linear partial differential equations. Their solutions describe various gravitational phenomena, such as gravitational waves, black holes, and the expansion of the universe.</p>
+        </div>
+      </li>
+      <li class="paper-entry" data-year="1926" data-tags='["Quantum Mechanics", "Schrödinger Equation"]' data-link="http://matrixphysics.com/Schrodinger_Original_Paper_Annalen_translation.pdf">
+        <div class="paper-title">Quantisation as an Eigenvalue Problem</div>
+        <div class="paper-meta">Schrödinger, 1926</div>
+        <div class="paper-tags"><span class="tag">Quantum Mechanics</span><span class="tag">Schrödinger Equation</span></div>
+        <div class="paper-notes"><strong>My Take:</strong> The Schrödinger equation! Bedrock of non-relativistic QM.</div>
+        <div class="paper-detailed-info" style="display: none;">
+            <h4>Summary</h4>
+            <p>In this series of papers, Schrödinger introduced his wave equation, providing a description of quantum mechanics in terms of wave functions. This formulation was an alternative to Heisenberg's matrix mechanics but was later shown to be equivalent. It describes how the quantum state of a physical system changes over time.</p>
+            <h4>Further Insights & Key Math</h4>
+            <p>The time-dependent Schrödinger equation (TDSE):</p>
+            $$ i\hbar\frac{\partial}{\partial t}\Psi(\mathbf{r},t) = \hat{H}\Psi(\mathbf{r},t) $$
+            <p>The time-independent Schrödinger equation (TISE), for systems where the Hamiltonian $\hat{H}$ is not time-dependent, is derived by separation of variables, $\Psi(\mathbf{r},t) = \psi(\mathbf{r})e^{-iEt/\hbar}$:</p>
+            $$ \hat{H}\psi(\mathbf{r}) = E\psi(\mathbf{r}) $$
+            <p>This is an eigenvalue equation, where $E$ are the energy eigenvalues and $\psi(\mathbf{r})$ are the energy eigenfunctions (stationary states). The Hamiltonian operator for a single particle in a potential $V(\mathbf{r})$ is often:</p>
+            $$ \hat{H} = -\frac{\hbar^2}{2m}\nabla^2 + V(\mathbf{r}) $$
+            <p>The expectation value of an observable $A$ (represented by an operator $\hat{A}$) is given by $\langle A \rangle = \int \Psi^* \hat{A} \Psi \, d\tau$.</p>
+        </div>
+      </li>
+      <li class="paper-entry" data-year="1964" data-tags='["Particle Physics", "Higgs Mechanism"]' data-link="https://journals.aps.org/prl/abstract/10.1103/PhysRevLett.13.508">
+        <div class="paper-title">Broken Symmetry and the Mass of Gauge Bosons</div>
+        <div class="paper-meta">Higgs, 1964</div>
+        <div class="paper-tags"><span class="tag">Particle Physics</span><span class="tag">Higgs Mechanism</span></div>
+        <div class="paper-notes"><strong>My Take:</strong> Explained how particles acquire mass via spontaneous symmetry breaking. The potential $V(\phi) = -\mu^2 |\phi|^2 + \lambda |\phi|^4$ is key.</div>
+        <div class="paper-detailed-info" style="display: none;">
+            <h4>Abstract Summary (Conceptual)</h4>
+            <p>This paper (and others by Brout & Englert; Guralnik, Hagen & Kibble) proposed a mechanism by which fundamental particles, particularly gauge bosons in gauge theories, can acquire mass. It involves a scalar field (the Higgs field) that permeates all space and has a non-zero vacuum expectation value. Interactions with this field give particles their mass. This resolved a major issue in the formulation of the Standard Model of particle physics, where gauge invariance initially implied massless gauge bosons.</p>
+            <h4>Further Insights & Key Math</h4>
+            <p>The Higgs mechanism involves a scalar field $\phi$ with a "mexican hat" potential:</p>
+            $$ V(\phi) = -\frac{1}{2}\mu^2 |\phi|^2 + \frac{1}{4}\lambda (|\phi|^2)^2 $$
+            <p>When $\mu^2 > 0$, the minimum of the potential is not at $\phi=0$, but at $|\phi_0|^2 = \frac{\mu^2}{\lambda} = v^2$. This non-zero vacuum expectation value $v$ breaks the electroweak symmetry spontaneously.
+            When gauge bosons (like W and Z bosons) couple to this Higgs field, they acquire a mass term in the Lagrangian. For example, for a U(1) gauge boson $A_\mu$ coupling to a complex scalar $\phi = \frac{1}{\sqrt{2}}(\phi_1 + i\phi_2)$, if $\phi_1$ acquires a VEV $v$, the kinetic term for $\phi$ $(D_\mu \phi)^\dagger (D^\mu \phi)$ where $D_\mu = \partial_\mu - igA_\mu$, yields a mass term for $A_\mu$ of the form $\frac{1}{2} g^2 v^2 A_\mu A^\mu$. The Higgs boson itself is the quantum excitation of the Higgs field around its VEV.</p>
+        </div>
+      </li>
+      <li class="paper-entry" data-year="1957" data-tags='["Condensed Matter", "Superconductivity", "BCS Theory"]' data-link="https://journals.aps.org/pr/abstract/10.1103/PhysRev.108.1175">
+        <div class="paper-title">Theory of Superconductivity</div>
+        <div class="paper-meta">Bardeen, Cooper & Schrieffer, 1957</div>
+        <div class="paper-tags"><span class="tag">Condensed Matter</span><span class="tag">Superconductivity</span></div>
+        <div class="paper-notes"><strong>My Take:</strong> BCS Theory explained superconductivity via Cooper pairs of electrons, leading to an energy gap $\Delta$.</div>
+        <div class="paper-detailed-info" style="display: none;">
+            <h4>Abstract Summary</h4>
+            <p>This theory explains conventional superconductivity as a microscopic effect caused by a condensation of Cooper pairs into a boson-like state. These Cooper pairs consist of two electrons that are indirectly attracted to each other through their interaction with the crystal lattice (phonons). This pairing opens up an energy gap in the density of states at the Fermi level, which is crucial for the properties of superconductors, such as zero electrical resistance and the Meissner effect.</p>
+            <h4>Further Insights & Key Math</h4>
+            <p>Key concepts include:</p>
+            <p>1. <strong>Cooper Pairs:</strong> Two electrons with opposite momenta and spins can form a bound state (a Cooper pair) due to an attractive interaction mediated by lattice vibrations (phonons), even if the direct Coulomb interaction is repulsive.</p>
+            <p>2. <strong>Energy Gap ($\Delta$):</strong> The formation of Cooper pairs leads to an energy gap $\Delta$ in the electronic excitation spectrum at the Fermi energy $E_F$. The energy of an excitation (quasiparticle) is $E_k = \sqrt{\epsilon_k^2 + \Delta^2}$, where $\epsilon_k$ is the single-particle energy relative to $E_F$. This gap prevents small-energy scattering events that would normally cause resistance.</p>
+            <p>3. <strong>BCS Ground State Wavefunction:</strong> The ground state is a coherent superposition of states with different numbers of Cooper pairs.
+            The critical temperature $T_c$ below which superconductivity occurs is related to the energy gap by $2\Delta(0) \approx 3.53 k_B T_c$ at $T=0$. The gap $\Delta$ itself depends on temperature and vanishes at $T_c$.
             </p>
-            
-            <div class="flex flex-col md:flex-row gap-6 justify-center mb-16">
-                <a href="mailto:sanhashim12@outlook.com" class="flex items-center justify-center px-8 py-5 bg-accent text-white rounded-xl hover:bg-accentDark transition-all duration-300 shadow-lg hover:shadow-xl btn-3d">
-                    <i class="fas fa-envelope mr-3"></i>
-                    <span>san.hashimhama@outlook.com</span>
-                </a>
-                <a href="https://github.com/sanowl" target="_blank" class="flex items-center justify-center px-8 py-5 bg-gray-900 text-white rounded-xl hover:bg-black transition-all duration-300 shadow-lg hover:shadow-xl btn-3d">
-                    <i class="fab fa-github mr-3"></i>
-                    <span>GitHub</span>
-                </a>
-            </div>
-            
-            <div class="bg-white p-10 rounded-3xl shadow-lg glass-effect backdrop-blur-lg border border-gray-200">
-                <h3 class="text-2xl font-semibold mb-8">Areas of Expertise</h3>
-                <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
-                    <div class="bg-accent/5 p-5 rounded-xl hover-lift flex flex-col items-center justify-center h-32">
-                        <i class="fas fa-brain text-accent text-3xl mb-4"></i>
-                        <p class="font-medium">AI & Machine Learning</p>
-                    </div>
-                    <div class="bg-accent/5 p-5 rounded-xl hover-lift flex flex-col items-center justify-center h-32">
-                        <i class="fas fa-comment-dots text-accent text-3xl mb-4"></i>
-                        <p class="font-medium">Natural Language Processing</p>
-                    </div>
-                    <div class="bg-accent/5 p-5 rounded-xl hover-lift flex flex-col items-center justify-center h-32">
-                        <i class="fas fa-eye text-accent text-3xl mb-4"></i>
-                        <p class="font-medium">Computer Vision</p>
-                    </div>
-                    <div class="bg-accent/5 p-5 rounded-xl hover-lift flex flex-col items-center justify-center h-32">
-                        <i class="fas fa-cloud text-accent text-3xl mb-4"></i>
-                        <p class="font-medium">Cloud Architecture</p>
-                    </div>
-                    <div class="bg-accent/5 p-5 rounded-xl hover-lift flex flex-col items-center justify-center h-32">
-                        <i class="fas fa-server text-accent text-3xl mb-4"></i>
-                        <p class="font-medium">Backend Development</p>
-                    </div>
-                    <div class="bg-accent/5 p-5 rounded-xl hover-lift flex flex-col items-center justify-center h-32">
-                        <i class="fas fa-project-diagram text-accent text-3xl mb-4"></i>
-                        <p class="font-medium">System Architecture</p>
-                    </div>
-                </div>
-            </div>
         </div>
+      </li>
+    </ul>
+  </section>
+
+  <hr class="section-divider"/>
+  <section id="robotics">
+     <div class="section-header"><h2>Robotics</h2> <div class="controls"><button onclick="sortPapers('robotics-papers', 'asc')">Year ↑</button><button onclick="sortPapers('robotics-papers', 'desc')">Year ↓</button></div>
     </div>
-</section>
+    <div class="tag-filter-container" id="robotics-tag-filters"><span class="tag-filter-label">Filter:</span><button id="show-all-tags-robotics" class="tag show-all" onclick="filterPapersByTag('robotics-papers', null, 'robotics-tag-filters')">Show All</button></div>
+    <ul class="paper-list" id="robotics-papers">
+       <li class="paper-entry" data-year="1960" data-tags='["Control Theory", "Estimation", "Kalman Filter"]' data-link="https://decibel.ni.com/content/docs/DOC-24744">
+        <div class="paper-title">A New Approach to Linear Filtering and Prediction Problems</div>
+        <div class="paper-meta">Kalman, 1960</div>
+        <div class="paper-tags"><span class="tag">Control Theory</span><span class="tag">Estimation</span><span class="tag">Kalman Filter</span></div>
+        <div class="paper-notes"><strong>My Take:</strong> The Kalman Filter! Essential for state estimation.</div>
+        <div class="paper-detailed-info" style="display: none;">
+            <h4>Summary</h4>
+            <p>This paper introduced an optimal recursive data processing algorithm, the Kalman filter. It's used to estimate the state of a linear dynamic system from a series of noisy measurements. It operates by propagating the mean and covariance of the state estimate forward in time based on a system model (prediction step) and then updating this estimate using new measurements (update step).</p>
+            <h4>Further Insights & Key Math</h4>
+            <p>The Kalman filter operates in a two-step process:</p>
+            <p>1. <strong>Prediction Step:</strong></p>
+            <p>Predicted state estimate: $\hat{x}_k^- = A \hat{x}_{k-1} + B u_{k-1}$</p>
+            <p>Predicted error covariance: $P_k^- = A P_{k-1} A^T + Q$</p>
+            <p>2. <strong>Update Step:</strong></p>
+            <p>Kalman Gain: $K_k = P_k^- H^T (H P_k^- H^T + R)^{-1}$</p>
+            <p>Updated state estimate: $\hat{x}_k = \hat{x}_k^- + K_k (z_k - H \hat{x}_k^-)$</p>
+            <p>Updated error covariance: $P_k = (I - K_k H) P_k^-$</p>
+            <p>Where: $\hat{x}$ is the state estimate, $P$ is the error covariance, $A$ is the state transition matrix, $B$ is the control input matrix, $u$ is the control input, $Q$ is the process noise covariance, $H$ is the observation matrix, $R$ is the measurement noise covariance, $z_k$ is the measurement at time $k$, and $K_k$ is the Kalman gain.</p>
+        </div>
+      </li>
+      <li class="paper-entry" data-year="1986" data-tags='["Motion Planning", "Potential Fields"]' data-link="https://www.cs.cmu.edu/~motionplanning/papers/sbp_papers/integrated_planning_and_control/khatib_ Echtzeit-HindernisvermeidungfuerManipulatorenundmobileRoboter.pdf">
+        <div class="paper-title">Real-Time Obstacle Avoidance for Manipulators and Mobile Robots</div>
+        <div class="paper-meta">Khatib, 1986</div>
+        <div class="paper-tags"><span class="tag">Motion Planning</span><span class="tag">Potential Fields</span></div>
+        <div class="paper-notes"><strong>My Take:</strong> Potential fields for path planning! Robot pulled to goal, pushed from obstacles. Elegant.</div>
+        <div class="paper-detailed-info" style="display: none;">
+            <h4>Abstract Summary</h4>
+            <p>This paper presents the artificial potential field approach for real-time obstacle avoidance for manipulators and mobile robots. The robot moves in a field of forces, where it is attracted to its goal configuration and repelled by obstacles. The resulting motion is generated by the sum of these forces, allowing for smooth, reactive path generation.</p>
+            <h4>Further Insights & Key Math</h4>
+            <p>The total potential field $U(q)$ at a configuration $q$ is the sum of an attractive potential $U_{att}(q)$ pulling the robot towards the goal $q_{goal}$, and a repulsive potential $U_{rep}(q)$ pushing the robot away from obstacles.</p>
+            $$ U(q) = U_{att}(q) + U_{rep}(q) $$
+            <p>A common form for the attractive potential is parabolic:</p>
+            $$ U_{att}(q) = \frac{1}{2} \zeta \rho^2(q, q_{goal}) $$
+            <p>where $\zeta$ is a positive scaling factor and $\rho(q, q_{goal})$ is the distance to the goal.</p>
+            <p>A common form for the repulsive potential from an obstacle is:</p>
+            $$ U_{rep}(q) = \begin{cases} \frac{1}{2} \eta \left(\frac{1}{\rho(q, q_{obs})} - \frac{1}{\rho_0}\right)^2 & \text{if } \rho(q, q_{obs}) \le \rho_0 \\ 0 & \text{if } \rho(q, q_{obs}) > \rho_0 \end{cases} $$
+            <p>where $\eta$ is a positive scaling factor, $\rho(q, q_{obs})$ is the minimum distance to the obstacle, and $\rho_0$ is the distance of influence of the obstacle.</p>
+            <p>The "force" applied to the robot is the negative gradient of the total potential: $F(q) = -\nabla U(q)$. This force can then be used to control the robot's velocity or acceleration.</p>
+            <p>A major challenge with potential fields is the problem of local minima, where the robot can get stuck even if a path to the goal exists.</p>
+        </div>
+      </li>
+      <li class="paper-entry" data-year="1971" data-tags='["AI Planning", "Robotics", "STRIPS"]' data-link="https://ai.stanford.edu/users/nilsson/OnlinePubs-Nils/PublishedPapers/strips.pdf">
+        <div class="paper-title">STRIPS: A New Approach to the Application of Theorem Proving to Problem Solving</div>
+        <div class="paper-meta">Fikes & Nilsson, 1971</div>
+        <div class="paper-tags"><span class="tag">AI Planning</span><span class="tag">Robotics</span><span class="tag">STRIPS</span></div>
+        <div class="paper-notes">
+          <strong>My Take:</strong> STRIPS was a foundational planner, used in Shakey. Represented states and actions logically.
+        </div>
+        <div class="paper-detailed-info" style="display: none;">
+            <h4>Abstract Summary</h4>
+            <p>This paper describes the STRIPS (Stanford Research Institute Problem Solver) system, a problem solver designed for controlling autonomous robots like Shakey. STRIPS represents the world as a set of first-order logic formulas and actions as operators that modify this state. It uses a means-ends analysis approach combined with theorem proving to find a sequence of actions to achieve a goal state from an initial state.</p>
+            <h4>Further Insights</h4>
+            <p>Key components of STRIPS representation:</p>
+            <p>1. <strong>State Representation:</strong> A state is represented by a set of ground literals (positive atomic formulas) that are true in that state. Anything not listed is assumed false (Closed World Assumption).</p>
+            <p>2. <strong>Goal Representation:</strong> A goal is also represented by a set of ground literals. The system aims to find a state where all goal literals are true.</p>
+            <p>3. <strong>Action Representation (Operators):</strong> Each action is defined by:</p>
+            <ul>
+                <li><strong>Action Name:</strong> e.g., `pickup(X)`</li>
+                <li><strong>Preconditions:</strong> A set of literals that must be true for the action to be applicable. e.g., `on_table(X), clear(X), hand_empty`.</li>
+                <li><strong>Add List:</strong> A set of literals that become true after the action is performed. e.g., `holding(X)`.</li>
+                <li><strong>Delete List:</strong> A set of literals that become false (are removed from the state) after the action. e.g., `on_table(X), clear(X), hand_empty`.</li>
+            </ul>
+            <p>STRIPS uses a search algorithm (means-ends analysis) where it tries to reduce the differences between the current state and the goal state by selecting applicable operators. It was a significant step in automated planning and influenced many subsequent planning systems.</p>
+        </div>
+      </li>
+      <li class="paper-entry" data-year="1990" data-tags='["SLAM", "Probabilistic Robotics"]' data-link="https://www.researchgate.net/publication/220506788_Estimating_uncertain_spatial_relationships_in_robotics">
+        <div class="paper-title">Estimating Uncertain Spatial Relationships in Robotics</div>
+        <div class="paper-meta">Smith, Self & Cheeseman, 1990</div>
+        <div class="paper-tags"><span class="tag">SLAM</span><span class="tag">Probabilistic Robotics</span><span class="tag">EKF SLAM</span></div>
+        <div class="paper-notes">
+          <strong>My Take:</strong> Seminal for SLAM, especially EKF SLAM. Representing map and robot pose with uncertainties (covariances) was key.
+        </div>
+        <div class="paper-detailed-info" style="display: none;">
+            <h4>Abstract Summary (Conceptual)</h4>
+            <p>This paper (and related works like "Representing and Estimating Spatial Uncertainty" by Smith and Cheeseman, 1986) laid crucial groundwork for Simultaneous Localization and Mapping (SLAM). It focused on how to represent and manage uncertainty in the spatial relationships between a robot and features in its environment. The key idea was to use stochastic maps, where the positions of features and the robot's own pose are described by probability distributions (typically Gaussians, characterized by means and covariance matrices). This allowed for a mathematically rigorous way to fuse sensor information and update the map and robot pose over time.</p>
+            <h4>Further Insights & Key Math</h4>
+            <p>The core of EKF-SLAM involves augmenting the robot's state vector $x_v$ with the locations of all observed map features $m_i$: $x_a = [x_v^T, m_1^T, m_2^T, ..., m_N^T]^T$. The uncertainty is captured in a large covariance matrix $P_a$.</p>
+            <p><strong>Prediction Step (Robot Motion):</strong></p>
+            <p>When the robot moves, its pose estimate $\hat{x}_v$ is updated using a motion model $f(\cdot)$, and its covariance $P_{vv}$ is updated:
+            $$ \hat{x}_v(k|k-1) = f(\hat{x}_v(k-1|k-1), u(k)) $$
+            $$ P_{vv}(k|k-1) = \nabla_x f P_{vv}(k-1|k-1) \nabla_x f^T + Q(k) $$
+            Map feature estimates and their covariances (and cross-covariances with the robot) are also propagated.</p>
+            <p><strong>Update Step (Observation of a Feature):</strong></p>
+            <p>When a feature $m_j$ is observed with measurement $z_j$, the innovation (difference between expected and actual measurement) is $ \nu_j = z_j - h(\hat{x}_v(k|k-1), \hat{m}_j(k|k-1)) $.
+            The innovation covariance is $S_j = \nabla h P_a(k|k-1) \nabla h^T + R_j$.
+            The Kalman gain is $K_j = P_a(k|k-1) \nabla h^T S_j^{-1}$.
+            The state vector and covariance matrix are updated:
+            $$ \hat{x}_a(k|k) = \hat{x}_a(k|k-1) + K_j \nu_j $$
+            $$ P_a(k|k) = (I - K_j \nabla h) P_a(k|k-1) $$
+            <p>A key challenge was managing the growing size and computational complexity of the covariance matrix $P_a$ and correctly handling data association (matching observations to existing map features).</p>
+        </div>
+      </li>
+    </ul>
+  </section>
+  <hr class="section-divider"/>
 
-<!-- Footer -->
-<footer class="bg-darkBg text-white py-16">
-    <div class="container mx-auto px-6 md:px-12">
-        <div class="flex flex-col md:flex-row justify-between items-center">
-            <div class="mb-8 md:mb-0">
-                <a href="#" class="text-3xl font-bold font-display">San Hashim</a>
-                <p class="mt-2 text-gray-400">AI/ML Engineer & AWS Cloud Architect</p>
-            </div>
-            <div class="flex space-x-8">
-                <a href="#about" class="text-gray-400 hover:text-white transition-colors">About</a>
-                <a href="#experience" class="text-gray-400 hover:text-white transition-colors">Experience</a>
-                <a href="#skills" class="text-gray-400 hover:text-white transition-colors">Skills</a>
-                <a href="#certifications" class="text-gray-400 hover:text-white transition-colors">Certifications</a>
-                <a href="#projects" class="text-gray-400 hover:text-white transition-colors">Projects</a>
-                <a href="#contact" class="text-gray-400 hover:text-white transition-colors">Contact</a>
-            </div>
+  <div id="paperModal" class="modal">
+    <div class="modal-content">
+      <span class="modal-close-btn" onclick="closeModal()">&times;</span>
+      <h3 id="modalTitle" class="modal-paper-title"></h3>
+      <p id="modalMeta" class="modal-paper-meta"></p>
+      <div id="modalTags" class="modal-paper-tags"></div>
+      <div id="modalNotes" class="modal-paper-notes"></div>
+      <div id="modalDetailedInfo" class="modal-detailed-info" style="margin-top: 1.5em;">
         </div>
-        <hr class="border-gray-800 my-8">
-        <div class="flex flex-col md:flex-row justify-between items-center">
-            <p>&copy; 2025 San Hashim. All rights reserved.</p>
-            <div class="flex space-x-6 mt-4 md:mt-0">
-                <a href="https://github.com/sanowl" target="_blank" class="text-gray-400 hover:text-white transition-colors">
-                    <i class="fab fa-github text-xl"></i>
-                </a>
-                <a href="mailto:sanhashim12@outlook.com" class="text-gray-400 hover:text-white transition-colors">
-                    <i class="fas fa-envelope text-xl"></i>
-                </a>
-                <a href="https://www.linkedin.com/in/san-hashim/" target="_blank" class="text-gray-400 hover:text-white transition-colors">
-                    <i class="fab fa-linkedin text-xl"></i>
-                </a>
-            </div>
-        </div>
+      <a id="modalLink" href="#" target="_blank" class="modal-paper-link">Read Paper (External Link)</a>
     </div>
-</footer>
+  </div>
 
-<!-- Scripts -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/particles.js/2.0.0/particles.min.js"></script>
-<script>
-    // Preloader
-    window.addEventListener('load', function() {
-        const preloader = document.querySelector('.preloader');
-        setTimeout(() => {
-            preloader.classList.add('loaded');
-        }, 500);
-    });
-    
-    // Initialize AOS
-    AOS.init({
-        once: true,
-        duration: 800,
-        offset: 100,
-        delay: 100,
-        easing: 'ease-out-cubic'
-    });
+  <footer> Built by Me • Last updated: <span id="last-updated"></span>
+    <p style="font-size: 0.8em; margin-top: 1em;"><em>Disclaimer: All external links are provided as examples and should be verified by the user. Content represents personal selections. Math rendering by MathJax.</em></p>
+  </footer>
 
-    // Mobile menu toggle
-    const menuToggle = document.getElementById('menu-toggle');
-    const mobileMenu = document.getElementById('mobile-menu');
-    menuToggle.addEventListener('click', () => {
-        mobileMenu.classList.toggle('hidden');
-    });
+  <script>
+    const modal = document.getElementById('paperModal');
+    const modalTitle = document.getElementById('modalTitle');
+    const modalMeta = document.getElementById('modalMeta');
+    const modalTags = document.getElementById('modalTags');
+    const modalNotes = document.getElementById('modalNotes');
+    const modalDetailedInfo = document.getElementById('modalDetailedInfo');
+    const modalLink = document.getElementById('modalLink');
 
-    // Smooth scrolling for anchor links
-    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-        anchor.addEventListener('click', function (e) {
-            e.preventDefault();
-            const target = document.querySelector(this.getAttribute('href'));
-            if (target) {
-                window.scrollTo({
-                    top: target.offsetTop - 100,
-                    behavior: 'smooth'
-                });
-                
-                // Close mobile menu if open
-                if (!mobileMenu.classList.contains('hidden')) {
-                    mobileMenu.classList.add('hidden');
-                }
-            }
-        });
-    });
+    function openModal(paperElement) {
+        const title = paperElement.querySelector('.paper-title').innerText;
+        const meta = paperElement.querySelector('.paper-meta').innerText;
+        const tagsHTML = paperElement.querySelector('.paper-tags').innerHTML;
+        const notesHTML = paperElement.querySelector('.paper-notes').innerHTML;
+        const link = paperElement.dataset.link || '#';
+        
+        const detailedInfoElement = paperElement.querySelector('.paper-detailed-info');
+        const detailedInfoHTML = detailedInfoElement ? detailedInfoElement.innerHTML : '<p>More detailed information will be available soon.</p>';
 
-    // Shrinking header on scroll
-    window.addEventListener('scroll', () => {
-        const header = document.querySelector('header');
-        if (window.scrollY > 100) {
-            header.classList.add('py-2');
-            header.classList.remove('py-4');
-            header.classList.add('shadow-md');
-        } else {
-            header.classList.add('py-4');
-            header.classList.remove('py-2');
-            header.classList.remove('shadow-md');
+        modalTitle.innerText = title;
+        modalMeta.innerText = meta;
+        modalTags.innerHTML = tagsHTML;
+        modalNotes.innerHTML = notesHTML;
+        modalDetailedInfo.innerHTML = detailedInfoHTML;
+        modalLink.href = link;
+        
+        modalLink.style.display = (link === '#') ? 'none' : 'inline-block';
+        modal.classList.add('active');
+        
+        if (window.MathJax) {
+            MathJax.typesetPromise([modalNotes, modalDetailedInfo]).catch(function (err) { console.error('MathJax Typesetting Error:', err); });
         }
+    }
+
+    function closeModal() { modal.classList.remove('active'); }
+    window.onclick = function(event) { if (event.target == modal) { closeModal(); } }
+    
+    document.addEventListener('DOMContentLoaded', () => {
+        document.querySelectorAll('li.paper-entry').forEach(item => {
+            item.addEventListener('click', function(event) {
+                if (event.target.tagName === 'A' && event.target.closest('.paper-title')) { return; }
+                if (event.target.classList.contains('bibtex-btn')) { return; } // Assuming you might re-add this
+                openModal(this);
+            });
+        });
+
+        const navLinks = document.querySelectorAll('nav a');
+        const sections = document.querySelectorAll('section');
+        function changeNav() {
+          let index = sections.length;
+          while(--index >= 0 && window.scrollY + (window.innerHeight * 0.3) < sections[index].offsetTop) {} 
+          navLinks.forEach((link) => link.classList.remove('active'));
+          if (index >= 0 && navLinks[index]) { navLinks[index].classList.add('active'); }
+          else if (sections.length > 0 && window.scrollY < sections[0].offsetTop) { if (navLinks[0]) navLinks[0].classList.add('active'); }
+        }
+        navLinks.forEach(link => { link.addEventListener('click', function() { navLinks.forEach(l => l.classList.remove('active')); this.classList.add('active'); }); });
+        window.addEventListener('scroll', changeNav);
+        if (sections.length > 0) { changeNav(); }
+
+        const lastUpdatedSpan = document.getElementById('last-updated');
+        if(lastUpdatedSpan) { lastUpdatedSpan.textContent = new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' }); }
+
+        populateTagFilters();
+        document.querySelectorAll('.tag-filter-container').forEach(container => {
+            const listId = container.id.replace('-tag-filters', '-papers');
+            const paperList = document.getElementById(listId);
+            if (paperList) { filterPapersByTag(listId, null, container.id); }
+        });
     });
 
-    // Initialize particles.js
-    particlesJS('particles-js', {
-        "particles": {
-            "number": {
-                "value": 100,
-                "density": {
-                    "enable": true,
-                    "value_area": 800
-                }
-            },
-            "color": {
-                "value": "#ffffff"
-            },
-            "shape": {
-                "type": "circle",
-                "stroke": {
-                    "width": 0,
-                    "color": "#000000"
-                },
-            },
-            "opacity": {
-                "value": 0.5,
-                "random": true,
-            },
-            "size": {
-                "value": 3,
-                "random": true,
-            },
-            "line_linked": {
-                "enable": true,
-                "distance": 150,
-                "color": "#ffffff",
-                "opacity": 0.4,
-                "width": 1
-            },
-            "move": {
-                "enable": true,
-                "speed": 2,
-                "direction": "none",
-                "random": true,
-                "straight": false,
-                "out_mode": "out",
-                "bounce": false,
-            }
-        },
-        "interactivity": {
-            "detect_on": "canvas",
-            "events": {
-                "onhover": {
-                    "enable": true,
-                    "mode": "grab"
-                },
-                "onclick": {
-                    "enable": true,
-                    "mode": "push"
-                },
-                "resize": true
-            },
-            "modes": {
-                "grab": {
-                    "distance": 140,
-                    "line_linked": {
-                        "opacity": 1
-                    }
-                },
-                "push": {
-                    "particles_nb": 4
-                },
-            }
-        },
-        "retina_detect": true
-    });
-    
-    // Custom cursor follower (for desktop)
-    const cursorFollower = document.getElementById('cursor-follower');
-    
-    if (window.innerWidth > 768) {
-        document.addEventListener('mousemove', (e) => {
-            cursorFollower.style.opacity = '1';
-            cursorFollower.style.transform = `translate(${e.clientX}px, ${e.clientY}px)`;
-        });
-        
-        document.querySelectorAll('a, button').forEach(el => {
-            el.addEventListener('mouseenter', () => {
-                cursorFollower.style.width = '50px';
-                cursorFollower.style.height = '50px';
-                cursorFollower.style.borderWidth = '1px';
-                cursorFollower.style.backgroundColor = 'rgba(59, 130, 246, 0.1)';
+    function sortPapers(listId, order) { /* ... (sorting logic same as before) ... */ 
+      const list = document.getElementById(listId);
+      if (!list) return;
+      const items = Array.from(list.getElementsByClassName('paper-entry'));
+      items.sort((a, b) => {
+        const yearA = parseInt(a.dataset.year);
+        const yearB = parseInt(b.dataset.year);
+        return order === 'asc' ? yearA - yearB : yearB - yearA;
+      });
+      items.forEach(item => list.appendChild(item));
+    }
+    function populateTagFilters() { /* ... (tag filter population logic same as before) ... */ 
+        document.querySelectorAll('.tag-filter-container').forEach(container => {
+            const listId = container.id.replace('-tag-filters', '-papers');
+            const paperList = document.getElementById(listId);
+            if (!paperList) return;
+            const papersInSection = paperList.getElementsByClassName('paper-entry');
+            const tagsInSection = new Set();
+            Array.from(papersInSection).forEach(paper => {
+                 const tags = JSON.parse(paper.dataset.tags || '[]');
+                 tags.forEach(tag => tagsInSection.add(tag));
             });
-            
-            el.addEventListener('mouseleave', () => {
-                cursorFollower.style.width = '12px';
-                cursorFollower.style.height = '12px';
-                cursorFollower.style.borderWidth = '2px';
-                cursorFollower.style.backgroundColor = 'transparent';
+            container.querySelectorAll('button.tag:not(.show-all)').forEach(btn => btn.remove());
+            const sortedTags = Array.from(tagsInSection).sort();
+            const showAllButton = container.querySelector('button.tag.show-all');
+            let insertAfterElement = showAllButton || container.querySelector('.tag-filter-label');
+            sortedTags.forEach(tag => {
+                const button = document.createElement('button');
+                button.classList.add('tag');
+                button.textContent = tag;
+                button.onclick = () => filterPapersByTag(listId, tag, container.id);
+                if (insertAfterElement && insertAfterElement.nextSibling) { container.insertBefore(button, insertAfterElement.nextSibling); }
+                else if (insertAfterElement) { container.appendChild(button); }
+                else { container.appendChild(button); }
+                insertAfterElement = button;
             });
-        });
-        
-        // Hide cursor when it leaves the window
-        document.addEventListener('mouseout', (e) => {
-            if (e.toElement === null && e.relatedTarget === null) {
-                cursorFollower.style.opacity = '0';
-            }
         });
     }
-    
-    // 3D rotation effect for cards
-    document.querySelectorAll('.rotate-3d').forEach(el => {
-        el.addEventListener('mousemove', (e) => {
-            const rect = el.getBoundingClientRect();
-            const x = e.clientX - rect.left;
-            const y = e.clientY - rect.top;
-            const centerX = rect.width / 2;
-            const centerY = rect.height / 2;
-            
-            const rotateX = (y - centerY) / 10;
-            const rotateY = (centerX - x) / 10;
-            
-            el.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg)`;
-            
-            const icon = el.querySelector('.icon-3d');
-            if (icon) {
-                icon.style.transform = `translateZ(40px)`;
-            }
+    function filterPapersByTag(listId, tag, filterContainerId) { /* ... (filtering logic same as before) ... */ 
+      const list = document.getElementById(listId);
+      if (!list) return;
+      const items = Array.from(list.getElementsByClassName('paper-entry'));
+      const filterButtonsContainer = document.getElementById(filterContainerId);
+      if (!filterButtonsContainer) return;
+      const filterButtons = filterButtonsContainer.querySelectorAll('button.tag');
+      filterButtons.forEach(button => button.classList.remove('active-tag-filter'));
+      if (tag === null) {
+        items.forEach(item => item.classList.remove('hidden'));
+        const showAllBtn = filterButtonsContainer.querySelector('button.tag.show-all');
+        if (showAllBtn) showAllBtn.classList.add('active-tag-filter');
+      } else {
+        items.forEach(item => {
+          const itemTags = JSON.parse(item.dataset.tags || '[]');
+          if (itemTags.includes(tag)) { item.classList.remove('hidden'); }
+          else { item.classList.add('hidden'); }
         });
-        
-        el.addEventListener('mouseleave', () => {
-            el.style.transform = 'perspective(1000px) rotateX(0) rotateY(0)';
-            
-            const icon = el.querySelector('.icon-3d');
-            if (icon) {
-                icon.style.transform = `translateZ(20px)`;
-            }
-        });
-    });
-</script>
+        Array.from(filterButtons).find(button => button.textContent === tag && !button.classList.contains('show-all'))?.classList.add('active-tag-filter');
+      }
+    }
+  </script>
 </body>
 </html>
