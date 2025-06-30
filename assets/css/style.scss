@@ -1,0 +1,57 @@
+---
+---
+
+// Variables
+$primary-color: #4f46e5;
+$text-color: #1e293b;
+$background-color: #ffffff;
+
+// Base styles
+body {
+    font-family: 'Georgia', serif;
+    line-height: 1.6;
+    color: $text-color;
+    background: $background-color;
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 2rem;
+}
+
+// Math styling
+.math-block {
+    overflow-x: auto;
+    margin: 2rem 0;
+    padding: 1rem;
+    background: #f8fafc;
+    border-radius: 4px;
+}
+
+// Note styling
+.note {
+    margin: 2rem 0;
+    
+    h1 {
+        color: $primary-color;
+        font-size: 2.5rem;
+        margin-bottom: 1rem;
+    }
+    
+    .metadata {
+        color: #64748b;
+        margin-bottom: 2rem;
+        
+        time {
+            margin-right: 1rem;
+        }
+        
+        .category {
+            display: inline-block;
+            padding: 0.25rem 0.75rem;
+            background: #e0e7ff;
+            color: $primary-color;
+            border-radius: 9999px;
+            font-size: 0.875rem;
+            margin-right: 0.5rem;
+        }
+    }
+}
