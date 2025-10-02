@@ -1,0 +1,385 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>QLoRA Internals — 4‑bit Adapters on Quantized Bases</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: Georgia, serif; line-height: 1.7; color: #333; background: white; max-width: 1000px; margin: 0 auto; padding: 40px 20px; }
+    .back-nav { margin-bottom: 40px; }
+    .back-nav a { color: #666; text-decoration: none; font-size: 0.9rem; }
+    .back-nav a:hover { color: #333; }
+    header { margin-bottom: 50px; text-align: center; padding-bottom: 30px; border-bottom: 1px solid #eee; }
+    h1 { font-size: 2.6rem; font-weight: normal; margin-bottom: 12px; }
+    .subtitle { color: #666; font-size: 1.15rem; margin-bottom: 10px; }
+    h2 { font-size: 1.9rem; font-weight: normal; margin: 48px 0 22px; padding-bottom: 10px; border-bottom: 1px solid #eee; }
+    h3 { font-size: 1.5rem; font-weight: normal; margin: 30px 0 16px; }
+    p { margin-bottom: 18px; text-align: justify; }
+    ul, ol { margin: 16px 0 18px 28px; }
+    li { margin-bottom: 10px; }
+    .math-formula { background: #f8f8f8; padding: 24px; margin: 24px 0; border-left: 3px solid #333; text-align: center; font-size: 1.05rem; }
+    .diagram-container { margin: 30px 0; text-align: center; }
+    .diagram-caption { font-size: 0.9rem; color: #666; margin-top: 8px; font-style: italic; }
+    .code-block { background: #f8f8f8; padding: 24px; margin: 24px 0; font-family: 'Courier New', monospace; font-size: 0.9rem; overflow-x: auto; border: 1px solid #ddd; }
+    table { width: 100%; border-collapse: collapse; margin: 26px 0; font-size: 0.95rem; }
+    th, td { padding: 14px; text-align: left; border-bottom: 1px solid #ddd; }
+    th { background: #f8f8f8; font-weight: normal; }
+    footer { margin-top: 70px; padding-top: 36px; border-top: 1px solid #eee; text-align: center; color: #666; font-size: 0.9rem; }
+  </style>
+  <link rel="stylesheet" href="assets/css/theme.css">
+  <script src="assets/js/site.js" defer></script>
+</head>
+<body>
+  <nav class="back-nav">
+    <a href="index.html">← Back to Home</a>
+  </nav>
+
+  <header>
+    <h1>QLoRA Internals</h1>
+    <p class="subtitle">NF4 quantization, double quant, dequant math, and paged optimizers</p>
+  </header>
+
+  <section>
+    <h2>Why QLoRA</h2>
+    <p>QLoRA enables parameter‑efficient fine‑tuning on a 4‑bit quantized base model while training small LoRA adapters in higher precision. The base weights are frozen and stored with ultra‑low memory, while adapters capture task‑specific updates. Coupled with paged optimizers, this allows single‑GPU fine‑tuning of multi‑billion‑parameter models with minimal quality loss.</p>
+  </section>
+
+  <section>
+    <h2>NF4 Quantization</h2>
+    <p>NormalFloat4 (NF4) is a 4‑bit, non‑uniform quantizer whose 16 codebook values approximate the cumulative distribution of standardized weights (roughly Gaussian). Rather than linear steps, NF4 places more levels near 0 to preserve small weights.</p>
+    <div class="math-formula">
+      x ∈ ℝ → \hat{x} = s·c[q] + b, &nbsp; q ∈ {0,…,15}
+    </div>
+    <p>Here c[q] is a fixed 16‑entry codebook on standardized space, s is a per‑group or per‑channel scale, and b is an optional bias/offset (often 0). Quantization selects the nearest code:</p>
+    <div class="math-formula">
+      q(x) = argmin<sub>q</sub> | (x − b)/s − c[q] |
+    </div>
+    <p>Grouping choices (e.g., 64 weights per group) trade off fidelity and metadata overhead. Per‑channel scales give higher fidelity but slightly larger metadata.</p>
+  </section>
+
+  <section>
+    <h2>Double Quantization</h2>
+    <p>To reduce overhead further, QLoRA “double‑quantizes” scales: instead of storing s as FP16 per group, it stores quantized scales ŝ using an 8‑bit quantizer with its own codebook and a small set of shared scales. This can halve the metadata memory for scales with negligible loss.</p>
+    <div class="math-formula">
+      s ≈ s<sub>0</sub> · d[k], &nbsp; k ∈ {0,…,255}
+    </div>
+    <p>At runtime, dequant uses the small codebook d and reconstructs s before reconstructing x̂. In practice, libraries handle this transparently.</p>
+  </section>
+
+  <section>
+    <h2>Dequantization Math</h2>
+    <p>During forward passes, matrix multiplications operate on dequantized values on‑the‑fly (often in fused kernels):</p>
+    <div class="math-formula">
+      \hat{W} = s ⊙ gather(c, Q) + b, &nbsp; y = \hat{W}x
+    </div>
+    <p>Where Q stores 4‑bit codes, gather(c,Q) looks up codebook entries, s broadcasts per group/channel, and ⊙ is elementwise scaling. Fused dequant‑GEMM minimizes memory traffic.</p>
+  </section>
+
+  <section>
+    <h2>Paged Optimizers</h2>
+    <p>Since base weights are frozen, only adapter parameters need optimizer state. Paged Adam(W) further reduces GPU memory by keeping optimizer state on CPU or paged buffers and pulling it to GPU on demand. This is crucial for long sequences and large batch sizes.</p>
+  </section>
+
+  <section>
+    <h2>Memory Accounting</h2>
+    <table>
+      <thead>
+        <tr>
+          <th>Component</th>
+          <th>Precision</th>
+          <th>Approx. Memory</th>
+          <th>Notes</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Base weights (frozen)</td>
+          <td>NF4 (4‑bit) + scales</td>
+          <td>≈ 0.5 bytes/param + 0.05–0.15 bytes/param</td>
+          <td>Codebook indices + per‑group scales</td>
+        </tr>
+        <tr>
+          <td>LoRA A,B</td>
+          <td>FP16/BF16</td>
+          <td>2·d·r per d×d layer (×2 bytes)</td>
+          <td>Trainable; often r∈[4,16]</td>
+        </tr>
+        <tr>
+          <td>Optimizer state (adapters)</td>
+          <td>FP32 (CPU paged)</td>
+          <td>≈ 2× adapter params (m,v)</td>
+          <td>Paged to CPU to save VRAM</td>
+        </tr>
+        <tr>
+          <td>KV cache (inference)</td>
+          <td>FP16/BF16</td>
+          <td>O(L·n_layers·d)</td>
+          <td>Dominates long‑context inference</td>
+        </tr>
+      </tbody>
+    </table>
+    <p>For a 7B model, 4‑bit weights are ~3.5 GB plus ~0.4–1.0 GB for scales/metadata depending on grouping, leaving room for adapters and context on a 24 GB GPU.</p>
+  </section>
+
+  <section>
+    <h2>Interactive: Memory Calculator</h2>
+    <div id="qlora-calc" class="controls">
+      <div class="row"><div>Model params (B)</div><input id="qc_params_b" type="number" step="0.1" value="7"><div class="hint">Billions</div></div>
+      <div class="row"><div>Base bytes/param</div><input id="qc_base_bpp" type="number" step="0.01" value="0.6"><div class="hint">NF4 ~0.5–0.6</div></div>
+      <div class="row"><div>Scales bytes/param</div><input id="qc_scales_bpp" type="number" step="0.01" value="0.1"><div class="hint">Double‑quant ~0.05–0.15</div></div>
+      <div class="row"><div>Targeted fraction</div><input id="qc_cov" type="number" step="0.05" value="0.7"><div class="hint">Adapters cover this fraction</div></div>
+      <div class="row"><div>Rank r</div><input id="qc_r" type="number" step="1" value="8"><div class="hint">LoRA rank</div></div>
+      <div class="row"><div>Hidden size d</div><input id="qc_d" type="number" step="64" value="4096"><div class="hint">Approximate</div></div>
+      <div class="row"><div>KV cache (GB)</div><input id="qc_kv_gb" type="number" step="0.5" value="6"><div class="hint">At target context</div></div>
+      <div class="row"><div>Base</div><div class="bar-track"><div id="qbar_base" class="bar" style="width:40%"></div></div><div id="qout_base" class="output">—</div></div>
+      <div class="row"><div>Scales/Meta</div><div class="bar-track"><div id="qbar_scales" class="bar" style="width:10%"></div></div><div id="qout_scales">—</div></div>
+      <div class="row"><div>Adapters</div><div class="bar-track"><div id="qbar_adapters" class="bar" style="width:10%"></div></div><div id="qout_adapters">—</div></div>
+      <div class="row"><div>KV cache</div><div class="bar-track"><div id="qbar_kv" class="bar" style="width:10%"></div></div><div id="qout_kv">—</div></div>
+      <div class="row"><div>Total (GPU)</div><div class="output-box" style="grid-column: span 2" id="qout_total">—</div><div id="qout_opt" class="hint">optimizer</div></div>
+    </div>
+  </section>
+
+  <section>
+    <h2>Training Pipeline (Diagram)</h2>
+    <div class="diagram-container" data-tilt>
+      <svg width="880" height="300" viewBox="0 0 880 300" data-panzoom>
+        <defs>
+          <filter id="ds2" x="-20%" y="-20%" width="140%" height="140%">
+            <feDropShadow dx="0" dy="2" stdDeviation="2" flood-color="#7B6C50" flood-opacity="0.15"/>
+          </filter>
+          <marker id="arr2" markerWidth="10" markerHeight="7" refX="10" refY="3.5" orient="auto">
+            <polygon points="0 0, 10 3.5, 0 7" fill="#7B6C50"/>
+          </marker>
+        </defs>
+        <rect x="40" y="40" width="160" height="60" rx="12" fill="#e9efe6" stroke="#7B6C50" filter="url(#ds2)" data-draggable/>
+        <text x="120" y="75" text-anchor="middle" fill="#5A4B33">Input tokens</text>
+        <path d="M 200 70 L 240 70" stroke="#7B6C50" stroke-width="2" marker-end="url(#arr2)"/>
+        <rect x="240" y="30" width="200" height="80" rx="12" fill="#ffeede" stroke="#7B6C50" filter="url(#ds2)" data-draggable/>
+        <text x="340" y="65" text-anchor="middle" fill="#5A4B33">Dequant + GEMM (NF4)</text>
+        <path d="M 440 70 L 480 70" stroke="#7B6C50" stroke-width="2" marker-end="url(#arr2)"/>
+        <rect x="480" y="30" width="140" height="80" rx="12" fill="#FFFDF7" stroke="#7B6C50" filter="url(#ds2)" data-draggable/>
+        <text x="550" y="55" text-anchor="middle" fill="#5A4B33">LoRA BA</text>
+        <text x="550" y="75" text-anchor="middle" fill="#5A4B33">(FP16)</text>
+        <path d="M 620 70 L 660 70" stroke="#7B6C50" stroke-width="2" marker-end="url(#arr2)"/>
+        <rect x="660" y="30" width="180" height="80" rx="12" fill="#f7f3ec" stroke="#7B6C50" filter="url(#ds2)" data-draggable/>
+        <text x="750" y="65" text-anchor="middle" fill="#5A4B33">Output activations</text>
+        <rect x="300" y="140" width="180" height="70" rx="12" fill="#FFF6EA" stroke="#7B6C50" filter="url(#ds2)" data-draggable/>
+        <text x="390" y="170" text-anchor="middle" fill="#5A4B33">Paged AdamW (CPU)</text>
+        <path d="M 390 110 L 390 140" stroke="#7B6C50" stroke-width="2" marker-end="url(#arr2)"/>
+      </svg>
+      <div class="diagram-caption">Fused dequant‑GEMM runs on the frozen 4‑bit base; LoRA adapters add residual updates; paged optimizers keep adapter states off‑GPU.</div>
+    </div>
+  </section>
+
+  <section>
+    <h2>NF4 Quant/Dequant Sketch</h2>
+    <div class="code-block">
+<pre><code># Codebook c of length 16 (sorted). Group size G (e.g., 64)
+def quantize_nf4(x, group_size=64):
+    # x: 1D tensor of weights (FP32)
+    groups = x.view(-1, group_size)
+    scales = groups.std(dim=1, keepdim=True).clamp_min(1e-8)
+    x_hat = groups / scales  # standardize
+    # nearest code index per element
+    q = (x_hat.unsqueeze(-1) - c.view(1,1,-1)).abs().argmin(dim=-1).to(torch.uint8)
+    return q, scales.squeeze(1)  # store q (4-bit) + per-group scale
+
+def dequantize_nf4(q, scales):
+    return (c[q] * scales.unsqueeze(1))
+
+# LoRA on quantized base
+class QLoRALinear(nn.Module):
+    def __init__(self, in_f, out_f, r=8, alpha=16):
+        super().__init__()
+        self.q_codes, self.scales = ...  # NF4 storage (frozen)
+        self.A = nn.Parameter(torch.zeros(r, in_f))
+        self.B = nn.Parameter(torch.zeros(out_f, r))
+        nn.init.kaiming_uniform_(self.A, a=5**0.5); nn.init.zeros_(self.B)
+        self.scaling = alpha / r
+    def forward(self, x):
+        W = dequantize_nf4(self.q_codes, self.scales)  # fused in practice
+        y = x @ W.T
+        y = y + self.scaling * (x @ self.A.T @ self.B.T)
+        return y
+</code></pre>
+    </div>
+    <p>Real implementations fuse dequant and matmul in custom kernels and keep q_codes/scales in compact layouts.</p>
+  </section>
+
+  <section>
+    <h2>Tips & Pitfalls</h2>
+    <ul>
+      <li><strong>Calibration:</strong> Calibrate scales on representative batches to avoid saturation.</li>
+      <li><strong>Precision:</strong> Keep adapters in FP16/BF16; consider FP32 optimizer states for stability.</li>
+      <li><strong>Sequence length:</strong> KV cache dominates memory at inference; batch accordingly.</li>
+      <li><strong>Merging:</strong> For deployment, merge adapters into a higher‑precision base (if available); for pure NF4, keep adapters separate.</li>
+      <li><strong>Numerics:</strong> Watch for dequant overflow when using very large α or ranks.</li>
+    </ul>
+  </section>
+
+  <section>
+    <h2>Quantization Error & Fidelity</h2>
+    <p>Quantization introduces approximation error. For NF4, the non‑uniform codebook c concentrates bins near 0, reducing MSE for weight distributions that are approximately zero‑mean Gaussian.</p>
+    <div class="math-formula">
+      \operatorname{MSE}(s) = \mathbb{E}\big[ (x - s·c[q(x/s)])^2 \big],\; q(z)=\arg\min_j |z - c[j]|\,,\; x \sim \mathcal{N}(0,\sigma^2)
+    </div>
+    <p>Best scales s minimize MSE within a group. Empirically, per‑channel scales are most faithful but slightly larger metadata than per‑group. Outlier channels benefit from per‑channel scaling.</p>
+    <div class="diagram-container">
+      <svg width="860" height="260" viewBox="0 0 860 260">
+        <rect x="40" y="30" width="780" height="180" rx="12" fill="#FFFDF7" stroke="#7B6C50"/>
+        <text x="430" y="55" text-anchor="middle" fill="#5A4B33">NF4 Codebook Density (schematic)</text>
+        <!-- Bars (denser near 0) -->
+        <rect x="90" y="160" width="20" height="30" fill="#e9efe6" stroke="#7B6C50"/>
+        <rect x="120" y="120" width="20" height="70" fill="#e9efe6" stroke="#7B6C50"/>
+        <rect x="150" y="90" width="20" height="100" fill="#e9efe6" stroke="#7B6C50"/>
+        <rect x="180" y="70" width="20" height="120" fill="#e9efe6" stroke="#7B6C50"/>
+        <rect x="210" y="60" width="20" height="130" fill="#e9efe6" stroke="#7B6C50"/>
+        <rect x="240" y="55" width="20" height="135" fill="#e9efe6" stroke="#7B6C50"/>
+        <rect x="270" y="50" width="20" height="140" fill="#e9efe6" stroke="#7B6C50"/>
+        <rect x="300" y="55" width="20" height="135" fill="#e9efe6" stroke="#7B6C50"/>
+        <rect x="330" y="60" width="20" height="130" fill="#e9efe6" stroke="#7B6C50"/>
+        <rect x="360" y="70" width="20" height="120" fill="#e9efe6" stroke="#7B6C50"/>
+        <rect x="390" y="90" width="20" height="100" fill="#e9efe6" stroke="#7B6C50"/>
+        <rect x="420" y="120" width="20" height="70" fill="#e9efe6" stroke="#7B6C50"/>
+        <rect x="450" y="160" width="20" height="30" fill="#e9efe6" stroke="#7B6C50"/>
+        <text x="430" y="220" text-anchor="middle" font-size="12" fill="#5A4B33">Codebook levels (schematic, concentrated near 0)</text>
+      </svg>
+      <div class="diagram-caption">NF4 places more quantization levels near zero, reducing MSE for typical weight distributions.</div>
+    </div>
+  </section>
+
+  <section>
+    <h2>Grouping Strategies & Metadata</h2>
+    <p>Scales can be stored per‑tensor, per‑row, per‑channel, or per‑group of G weights (e.g., G=64). Smaller groups → better fidelity but more scale metadata.</p>
+    <ul>
+      <li>Per‑channel: best quality; scale per output channel in linear layers.</li>
+      <li>Per‑group (G=64): very common, good trade‑off with double quantization.</li>
+      <li>Per‑tensor: minimal metadata, highest error; rarely used for LLMs.</li>
+    </ul>
+    <div class="diagram-container">
+      <svg width="860" height="240" viewBox="0 0 860 240">
+        <defs>
+          <marker id="arrg" markerWidth="10" markerHeight="7" refX="10" refY="3.5" orient="auto">
+            <polygon points="0 0, 10 3.5, 0 7" fill="#7B6C50"/>
+          </marker>
+        </defs>
+        <rect x="60" y="40" width="300" height="60" rx="10" fill="#e9efe6" stroke="#7B6C50"/>
+        <text x="210" y="75" text-anchor="middle" fill="#5A4B33">Weights stream</text>
+        <rect x="60" y="130" width="60" height="40" rx="8" fill="#FFFDF7" stroke="#7B6C50"/>
+        <text x="90" y="155" text-anchor="middle" font-size="12" fill="#5A4B33">G=64</text>
+        <rect x="140" y="130" width="60" height="40" rx="8" fill="#FFFDF7" stroke="#7B6C50"/>
+        <text x="170" y="155" text-anchor="middle" font-size="12" fill="#5A4B33">G=64</text>
+        <rect x="220" y="130" width="60" height="40" rx="8" fill="#FFFDF7" stroke="#7B6C50"/>
+        <text x="250" y="155" text-anchor="middle" font-size="12" fill="#5A4B33">G=64</text>
+        <path d="M 320 70 L 380 70" stroke="#7B6C50" stroke-width="2" marker-end="url(#arrg)"/>
+        <rect x="380" y="40" width="160" height="60" rx="10" fill="#ffeede" stroke="#7B6C50"/>
+        <text x="460" y="75" text-anchor="middle" fill="#5A4B33">Scales (per group)</text>
+        <path d="M 540 70 L 600 70" stroke="#7B6C50" stroke-width="2" marker-end="url(#arrg)"/>
+        <rect x="600" y="40" width="200" height="60" rx="10" fill="#f7f3ec" stroke="#7B6C50"/>
+        <text x="700" y="75" text-anchor="middle" fill="#5A4B33">Double‑quant codes</text>
+      </svg>
+      <div class="diagram-caption">Groups of G weights share a scale; scales themselves can be quantized (double quantization).</div>
+    </div>
+  </section>
+
+  <section>
+    <h2>Fused Dequant‑GEMM (Kernel View)</h2>
+    <p>Efficient inference/training fuses dequantization into matmul kernels to reduce memory traffic. Tiles of codes are loaded, dequantized into registers/shared memory, then multiplied with activation tiles.</p>
+    <div class="math-formula">
+      Y<sub>tile</sub> += (S ⊙ C[Q<sub>tile</sub>]) · X<sub>tile</sub>, &nbsp; streaming softmax/accumulation for attention blocks
+    </div>
+    <div class="diagram-container">
+      <svg width="860" height="300" viewBox="0 0 860 300">
+        <rect x="60" y="40" width="260" height="80" rx="12" fill="#e9efe6" stroke="#7B6C50"/>
+        <text x="190" y="75" text-anchor="middle" fill="#5A4B33">NF4 codes (global mem)</text>
+        <rect x="360" y="40" width="180" height="80" rx="12" fill="#ffeede" stroke="#7B6C50"/>
+        <text x="450" y="75" text-anchor="middle" fill="#5A4B33">Dequant tile (SMEM)</text>
+        <rect x="570" y="40" width="230" height="80" rx="12" fill="#FFFDF7" stroke="#7B6C50"/>
+        <text x="685" y="75" text-anchor="middle" fill="#5A4B33">GEMM with X tile</text>
+        <text x="430" y="140" text-anchor="middle" font-size="12" fill="#5A4B33">Tiles stream left→right within kernel</text>
+      </svg>
+      <div class="diagram-caption">Kernel loads NF4 code tiles, dequantizes into fast memory, and multiplies with activation tiles.</div>
+    </div>
+    <div class="code-block">
+<pre><code># Pseudocode of fused kernel loop
+for tile in weight_codes.tiles():
+    q = global_load(tile)
+    w_tile = dequantize(codebook, q, scales_for(tile))  # shared/registers
+    y_tile += matmul(w_tile, x_tile)
+</code></pre>
+    </div>
+  </section>
+
+  <section>
+    <h2>LoRA Placement in Transformers</h2>
+    <p>Adapters are commonly applied to attention projections (Q and V) and optionally to MLPs. With QLoRA, the base QKV/O weights are quantized; adapters are FP16/BF16.</p>
+    <div class="diagram-container">
+      <svg width="860" height="320" viewBox="0 0 860 320">
+        <rect x="60" y="40" width="180" height="60" rx="10" fill="#e9efe6" stroke="#7B6C50"/>
+        <text x="150" y="75" text-anchor="middle" fill="#5A4B33">W_q (NF4)</text>
+        <rect x="60" y="120" width="180" height="40" rx="8" fill="#FFFDF7" stroke="#7B6C50"/>
+        <text x="150" y="145" text-anchor="middle" font-size="12" fill="#5A4B33">LoRA: B_q A_q</text>
+        <rect x="260" y="40" width="180" height="60" rx="10" fill="#e9efe6" stroke="#7B6C50"/>
+        <text x="350" y="75" text-anchor="middle" fill="#5A4B33">W_k (NF4)</text>
+        <rect x="460" y="40" width="180" height="60" rx="10" fill="#e9efe6" stroke="#7B6C50"/>
+        <text x="550" y="75" text-anchor="middle" fill="#5A4B33">W_v (NF4)</text>
+        <rect x="460" y="120" width="180" height="40" rx="8" fill="#FFFDF7" stroke="#7B6C50"/>
+        <text x="550" y="145" text-anchor="middle" font-size="12" fill="#5A4B33">LoRA: B_v A_v</text>
+        <rect x="660" y="220" width="180" height="60" rx="10" fill="#e9efe6" stroke="#7B6C50"/>
+        <text x="750" y="255" text-anchor="middle" fill="#5A4B33">W_o (NF4)</text>
+        <text x="750" y="205" text-anchor="middle" font-size="12" fill="#5A4B33">(optional LoRA)</text>
+      </svg>
+      <div class="diagram-caption">Quantized base projections with FP16 adapters on Q and V (common), K optional, O sometimes.</div>
+    </div>
+  </section>
+
+  <section>
+    <h2>Worked Memory Example (7B)</h2>
+    <p>Assume a 7B model (7×10<sup>9</sup> params), NF4 with per‑group scales (~0.6 bytes/param effective), LoRA rank r=8 on attention and MLP layers covering ~70% of params with square d×d blocks.</p>
+    <div class="math-formula">
+      Base ≈ 7e9 × 0.6 B ≈ 4.2 GB, &nbsp; Adapters per d×d ≈ 2dr; overall ≈ 0.7·(2dr) aggregated
+    </div>
+    <p>Typical adapter memory: 100–300 MB in FP16 depending on which layers are targeted. Optimizer states (paged) live on CPU (~2× adapter size). This easily fits on a 24 GB GPU with ample KV cache for long contexts.</p>
+    <div class="diagram-container">
+      <svg width="860" height="240" viewBox="0 0 860 240">
+        <rect x="60" y="60" width="220" height="40" rx="8" fill="#e9efe6" stroke="#7B6C50"/>
+        <text x="170" y="85" text-anchor="middle" fill="#5A4B33">Base (≈4.2 GB)</text>
+        <rect x="300" y="60" width="140" height="40" rx="8" fill="#ffeede" stroke="#7B6C50"/>
+        <text x="370" y="85" text-anchor="middle" fill="#5A4B33">Scales/Meta</text>
+        <rect x="460" y="60" width="120" height="40" rx="8" fill="#FFFDF7" stroke="#7B6C50"/>
+        <text x="520" y="85" text-anchor="middle" fill="#5A4B33">Adapters</text>
+        <rect x="600" y="60" width="180" height="40" rx="8" fill="#f7f3ec" stroke="#7B6C50"/>
+        <text x="690" y="85" text-anchor="middle" fill="#5A4B33">KV cache headroom</text>
+      </svg>
+      <div class="diagram-caption">Rough memory split on a 24 GB GPU: base weights, metadata, adapters, and KV cache.</div>
+    </div>
+  </section>
+
+  <section>
+    <h2>Training Stability & Scaling</h2>
+    <ul>
+      <li>Keep α/r moderate (e.g., α≈2r–8r). Very large updates can interact poorly with dequant.</li>
+      <li>Use BF16/FP16 for adapters; enable gradient clipping (norm 0.5–1.0).</li>
+      <li>Optimizer on adapters only (AdamW β1=0.9, β2=0.999; wd≤0.01).</li>
+      <li>Warmup 3–5%, cosine/linear decay. Monitor validation loss and per‑batch KL if co‑training with ref.</li>
+      <li>Calibrate group sizes per layer type; MLPs may need smaller G than attention for outlier channels.</li>
+    </ul>
+  </section>
+
+  <section>
+    <h2>Validation Checklist</h2>
+    <ul>
+      <li>Dequant correctness: compare fused vs explicit dequant outputs on a small batch.</li>
+      <li>Merged vs unmerged: if merging adapters into FP16 base, verify logits parity.</li>
+      <li>Throughput: measure tokens/sec and kernel time to confirm fused paths are used.</li>
+      <li>Quality: task metrics vs full‑precision baseline; regression on known benchmarks.</li>
+      <li>Memory: profile VRAM usage across sequence lengths to budget KV cache.</li>
+    </ul>
+  </section>
+
+  <footer>
+    <p>© 2025 San Hashimhama. Educational use permitted with attribution.</p>
+  </footer>
+</body>
+</html>

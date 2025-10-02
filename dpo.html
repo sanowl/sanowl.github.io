@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>DPO (Direct Preference Optimization) - San’s AI Notes</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: Georgia, serif; line-height: 1.7; color: #333; background: white; max-width: 1000px; margin: 0 auto; padding: 40px 20px; }
+    .back-nav { margin-bottom: 40px; }
+    .back-nav a { color: #666; text-decoration: none; font-size: 0.9rem; }
+    .back-nav a:hover { color: #333; }
+    header { margin-bottom: 50px; text-align: center; padding-bottom: 30px; border-bottom: 1px solid #eee; }
+    h1 { font-size: 2.6rem; font-weight: normal; margin-bottom: 12px; }
+    .subtitle { color: #666; font-size: 1.15rem; margin-bottom: 10px; }
+    h2 { font-size: 1.9rem; font-weight: normal; margin: 48px 0 22px; padding-bottom: 10px; border-bottom: 1px solid #eee; }
+    p { margin-bottom: 18px; text-align: justify; }
+    ul, ol { margin: 16px 0 18px 28px; }
+    li { margin-bottom: 10px; }
+    .math-formula { background: #f8f8f8; padding: 24px; margin: 24px 0; border-left: 3px solid #333; text-align: center; font-size: 1.05rem; }
+    .diagram-container { margin: 30px 0; text-align: center; }
+    .diagram-caption { font-size: 0.9rem; color: #666; margin-top: 8px; font-style: italic; }
+    .code-block { background: #f8f8f8; padding: 24px; margin: 24px 0; font-family: 'Courier New', monospace; font-size: 0.9rem; overflow-x: auto; border: 1px solid #ddd; }
+    footer { margin-top: 70px; padding-top: 36px; border-top: 1px solid #eee; text-align: center; color: #666; font-size: 0.9rem; }
+  </style>
+  <link rel="stylesheet" href="assets/css/theme.css">
+</head>
+<body>
+  <nav class="back-nav">
+    <a href="index.html">← Back to Home</a>
+  </nav>
+
+  <header>
+    <h1>DPO (Direct Preference Optimization)</h1>
+    <p class="subtitle">Training from pairwise preferences without a reward model</p>
+  </header>
+
+  <section>
+    <h2>Setup</h2>
+    <p>Given prompts x and pairwise preferences (y<sup>+</sup> preferred over y<sup>−</sup>), DPO optimizes the policy directly to prefer y<sup>+</sup> over y<sup>−</sup> relative to a frozen reference policy π<sub>ref</sub>, avoiding an explicit reward model.</p>
+  </section>
+
+  <section>
+    <h2>Objective</h2>
+    <div class="math-formula">
+      L(θ) = − E\big[ log σ\big( β( log π<sub>θ</sub>(y<sup>+</sup>|x) − log π<sub>θ</sub>(y<sup>−</sup>|x) ) − ( log π<sub>ref</sub>(y<sup>+</sup>|x) − log π<sub>ref</sub>(y<sup>−</sup>|x) ) \big) \big]
+    </div>
+    <p>β scales preference strength. The reference term anchors updates to avoid degeneracy and preserves proximity to the base model.</p>
+  </section>
+
+  <section>
+    <h2>Diagram</h2>
+    <div class="diagram-container">
+      <svg width="820" height="260" viewBox="0 0 820 260">
+        <rect x="40" y="40" width="200" height="60" rx="10" fill="#e9efe6" stroke="#7B6C50"/>
+        <text x="140" y="75" text-anchor="middle" fill="#5A4B33">Prompt x</text>
+        <text x="260" y="70" font-size="22" fill="#5A4B33">→</text>
+        <rect x="290" y="30" width="220" height="80" rx="10" fill="#ffeede" stroke="#7B6C50"/>
+        <text x="400" y="65" text-anchor="middle" fill="#5A4B33">Policy π<sub>θ</sub>(y|x)</text>
+        <rect x="290" y="120" width="220" height="80" rx="10" fill="#FFFDF7" stroke="#7B6C50"/>
+        <text x="400" y="155" text-anchor="middle" fill="#5A4B33">Reference π<sub>ref</sub>(y|x)</text>
+        <text x="540" y="100" text-anchor="middle" fill="#5A4B33">→ Preference loss</text>
+      </svg>
+      <div class="diagram-caption">Policy favors preferred completions over rejected ones relative to a reference.</div>
+    </div>
+  </section>
+
+  <section>
+    <h2>Pseudocode</h2>
+    <div class="code-block">
+<pre><code>freeze π_ref; initialize π_θ
+for minibatch of (x, y_plus, y_minus):
+  lpos = log π_θ(y_plus|x); lneg = log π_θ(y_minus|x)
+  lpos_ref = log π_ref(y_plus|x); lneg_ref = log π_ref(y_minus|x)
+  z = β * (lpos - lneg) - (lpos_ref - lneg_ref)
+  loss = -mean(log_sigmoid(z))
+  update θ by minimizing loss
+</code></pre>
+    </div>
+  </section>
+
+  <section>
+    <h2>Notes</h2>
+    <ul>
+      <li>Works well for RLHF without reward modeling and PPO loops.</li>
+      <li>Batch multiple candidates per prompt to improve signal.</li>
+      <li>Calibrate β; too large can overfit and drift from reference.</li>
+    </ul>
+  </section>
+
+  <footer>
+    <p>© 2025 San Hashimhama. Educational use permitted with attribution.</p>
+  </footer>
+</body>
+</html>
+

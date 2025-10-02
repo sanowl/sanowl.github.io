@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>GRPO (Generalized Preference Optimization) - San’s AI Notes</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: Georgia, serif; line-height: 1.7; color: #333; background: white; max-width: 1000px; margin: 0 auto; padding: 40px 20px; }
+    .back-nav { margin-bottom: 40px; }
+    .back-nav a { color: #666; text-decoration: none; font-size: 0.9rem; }
+    .back-nav a:hover { color: #333; }
+    header { margin-bottom: 50px; text-align: center; padding-bottom: 30px; border-bottom: 1px solid #eee; }
+    h1 { font-size: 2.6rem; font-weight: normal; margin-bottom: 12px; }
+    .subtitle { color: #666; font-size: 1.15rem; margin-bottom: 10px; }
+    h2 { font-size: 1.9rem; font-weight: normal; margin: 48px 0 22px; padding-bottom: 10px; border-bottom: 1px solid #eee; }
+    p { margin-bottom: 18px; text-align: justify; }
+    ul, ol { margin: 16px 0 18px 28px; }
+    li { margin-bottom: 10px; }
+    .math-formula { background: #f8f8f8; padding: 24px; margin: 24px 0; border-left: 3px solid #333; text-align: center; font-size: 1.05rem; }
+    .diagram-container { margin: 30px 0; text-align: center; }
+    .diagram-caption { font-size: 0.9rem; color: #666; margin-top: 8px; font-style: italic; }
+    .code-block { background: #f8f8f8; padding: 24px; margin: 24px 0; font-family: 'Courier New', monospace; font-size: 0.9rem; overflow-x: auto; border: 1px solid #ddd; }
+    footer { margin-top: 70px; padding-top: 36px; border-top: 1px solid #eee; text-align: center; color: #666; font-size: 0.9rem; }
+  </style>
+  <link rel="stylesheet" href="assets/css/theme.css">
+  <script src="assets/js/site.js" defer></script>
+</head>
+<body>
+  <nav class="back-nav">
+    <a href="index.html">← Back to Home</a>
+  </nav>
+
+  <header>
+    <h1>GRPO (Generalized Preference Optimization)</h1>
+    <p class="subtitle">Unifying preference learning with policy optimization</p>
+  </header>
+
+  <section>
+    <h2>Motivation</h2>
+    <p>Preference‑based training aligns a model to human choices using paired or grouped responses. GRPO generalizes direct preference optimization by weighting multiple candidates and optionally constraining updates via KL regularization or clipping, combining the strengths of DPO‑style losses and PPO‑style stability.</p>
+  </section>
+
+  <section>
+    <h2>Setting & Notation</h2>
+    <p>Given a prompt x and a set of K responses {y<sub>i</sub>} from a language model (policy) π<sub>θ</sub>(y|x), we want the policy to place higher probability mass on preferred responses. We denote a frozen reference policy π<sub>ref</sub> (often the base SFT model) that anchors updates.</p>
+    <div class="math-formula">
+      log π<sub>θ</sub>(y|x) = \(\sum_{t=1}^{T(y)} log π<sub>θ</sub>(y_t \mid x, y_{<t})\) \quad (sequence log‑probability)
+    </div>
+    <p>To avoid length bias, use a normalized score s(y|x) = (1/T)·log π<sub>θ</sub>(y|x) or add an explicit length penalty. We also define a scaled, reference‑relative score used by many preference losses:</p>
+    <div class="math-formula">
+      S<sub>θ</sub>(y|x) = β[ log π<sub>θ</sub>(y|x) − log π<sub>ref</sub>(y|x) ]
+    </div>
+  </section>
+
+  <section>
+    <h2>General Form</h2>
+    <div class="math-formula">
+      maximize E\Big[ \sum_i w_i(x, y_i) · log π_θ(y_i|x) \Big] − λ·E\big[ KL(π_θ(·|x)||π_ref(·|x)) \big]
+    </div>
+    <p>Weights w<sub>i</sub> can be derived from preference labels (e.g., +1/−1), Bradley‑Terry scores, or a learned reward model. A trust‑region flavor can be added by clipping probability ratios similar to PPO.</p>
+    <div class="math-formula">
+      r_i = π_θ(y_i|x) / π_ref(y_i|x), &nbsp; use min( r_i · ŵ_i, clip(r_i,1−ε,1+ε) · ŵ_i )
+    </div>
+  </section>
+
+  <section>
+    <h2>Preference Models (Weights w<sub>i</sub>)</h2>
+    <p>Different preference assumptions induce different weights:</p>
+    <ul>
+      <li><strong>Pairwise Bradley–Terry (DPO case):</strong> P(y<sup>+</sup> ≻ y<sup>−</sup>|x) = σ( S<sub>θ</sub>(y<sup>+</sup>|x) − S<sub>θ</sub>(y<sup>−</sup>|x) ).</li>
+      <li><strong>Listwise Plackett–Luce:</strong> w<sub>i</sub> ∝ exp(S<sub>θ</sub>(y<sub>i</sub>|x)) over the group, optionally using ranked positions.</li>
+      <li><strong>Top‑k positives:</strong> w<sub>i</sub> = 1/k for preferred items, −ρ/(K−k) for rejected, with ρ controlling negatives.</li>
+      <li><strong>Reward‑weighted:</strong> w<sub>i</sub> ∝ softmax(β·R(y<sub>i</sub>|x)) if a reward model is available.</li>
+    </ul>
+    <div class="note">Using S<sub>θ</sub> relative to π<sub>ref</sub> stabilizes training by measuring changes against a well‑behaved base model.</div>
+  </section>
+
+  <section>
+    <h2>Objective & Gradient</h2>
+    <p>Define the GRPO objective (minimization form) with KL regularization and optional clipping surrogate:</p>
+    <div class="math-formula">
+      L(θ) = E\Big[ −\sum_i w_i · log π_θ(y_i|x) + λ·KL(π_θ(·|x) || π_ref(·|x)) \Big]
+    </div>
+    <div class="math-formula">
+      L<sub>clip</sub>(θ) = E\Big[ −\sum_i min\big( r_i·w_i, clip(r_i,1−ε,1+ε)·w_i \big) + λ·KL(·) \Big]\,,\; r_i = \frac{π_θ}{π_{ref}}
+    </div>
+    <p>Gradient (ignoring dependence of w on θ for a simple, effective estimator):</p>
+    <div class="math-formula">
+      ∇<sub>θ</sub>L ≈ −E\Big[ \sum_i w_i · ∇<sub>θ</sub>log π_θ(y_i|x) \Big] + λ ∇<sub>θ</sub>KL
+    </div>
+    <p>Detaching w<sub>i</sub> (stop‑gradient) avoids second‑order terms and is standard in practice.</p>
+  </section>
+
+  <section>
+    <h2>Sequence Scoring & Length Bias</h2>
+    <p>Sequence log‑probabilities favor shorter outputs. Common fixes:</p>
+    <ul>
+      <li>Use average log‑prob: s̄(y)= (1/T) Σ log p.</li>
+      <li>Add length penalty: s<sub>α</sub>(y)= log p(y) / T<sup>α</sup> or −α·T.</li>
+      <li>Normalize weights within the group after applying penalties.</li>
+    </ul>
+    <div class="note">Always compute log‑probs with the same tokenizer and masking (ignore padding) for π<sub>θ</sub> and π<sub>ref</sub>.</div>
+  </section>
+
+  <section>
+    <h2>GRPO Pipeline (Diagram)</h2>
+    <div class="diagram-container" data-tilt>
+      <svg width="860" height="300" viewBox="0 0 860 300" data-panzoom>
+        <defs>
+          <filter id="ds1" x="-20%" y="-20%" width="140%" height="140%">
+            <feDropShadow dx="0" dy="2" stdDeviation="2" flood-color="#7B6C50" flood-opacity="0.15"/>
+          </filter>
+          <marker id="arr" markerWidth="10" markerHeight="7" refX="10" refY="3.5" orient="auto">
+            <polygon points="0 0, 10 3.5, 0 7" fill="#7B6C50"/>
+          </marker>
+          <linearGradient id="gCream" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stop-color="#fff9ef"/>
+            <stop offset="100%" stop-color="#f2e6d3"/>
+          </linearGradient>
+        </defs>
+        <g class="node" data-draggable>
+          <rect x="40" y="40" width="180" height="60" rx="12" fill="url(#gCream)" stroke="#7B6C50" filter="url(#ds1)"/>
+          <text x="130" y="75" text-anchor="middle" fill="#5A4B33">Prompt x</text>
+        </g>
+        <path d="M 220 70 L 260 70" stroke="#7B6C50" stroke-width="2" marker-end="url(#arr)"/>
+        <g class="node" data-draggable>
+          <rect x="260" y="30" width="200" height="80" rx="12" fill="url(#gCream)" stroke="#7B6C50" filter="url(#ds1)"/>
+          <text x="360" y="65" text-anchor="middle" fill="#5A4B33">Sample K candidates</text>
+        </g>
+        <path d="M 460 70 L 500 70" stroke="#7B6C50" stroke-width="2" marker-end="url(#arr)"/>
+        <g class="node" data-draggable>
+          <rect x="500" y="30" width="200" height="80" rx="12" fill="url(#gCream)" stroke="#7B6C50" filter="url(#ds1)"/>
+          <text x="600" y="55" text-anchor="middle" fill="#5A4B33">Compute Sθ, w<sub>i</sub></text>
+          <text x="600" y="75" text-anchor="middle" fill="#5A4B33">(with β, length norm)</text>
+        </g>
+        <path d="M 700 70 L 740 70" stroke="#7B6C50" stroke-width="2" marker-end="url(#arr)"/>
+        <g class="node" data-draggable>
+          <rect x="740" y="30" width="80" height="80" rx="12" fill="url(#gCream)" stroke="#7B6C50" filter="url(#ds1)"/>
+          <text x="780" y="75" text-anchor="middle" fill="#5A4B33">Update</text>
+        </g>
+        <g class="node" data-draggable>
+          <rect x="280" y="140" width="180" height="70" rx="12" fill="url(#gCream)" stroke="#7B6C50" filter="url(#ds1)"/>
+          <text x="370" y="170" text-anchor="middle" fill="#5A4B33">KL penalty λ or clipping ε</text>
+        </g>
+        <path d="M 370 110 L 370 140" stroke="#7B6C50" stroke-width="2" marker-end="url(#arr)"/>
+      </svg>
+      <div class="diagram-caption">Generate K candidates, score relative to reference, form weights, then update with KL or clipping for stability.</div>
+    </div>
+  </section>
+
+  <section>
+    <h2>Clipped vs Unclipped Surrogate</h2>
+    <p>Clipping limits harmful updates when π<sub>θ</sub> drifts from π<sub>ref</sub>. The plot shows the conservative surrogate.</p>
+    <div class="diagram-container">
+      <svg width="860" height="240" viewBox="0 0 860 240">
+        <rect x="40" y="30" width="780" height="160" rx="12" fill="#FFFDF7" stroke="#7B6C50"/>
+        <polyline points="60,140 140,120 220,100 300,80 380,65 460,60 540,65 620,80 700,100 780,120" fill="none" stroke="#7B6C50" stroke-width="2"/>
+        <polyline points="60,140 140,120 220,100 300,85 380,80 460,80 540,80 620,85 700,100 780,120" fill="none" stroke="#c0a57c" stroke-width="3"/>
+        <text x="460" y="200" text-anchor="middle" font-size="12" fill="#5A4B33">Dark: r·w  |  Light: clip(r,1−ε,1+ε)·w</text>
+      </svg>
+      <div class="diagram-caption">Clipping flattens the objective near the boundaries to prevent large steps.</div>
+    </div>
+  </section>
+
+  <section>
+    <h2>Training Algorithm (LLMs)</h2>
+    <div class="code-block">
+<pre><code># Inputs: prompts x, reference π_ref, current policy π_θ, K candidates each
+for batch in dataloader:
+  # 1) Sample K responses per prompt (top-p, T) or read from buffer
+  Y = sample_candidates(model=π_θ, prompts=batch.x, K=K)
+  # 2) Compute sequence log-probs under π_θ and π_ref (mask padding)
+  logp = logprob(π_θ, batch.x, Y); logp_ref = logprob(π_ref, batch.x, Y)
+  # 3) Build relative scores and weights
+  S = β * (normalize(logp) - normalize(logp_ref))  # length-normalized
+  w = listwise_softmax(S)  # or pairwise/heuristic weights
+  # 4) Loss with KL or clipping surrogate
+  if use_clipping:
+      r = exp(logp - logp_ref)
+      obj = mean( min(r*w, clip(r, 1-ε, 1+ε)*w) ) - λ * mean(KL(π_θ||π_ref))
+      loss = -obj
+  else:
+      loss = -mean(w * logp) + λ * mean(KL(π_θ||π_ref))
+  # 5) Update θ (detach w to avoid second-order terms)
+  loss.backward(); clip_grad_norm_(model.parameters(), 1.0); optimizer.step(); optimizer.zero_grad()
+</code></pre>
+    </div>
+  </section>
+
+  <section>
+    <h2>Hyperparameters & Tuning</h2>
+    <ul>
+      <li>β (preference temperature): 0.1–4.0; larger emphasizes differences.</li>
+      <li>K (candidates per prompt): 2–8; higher K strengthens listwise signal.</li>
+      <li>λ (KL penalty): tune to match target KL per batch (0.02–0.2 typical).</li>
+      <li>ε (clipping): 0.1–0.3 if using PPO‑style surrogate.</li>
+      <li>Sampling: top‑p 0.9–0.95, temperature 0.7–1.0 for diverse candidates.</li>
+      <li>Length penalty α: 0.0–0.5 to curb verbosity; normalize before weighting.</li>
+    </ul>
+  </section>
+
+  <section>
+    <h2>Connections & Special Cases</h2>
+    <ul>
+      <li><strong>DPO:</strong> K=2 pairwise with logistic loss on S<sub>θ</sub> differences (no clipping).</li>
+      <li><strong>IPO/KTO:</strong> Unregularized preference fitting on relative scores with temperature scaling.</li>
+      <li><strong>ORPO:</strong> Token‑level odds ratio objective; related weighting at sequence level.</li>
+      <li><strong>SFT:</strong> w<sub>i</sub>=1 for gold responses, 0 otherwise (no reference term).</li>
+    </ul>
+  </section>
+
+  <section>
+    <h2>Evaluation & Diagnostics</h2>
+    <ul>
+      <li>Win‑rate vs reference or baseline on a held‑out prompt set.</li>
+      <li>Average length, toxicity/safety metrics, and factuality checks.</li>
+      <li>Per‑batch KL(π<sub>θ</sub>||π<sub>ref</sub>) to monitor drift.</li>
+      <li>Weight entropy H(w) to ensure groups aren’t degenerate (e.g., one heavy winner always).</li>
+    </ul>
+  </section>
+
+  <section>
+    <h2>Interactive: Listwise Weights</h2>
+    <div id="grpo-weights" class="controls">
+      <div class="row"><div>Temperature τ</div><input id="g_tau" type="range" min="0.1" max="5" step="0.1" value="1.0"><div class="hint">softmax sharpness</div></div>
+      <div class="row"><div>S₁</div><input id="g_s1" type="number" step="0.1" value="0.0"><div id="g_w1">—</div></div>
+      <div class="row"><div>S₂</div><input id="g_s2" type="number" step="0.1" value="0.5"><div id="g_w2">—</div></div>
+      <div class="row"><div>S₃</div><input id="g_s3" type="number" step="0.1" value="1.0"><div id="g_w3">—</div></div>
+      <div class="row"><div>S₄</div><input id="g_s4" type="number" step="0.1" value="-0.3"><div id="g_w4">—</div></div>
+      <div class="bars-vertical" style="margin-top:10px">
+        <div class="barv"><div id="g_bar1" class="fill" style="height:0%"></div></div>
+        <div class="barv"><div id="g_bar2" class="fill" style="height:0%"></div></div>
+        <div class="barv"><div id="g_bar3" class="fill" style="height:0%"></div></div>
+        <div class="barv"><div id="g_bar4" class="fill" style="height:0%"></div></div>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <h2>Common Pitfalls</h2>
+    <ul>
+      <li><strong>Length bias:</strong> fix via normalization/penalties and consistent tokenization.</li>
+      <li><strong>Mode collapse:</strong> too high β or too low λ/ε; increase regularization or diversify sampling.</li>
+      <li><strong>Noisy preferences:</strong> smooth with listwise softmax or aggregate multiple annotators.</li>
+      <li><strong>Reference mismatch:</strong> large domain shift from π<sub>ref</sub> can hurt; warm‑start SFT or update π<sub>ref</sub> slowly.</li>
+    </ul>
+  </section>
+
+  <section>
+    <h2>Pseudocode</h2>
+    <div class="code-block">
+<pre><code>freeze π_ref
+for minibatch of prompts x:
+  sample K candidates {y_i} ~ current π_θ or from buffer
+  compute weights w_i from preferences or scores
+  if using clipping:
+    r_i = π_θ(y_i|x)/π_ref(y_i|x)
+    obj = mean(min(r_i*w_i, clip(r_i,1-ε,1+ε)*w_i)) - λ*KL(π_θ||π_ref)
+  else:
+    obj = mean(w_i * log π_θ(y_i|x)) - λ*KL(π_θ||π_ref)
+  ascend θ on obj
+</code></pre>
+    </div>
+  </section>
+
+  <section>
+    <h2>Notes</h2>
+    <ul>
+      <li>Bridges DPO (direct pairwise loss) and PPO‑style regularization.</li>
+      <li>Group sampling (K≥2) provides stronger supervision than single pairs.</li>
+      <li>Careful with large updates; KL penalty or clipping keeps policy near reference.</li>
+    </ul>
+  </section>
+
+  <footer>
+    <p>© 2025 San Hashimhama. Educational use permitted with attribution.</p>
+  </footer>
+</body>
+</html>

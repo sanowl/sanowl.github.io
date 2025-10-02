@@ -3,183 +3,256 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>San — Portfolio</title>
+  <title>San’s AI Notes</title>
   <style>
-    :root {
-      --bg: #000;
-      --text: #eaeaea;
-      --accent: #66ccff;
-      --bg-dark-1: #0a0a0a;
-      --bg-dark-2: #111;
-    }
-    * { box-sizing: border-box; }
-    body {
+    * { 
       margin: 0;
-      padding: 2rem 1rem;
-      background: linear-gradient(180deg, var(--bg) 0%, var(--bg-dark-1) 35%, var(--bg-dark-2) 100%);
-      color: var(--text);
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-      line-height: 1.6;
-    }
-    header, footer { text-align: center; margin-bottom: 3rem; }
-    h1 { margin: 0 0 0.5rem; font-size: 2.5rem; color: var(--accent); }
-    h2 { font-size: 1.9rem; margin-bottom: 1rem; color: var(--accent); }
-    nav {
-      display: flex;
-      justify-content: center;
-      gap: 1rem;
-      margin-bottom: 3rem;
-      flex-wrap: wrap;
-    }
-    nav a {
-      color: var(--text);
-      padding: 0.5rem 1rem;
-      border: 1px solid var(--text);
-      border-radius: 4px;
-      text-decoration: none;
-      transition: background 0.2s;
-    }
-    nav a:hover {
-      background-color: var(--accent);
-      color: var(--bg);
-    }
-    section {
-      max-width: 900px;
-      margin: 0 auto 3rem;
-      background-color: var(--bg-dark-1);
-      padding: 1.5rem 1rem;
-      border: 1px solid #1a1a1a;
-      border-radius: 8px;
-      margin-bottom: 3rem;
-      box-shadow: 0 2px 4px rgba(0,0,0,0.4);
-    }
-    ul { list-style: none; padding: 0; }
-    li { margin-bottom: 1.5rem; }
-    .year { color: var(--accent); font-weight: normal; }
-
-    /* Skills list styling */
-    ul.skills-list {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 0.6rem;
       padding: 0;
-      list-style: none;
+      box-sizing: border-box;
     }
-    ul.skills-list li {
-      background-color: var(--bg-dark-1);
-      border: 1px solid var(--accent);
-      color: var(--text);
-      padding: 0.35rem 0.8rem;
-      border-radius: 999px;
+    
+    body {
+      font-family: Georgia, serif;
+      line-height: 1.6;
+      color: #333;
+      background: white;
+      max-width: 1000px;
+      margin: 0 auto;
+      padding: 40px 20px;
+    }
+    
+    header {
+      text-align: center;
+      margin-bottom: 60px;
+      padding-bottom: 30px;
+      border-bottom: 1px solid #ddd;
+    }
+    
+    h1 {
+      font-size: 2.5rem;
+      font-weight: normal;
+      margin-bottom: 10px;
+    }
+    
+    .subtitle {
+      font-size: 1.1rem;
+      color: #666;
+      margin-bottom: 20px;
+    }
+    
+    .author {
       font-size: 0.9rem;
+      color: #888;
+    }
+    
+    .author a {
+      color: #333;
+      text-decoration: none;
+    }
+    
+    .intro {
+      margin-bottom: 50px;
+      padding: 30px;
+      background: #f9f9f9;
+      border-left: 3px solid #333;
+    }
+    
+    .algorithms-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 30px;
+      margin-bottom: 50px;
+    }
+    
+    .algorithm-card {
+      padding: 30px;
+      border: 1px solid #ddd;
+      text-decoration: none;
+      color: #333;
+      transition: all 0.2s ease;
+      background: white;
+    }
+    
+    .algorithm-card:hover {
+      border-color: #333;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    }
+    
+    .algorithm-card h3 {
+      font-size: 1.3rem;
+      margin-bottom: 15px;
+      font-weight: normal;
+    }
+    
+    .algorithm-card p {
+      font-size: 0.95rem;
+      color: #666;
+      margin-bottom: 15px;
+    }
+    
+    .complexity {
+      font-size: 0.85rem;
+      color: #999;
+      font-family: monospace;
+    }
+    
+    .research-section {
+      margin-top: 60px;
+      padding-top: 40px;
+      border-top: 1px solid #ddd;
+    }
+    
+    .research-section h2 {
+      font-size: 1.8rem;
+      font-weight: normal;
+      margin-bottom: 30px;
+    }
+    
+    .research-links {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 20px;
+    }
+    
+    .research-links a {
+      padding: 20px;
+      border: 1px solid #ddd;
+      text-decoration: none;
+      color: #333;
+      font-size: 0.9rem;
+      transition: border-color 0.2s ease;
+    }
+    
+    .research-links a:hover {
+      border-color: #333;
+    }
+    
+    footer {
+      text-align: center;
+      margin-top: 60px;
+      padding-top: 30px;
+      border-top: 1px solid #ddd;
+      font-size: 0.9rem;
+      color: #666;
+    }
+    
+    @media (max-width: 768px) {
+      body {
+        padding: 20px 15px;
+      }
+      
+      h1 {
+        font-size: 2rem;
+      }
+      
+      .algorithms-grid {
+        grid-template-columns: 1fr;
+      }
     }
   </style>
+  <link rel="stylesheet" href="assets/css/theme.css">
 </head>
 <body>
   <header>
-    <h1>San</h1>
-    <p>AI researcher crafting biologically-inspired language models.</p>
+    <h1>San’s AI Notes</h1>
+    <p class="subtitle">Working notes, derivations, and diagrams</p>
+    <p class="author">
+      By San Hashimhama<br>
+      AI Researcher • <a href="mailto:san.hashimhama@outlook.com">san.hashimhama@outlook.com</a> • 
+      <a href="https://github.com/sanowl" target="_blank">GitHub</a>
+    </p>
   </header>
 
-  <nav>
-    <a href="#about">About</a>
-    <a href="#skills">Skills</a>
-    <a href="#experience">Experience</a>
-    <a href="#projects">Projects</a>
-    <a href="#contact">Contact</a>
-  </nav>
+  <div class="intro">
+    <p>This guide covers fundamental AI algorithms with mathematical rigor and practical insights. Each algorithm is explained with clear derivations, real-world applications, and implementation details based on my research experience at Cyrion Labs and SourceMind Labs.</p>
+  </div>
 
-  <section id="about">
-    <h2>About Me</h2>
-    <p>I'm <strong>San</strong>, a <strong>21-year-old</strong> currently studying at <strong>AUIS University</strong> while working as an AI researcher at <strong>Cyrion Labs</strong>. I also serve as <strong>Research Lead at SourceMind Labs</strong>, where I explore biologically-inspired architectures for next-generation language models. Coding since age&nbsp;<strong>12</strong>, I split my time between open-source projects and experimental research. My very first build was a small movie-review website, and not long after I dove into supervised learning, putting together a simple stock-price prediction script.</p>
-  </section>
+  <div class="algorithms-grid">
+    <a href="transformers.html" class="algorithm-card">
+      <h3>Transformers</h3>
+      <p>Self-attention mechanisms, multi-head attention, and the architecture behind modern NLP.</p>
+      <div class="complexity">O(n²·d) attention | Parallelizable</div>
+    </a>
 
-  <section id="skills">
-    <h2>Skills</h2>
-    <ul class="skills-list">
-      <li>Python, NumPy &amp; Pandas</li>
-      <li>Deep Learning (PyTorch &amp; JAX)</li>
-      <li>Supervised &amp; Unsupervised Learning</li>
-      <li>Reinforcement Learning</li>
-      <li>Transformer &amp; LLM Fine-tuning</li>
-      <li>MLOps (Docker, CI/CD)</li>
-    </ul>
-  </section>
+    <a href="flashattention.html" class="algorithm-card">
+      <h3>FlashAttention</h3>
+      <p>IO‑aware tiled attention with streaming softmax and huge speedups.</p>
+      <div class="complexity">No n² workspace | Fused, tiled kernels</div>
+    </a>
 
-  <section id="experience">
-    <h2>Experience</h2>
-    <ul>
-      <li>
-        <h3>Research Lead | SourceMind Labs (Remote) <span class="year">Jan&nbsp;2025&nbsp;–&nbsp;Present</span></h3>
-        <p>Investigating biologically inspired LLM architectures and leading neuromorphic research tracks.</p>
-      </li>
-      <li>
-        <h3>AI Researcher | Cyrion Labs (Remote) <span class="year">Jun&nbsp;2025&nbsp;–&nbsp;Present</span></h3>
-      </li>
-      <li>
-        <h3>Deep Learning Engineer | Burton Algorithms (Remote) <span class="year">Nov&nbsp;2024&nbsp;–&nbsp;May&nbsp;2025</span></h3>
-        <p>Built and optimized production-grade deep-learning pipelines for U.S. enterprise clients.</p>
-      </li>
-      <li>
-        <h3>Lead AI Engineer | Futura Sourcings (Startup) <span class="year">Jun&nbsp;2024&nbsp;–&nbsp;Oct&nbsp;2024</span></h3>
-        <p>Led a small engineering team delivering AI-powered procurement automation tools.</p>
-      </li>
-      <li>
-        <h3>AI Open-Source Engineer Intern | Tublian AI (Remote) <span class="year">Apr&nbsp;2024&nbsp;–&nbsp;Jun&nbsp;2024</span></h3>
-        <p>Contributed to open-source LLM evaluation suites and improved model inference speed.</p>
-      </li>
-      <li>
-        <h3>Backend Engineer Intern | Kruschecompany K&amp;C (Remote) <span class="year">Oct&nbsp;2023&nbsp;–&nbsp;Mar&nbsp;2024</span></h3>
-        <p>Implemented RESTful APIs and micro-services in Go and Node.js for European clients.</p>
-      </li>
-      <li>
-        <h3>CEO &amp; Founder | Evolvemind (AI-driven Mental Health) <span class="year">Feb&nbsp;2021&nbsp;–&nbsp;Jun&nbsp;2022</span></h3>
-        <p>Bootstrapped a mental-wellbeing platform that matched users with AI-guided mindfulness content.</p>
-      </li>
-    </ul>
-  </section>
+    
+    <!-- Removed links to pages not yet created to avoid 404s -->
 
-  <section id="projects">
-    <h2>Selected Projects</h2>
-    <ul>
-      <li>
-        <h3><a href="https://github.com/sanowl/LSLM-Listening-while-Speaking-Language-Model" target="_blank" rel="noopener">LSLM – Listening-while-Speaking Language Model</a></h3>
-        <p>Implements full-duplex speech interaction for real-time dialogue.</p>
-      </li>
-      <li>
-        <h3><a href="https://github.com/sanowl/Self-Correcting-LLM--Reinforcement-Learning-" target="_blank" rel="noopener">Self-Correcting LLM (RL)</a></h3>
-        <p>Experimenting with reinforcement learning to teach models how to critique and repair their own outputs.</p>
-      </li>
-      <li>
-        <h3><a href="https://github.com/sanowl/OmegaPRM" target="_blank" rel="noopener">OmegaPRM</a></h3>
-        <p>Automated process-supervision framework that sharpens mathematical reasoning.</p>
-      </li>
-      <li>
-        <h3><a href="https://github.com/sanowl/CoRAG" target="_blank" rel="noopener">CoRAG – Chain-of-Retrieval Augmented Generation</a></h3>
-        <p>Lightweight RAG pipeline with explicit chain-of-thought visibility.</p>
-      </li>
-      <li>
-        <h3><a href="https://github.com/sanowl/Drag-and-Drop-LLMs-Zero-Shot-Prompt-to-Weights" target="_blank" rel="noopener">Drag-and-Drop LLMs</a></h3>
-        <p>Zero-shot prompt-to-weights experiments for rapid model adaptation.</p>
-      </li>
-      <li>
-        <h3>Movie Review Website <span class="year">2016</span></h3>
-        <p>My first web project: a static site where friends could rate and comment on films.</p>
-      </li>
-      <li>
-        <h3>Stock Price Prediction Script <span class="year">2017</span></h3>
-        <p>Early supervised-learning experiment predicting daily closing prices using Python and scikit-learn.</p>
-      </li>
-    </ul>
-  </section>
+    <a href="lora.html" class="algorithm-card">
+      <h3>LoRA Fine‑Tuning</h3>
+      <p>Low‑rank adaptation for parameter‑efficient training and deployment.</p>
+      <div class="complexity">2·d·r params vs d² | Mergeable adapters</div>
+    </a>
 
-  <section id="contact">
-    <h2>Contact</h2>
-    <p>Email: <a href="mailto:san.hashimhama@outlook.com">san.hashimhama@outlook.com</a></p>
-  </section>
+    <a href="qlora.html" class="algorithm-card">
+      <h3>QLoRA Internals</h3>
+      <p>NF4 quantization, double‑quant, dequant math, paged optimizers.</p>
+      <div class="complexity">4‑bit base + FP16 adapters | Fused dequant‑GEMM</div>
+    </a>
+
+
+    <a href="ppo.html" class="algorithm-card">
+      <h3>PPO</h3>
+      <p>Clipped surrogate objective for stable policy updates.</p>
+      <div class="complexity">Minibatch epochs | KL early stop</div>
+    </a>
+
+    <a href="trpo.html" class="algorithm-card">
+      <h3>TRPO</h3>
+      <p>KL‑constrained policy improvement with natural gradient.</p>
+      <div class="complexity">Conjugate gradient | Line search</div>
+    </a>
+
+    <a href="sac.html" class="algorithm-card">
+      <h3>SAC</h3>
+      <p>Maximum‑entropy RL with twin critics and temperature tuning.</p>
+      <div class="complexity">Replay + twin Q | Stochastic policy</div>
+    </a>
+
+    <a href="dpo.html" class="algorithm-card">
+      <h3>DPO</h3>
+      <p>Direct preference optimization without a reward model.</p>
+      <div class="complexity">Pairwise logistic loss | β scaling</div>
+    </a>
+
+    <a href="grpo.html" class="algorithm-card">
+      <h3>GRPO</h3>
+      <p>Generalized preference optimization with grouping and KL/clipping.</p>
+      <div class="complexity">Group weighting | KL regularization</div>
+    </a>
+
+  </div>
+
+  <div class="research-section">
+    <h2>My Research Projects</h2>
+    <div class="research-links">
+      <a href="https://github.com/sanowl/LSLM-Listening-while-Speaking-Language-Model" target="_blank">
+        <strong>LSLM</strong><br>
+        Listening-while-Speaking Language Model
+      </a>
+      <a href="https://github.com/sanowl/Self-Correcting-LLM--Reinforcement-Learning-" target="_blank">
+        <strong>Self-Correcting LLM</strong><br>
+        Reinforcement Learning for Language Models
+      </a>
+      <a href="https://github.com/sanowl/OmegaPRM" target="_blank">
+        <strong>OmegaPRM</strong><br>
+        Process Supervision Framework
+      </a>
+      <a href="https://github.com/sanowl/CoRAG" target="_blank">
+        <strong>CoRAG</strong><br>
+        Chain-of-Retrieval Augmented Generation
+      </a>
+    </div>
+  </div>
 
   <footer>
-    &copy; 2025 San
+    <p>"The best way to understand intelligence is to build it." – San Hashimhama</p>
+    <p>© 2025 San Hashimhama. Educational use permitted with attribution.</p>
   </footer>
 </body>
-</html> 
+</html>

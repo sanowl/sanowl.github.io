@@ -1,0 +1,1558 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Transformers & Attention - San’s AI Notes</title>
+  <style>
+    * { 
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    
+    body {
+      font-family: Georgia, serif;
+      line-height: 1.7;
+      color: #333;
+      background: white;
+      max-width: 1000px;
+      margin: 0 auto;
+      padding: 40px 20px;
+    }
+    
+    .back-nav {
+      margin-bottom: 40px;
+    }
+    
+    .back-nav a {
+      color: #666;
+      text-decoration: none;
+      font-size: 0.9rem;
+    }
+    
+    .back-nav a:hover {
+      color: #333;
+    }
+    
+    header {
+      margin-bottom: 50px;
+      text-align: center;
+      padding-bottom: 30px;
+      border-bottom: 1px solid #eee;
+    }
+    
+    h1 {
+      font-size: 2.8rem;
+      font-weight: normal;
+      margin-bottom: 15px;
+    }
+    
+    .subtitle {
+      color: #666;
+      font-size: 1.2rem;
+      margin-bottom: 10px;
+    }
+    
+    .author {
+      color: #888;
+      font-size: 0.9rem;
+    }
+    
+    h2 {
+      font-size: 2rem;
+      font-weight: normal;
+      margin: 50px 0 25px 0;
+      padding-bottom: 10px;
+      border-bottom: 1px solid #eee;
+    }
+    
+    h3 {
+      font-size: 1.6rem;
+      font-weight: normal;
+      margin: 35px 0 20px 0;
+    }
+    
+    h4 {
+      font-size: 1.3rem;
+      font-weight: normal;
+      margin: 25px 0 15px 0;
+    }
+    
+    p {
+      margin-bottom: 20px;
+      text-align: justify;
+    }
+    
+    .math-formula {
+      background: #f8f8f8;
+      padding: 30px;
+      margin: 30px 0;
+      border-left: 3px solid #333;
+      font-family: 'Times New Roman', serif;
+      text-align: center;
+      font-size: 1.2rem;
+    }
+    
+    .diagram-container {
+      margin: 40px 0;
+      text-align: center;
+    }
+    
+    .diagram-caption {
+      font-size: 0.9rem;
+      color: #666;
+      margin-top: 15px;
+      font-style: italic;
+    }
+    
+    .note {
+      background: #f5f5f5;
+      padding: 30px;
+      margin: 30px 0;
+      border-left: 3px solid #666;
+      font-style: italic;
+    }
+    
+    .note::before {
+      content: "Research Note: ";
+      font-weight: bold;
+      font-style: normal;
+    }
+    
+    .code-block {
+      background: #f8f8f8;
+      padding: 30px;
+      margin: 30px 0;
+      font-family: 'Courier New', monospace;
+      font-size: 0.9rem;
+      overflow-x: auto;
+      border: 1px solid #ddd;
+    }
+    
+    .implementation-link {
+      display: inline-block;
+      background: #333;
+      color: white;
+      padding: 15px 30px;
+      text-decoration: none;
+      margin: 20px 0;
+      font-size: 0.95rem;
+      transition: background 0.2s ease;
+    }
+    
+    .implementation-link:hover {
+      background: #555;
+    }
+    
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 30px 0;
+      font-size: 0.95rem;
+    }
+    
+    th, td {
+      padding: 18px;
+      text-align: left;
+      border-bottom: 1px solid #ddd;
+    }
+    
+    th {
+      background: #f8f8f8;
+      font-weight: normal;
+    }
+    
+    .two-column {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 40px;
+      margin: 30px 0;
+    }
+    
+    .three-column {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 30px;
+      margin: 30px 0;
+    }
+    
+    ul {
+      margin: 20px 0 20px 30px;
+    }
+    
+    ol {
+      margin: 20px 0 20px 30px;
+    }
+    
+    li {
+      margin-bottom: 10px;
+    }
+    
+    .timeline {
+      background: #f9f9f9;
+      padding: 30px;
+      margin: 30px 0;
+      border-left: 3px solid #333;
+    }
+    
+    .timeline-item {
+      margin-bottom: 25px;
+      padding-bottom: 20px;
+      border-bottom: 1px solid #ddd;
+    }
+    
+    .timeline-item:last-child {
+      border-bottom: none;
+    }
+    
+    .timeline-year {
+      font-weight: bold;
+      color: #333;
+      font-size: 1.1rem;
+    }
+    
+    .attention-matrix {
+      font-family: 'Courier New', monospace;
+      background: #f8f8f8;
+      padding: 20px;
+      margin: 20px 0;
+      text-align: center;
+      font-size: 0.8rem;
+      border: 1px solid #ddd;
+    }
+    
+    footer {
+      margin-top: 80px;
+      padding-top: 40px;
+      border-top: 1px solid #eee;
+      text-align: center;
+      color: #666;
+      font-size: 0.9rem;
+    }
+    
+    @media (max-width: 768px) {
+      body {
+        padding: 20px 15px;
+      }
+      
+      h1 {
+        font-size: 2.2rem;
+      }
+      
+      .two-column, .three-column {
+        grid-template-columns: 1fr;
+        gap: 20px;
+      }
+    }
+  </style>
+  <link rel="stylesheet" href="assets/css/theme.css">
+</head>
+<body>
+  <nav class="back-nav">
+    <a href="index.html">← Back to Home</a>
+  </nav>
+  
+  <header>
+    <h1>Transformers & Attention</h1>
+    <p class="subtitle">Self-Attention Mechanisms & the Foundation of Modern NLP</p>
+    <p class="author">San Hashimhama • AI Researcher at Cyrion Labs</p>
+  </header>
+
+  
+
+  <section>
+    <h2>Introduction: The Attention Revolution</h2>
+    
+    <p>The Transformer architecture, introduced in the seminal 2017 paper "Attention Is All You Need" by Vaswani et al., fundamentally revolutionized the field of natural language processing and beyond. By replacing recurrent and convolutional layers entirely with self-attention mechanisms, Transformers enabled unprecedented parallelization during training and achieved state-of-the-art performance across numerous tasks.</p>
+    
+    <p>The core innovation lies in the self-attention mechanism, which allows each position in a sequence to directly attend to all other positions, capturing long-range dependencies that RNNs struggled with due to vanishing gradients. This paradigm shift has not only dominated NLP but has also found applications in computer vision, reinforcement learning, and even protein structure prediction.</p>
+    
+    <div class="timeline">
+      <h3>Historical Timeline of Attention Mechanisms</h3>
+      
+      <div class="timeline-item">
+        <div class="timeline-year">2014</div>
+        <p><strong>Bahdanau Attention:</strong> First attention mechanism for neural machine translation, allowing decoders to selectively focus on different parts of the input sequence.</p>
+      </div>
+      
+      <div class="timeline-item">
+        <div class="timeline-year">2015</div>
+        <p><strong>Luong Attention:</strong> Improved attention mechanisms with global and local variants, achieving better alignment between source and target sequences.</p>
+      </div>
+      
+      <div class="timeline-item">
+        <div class="timeline-year">2016</div>
+        <p><strong>Neural Machine Translation:</strong> Attention-based models achieve human parity on various translation benchmarks, demonstrating the power of attention mechanisms.</p>
+      </div>
+      
+      <div class="timeline-item">
+        <div class="timeline-year">2017</div>
+        <p><strong>Transformer Architecture:</strong> "Attention Is All You Need" introduces self-attention and multi-head attention, eliminating the need for recurrence and convolution.</p>
+      </div>
+      
+      <div class="timeline-item">
+        <div class="timeline-year">2018-2019</div>
+        <p><strong>BERT and GPT:</strong> Pre-trained Transformer models achieve breakthrough performance across NLP tasks, establishing the foundation for large language models.</p>
+      </div>
+      
+      <div class="timeline-item">
+        <div class="timeline-year">2020-Present</div>
+        <p><strong>Scale Revolution:</strong> GPT-3, PaLM, ChatGPT, and GPT-4 demonstrate emergent capabilities as Transformers scale to hundreds of billions of parameters.</p>
+      </div>
+    </div>
+    
+    <div class="note">
+      In my research at SourceMind Labs, I've found that the success of Transformers lies not just in their architecture, but in how they naturally align with the way we process and understand language - through contextual relationships rather than sequential processing.
+    </div>
+  </section>
+
+  <section>
+    <h2>Mathematical Foundation of Self-Attention</h2>
+    
+    <h3>Core Attention Mechanism</h3>
+    
+    <p>The self-attention mechanism is fundamentally about computing weighted representations of input sequences. Given an input sequence of vectors, self-attention determines how much each vector should attend to every other vector in the sequence, including itself.</p>
+    
+    <div class="math-formula">
+      <strong>Scaled Dot-Product Attention:</strong><br><br>
+      Attention(Q, K, V) = softmax(QK<sup>T</sup> / √d<sub>k</sub>)V<br><br>
+      Where:<br>
+      • Q = Queries matrix (n × d<sub>k</sub>)<br>
+      • K = Keys matrix (n × d<sub>k</sub>)<br>
+      • V = Values matrix (n × d<sub>v</sub>)<br>
+      • d<sub>k</sub> = dimension of key vectors<br>
+      • n = sequence length
+    </div>
+    
+    <h4>Detailed Mathematical Breakdown</h4>
+    
+    <p>Let's dissect this formula step by step to understand its geometric and intuitive meaning:</p>
+    
+    <ol>
+      <li><strong>Query-Key Dot Product:</strong> QK<sup>T</sup> computes similarity between all query-key pairs</li>
+      <li><strong>Scaling:</strong> Division by √d<sub>k</sub> prevents vanishing gradients in high dimensions</li>
+      <li><strong>Softmax Normalization:</strong> Converts similarities to probability distributions</li>
+      <li><strong>Weighted Sum:</strong> Multiplication by V produces final attended representations</li>
+    </ol>
+    
+    <div class="math-formula">
+      <strong>Step-by-step computation:</strong><br><br>
+      1. Similarity Matrix: S = QK<sup>T</sup> / √d<sub>k</sub><br>
+      2. Attention Weights: A = softmax(S)<br>
+      3. Attended Output: O = AV<br><br>
+      Where A<sub>ij</sub> represents how much position i attends to position j
+    </div>
+    
+    <h3>Why Scaling by √d<sub>k</sub>?</h3>
+    
+    <p>The scaling factor √d<sub>k</sub> is crucial for maintaining stable gradients. When d<sub>k</sub> is large, the dot products QK<sup>T</sup> can have large magnitudes, pushing the softmax function into regions with extremely small gradients. This scaling ensures that the dot products have approximately unit variance.</p>
+    
+    <div class="math-formula">
+      <strong>Mathematical Justification:</strong><br><br>
+      If Q and K have zero mean and unit variance:<br>
+      Var(QK<sup>T</sup>) = d<sub>k</sub><br><br>
+      After scaling: Var(QK<sup>T</sup> / √d<sub>k</sub>) = 1<br><br>
+      This keeps the softmax in a sensitive region for gradient flow.
+    </div>
+    
+    <h3>Attention Visualization</h3>
+    
+    <div class="diagram-container">
+      <svg width="800" height="400" viewBox="0 0 800 400">
+        <!-- Input sequence -->
+        <g transform="translate(50,50)">
+          <text x="0" y="-10" font-size="14" font-weight="bold">Input Sequence</text>
+          <rect x="0" y="0" width="60" height="40" fill="none" stroke="#333" stroke-width="2"/>
+          <text x="30" y="25" text-anchor="middle" font-size="12">x₁</text>
+          <rect x="70" y="0" width="60" height="40" fill="none" stroke="#333" stroke-width="2"/>
+          <text x="100" y="25" text-anchor="middle" font-size="12">x₂</text>
+          <rect x="140" y="0" width="60" height="40" fill="none" stroke="#333" stroke-width="2"/>
+          <text x="170" y="25" text-anchor="middle" font-size="12">x₃</text>
+          <rect x="210" y="0" width="60" height="40" fill="none" stroke="#333" stroke-width="2"/>
+          <text x="240" y="25" text-anchor="middle" font-size="12">x₄</text>
+        </g>
+        
+        <!-- Q, K, V transformations -->
+        <g transform="translate(50,120)">
+          <text x="0" y="-10" font-size="12" font-weight="bold">Linear Transformations</text>
+          <rect x="0" y="0" width="80" height="30" fill="#f0f0f0" stroke="#333"/>
+          <text x="40" y="20" text-anchor="middle" font-size="11">Q = XW_Q</text>
+          <rect x="90" y="0" width="80" height="30" fill="#f0f0f0" stroke="#333"/>
+          <text x="130" y="20" text-anchor="middle" font-size="11">K = XW_K</text>
+          <rect x="180" y="0" width="80" height="30" fill="#f0f0f0" stroke="#333"/>
+          <text x="220" y="20" text-anchor="middle" font-size="11">V = XW_V</text>
+        </g>
+        
+        <!-- Attention computation -->
+        <g transform="translate(50,200)">
+          <text x="0" y="-10" font-size="12" font-weight="bold">Attention Computation</text>
+          <rect x="0" y="0" width="120" height="30" fill="#e0e0e0" stroke="#333"/>
+          <text x="60" y="20" text-anchor="middle" font-size="11">QK^T / √d_k</text>
+          <rect x="130" y="0" width="80" height="30" fill="#e0e0e0" stroke="#333"/>
+          <text x="170" y="20" text-anchor="middle" font-size="11">softmax</text>
+          <rect x="220" y="0" width="60" height="30" fill="#e0e0e0" stroke="#333"/>
+          <text x="250" y="20" text-anchor="middle" font-size="11">× V</text>
+        </g>
+        
+        <!-- Attention matrix visualization -->
+        <g transform="translate(400,80)">
+          <text x="50" y="-10" font-size="12" font-weight="bold">Attention Matrix</text>
+          <rect x="0" y="0" width="100" height="100" fill="none" stroke="#333" stroke-width="2"/>
+          <!-- Matrix cells -->
+          <rect x="0" y="0" width="25" height="25" fill="#ff9999" opacity="0.7"/>
+          <rect x="25" y="0" width="25" height="25" fill="#ffcc99" opacity="0.7"/>
+          <rect x="50" y="0" width="25" height="25" fill="#99ccff" opacity="0.7"/>
+          <rect x="75" y="0" width="25" height="25" fill="#cccccc" opacity="0.7"/>
+          
+          <rect x="0" y="25" width="25" height="25" fill="#cccccc" opacity="0.7"/>
+          <rect x="25" y="25" width="25" height="25" fill="#ff9999" opacity="0.7"/>
+          <rect x="50" y="25" width="25" height="25" fill="#ffcc99" opacity="0.7"/>
+          <rect x="75" y="25" width="25" height="25" fill="#99ccff" opacity="0.7"/>
+          
+          <rect x="0" y="50" width="25" height="25" fill="#99ccff" opacity="0.7"/>
+          <rect x="25" y="50" width="25" height="25" fill="#cccccc" opacity="0.7"/>
+          <rect x="50" y="50" width="25" height="25" fill="#ff9999" opacity="0.7"/>
+          <rect x="75" y="50" width="25" height="25" fill="#ffcc99" opacity="0.7"/>
+          
+          <rect x="0" y="75" width="25" height="25" fill="#ffcc99" opacity="0.7"/>
+          <rect x="25" y="75" width="25" height="25" fill="#99ccff" opacity="0.7"/>
+          <rect x="50" y="75" width="25" height="25" fill="#cccccc" opacity="0.7"/>
+          <rect x="75" y="75" width="25" height="25" fill="#ff9999" opacity="0.7"/>
+          
+          <!-- Labels -->
+          <text x="-15" y="18" font-size="10">x₁</text>
+          <text x="-15" y="43" font-size="10">x₂</text>
+          <text x="-15" y="68" font-size="10">x₃</text>
+          <text x="-15" y="93" font-size="10">x₄</text>
+          <text x="12" y="115" font-size="10">x₁</text>
+          <text x="37" y="115" font-size="10">x₂</text>
+          <text x="62" y="115" font-size="10">x₃</text>
+          <text x="87" y="115" font-size="10">x₄</text>
+        </g>
+        
+        <!-- Legend -->
+        <g transform="translate(550,80)">
+          <text x="0" y="-10" font-size="11" font-weight="bold">Attention Weights</text>
+          <rect x="0" y="0" width="15" height="15" fill="#ff9999" opacity="0.7"/>
+          <text x="20" y="12" font-size="10">High (0.7-1.0)</text>
+          <rect x="0" y="20" width="15" height="15" fill="#ffcc99" opacity="0.7"/>
+          <text x="20" y="32" font-size="10">Medium (0.4-0.7)</text>
+          <rect x="0" y="40" width="15" height="15" fill="#99ccff" opacity="0.7"/>
+          <text x="20" y="52" font-size="10">Low (0.1-0.4)</text>
+          <rect x="0" y="60" width="15" height="15" fill="#cccccc" opacity="0.7"/>
+          <text x="20" y="72" font-size="10">Minimal (<0.1)</text>
+        </g>
+      </svg>
+      <div class="diagram-caption">Self-attention mechanism: Input sequence is transformed to Q, K, V, then attention weights are computed and applied</div>
+    </div>
+  </section>
+
+  <section>
+    <h2>Multi-Head Attention: Parallel Attention Mechanisms</h2>
+    
+    <h3>Motivation and Architecture</h3>
+    
+    <p>Multi-head attention allows the model to jointly attend to information from different representation subspaces at different positions. With single attention, the model might focus on one type of relationship (e.g., syntactic), but multi-head attention enables simultaneous focus on multiple relationship types (syntactic, semantic, positional, etc.).</p>
+    
+    <div class="math-formula">
+      <strong>Multi-Head Attention Formula:</strong><br><br>
+      MultiHead(Q, K, V) = Concat(head₁, head₂, ..., head_h)W^O<br><br>
+      where head_i = Attention(QW_i^Q, KW_i^K, VW_i^V)<br><br>
+      Parameters:<br>
+      • h = number of attention heads<br>
+      • W_i^Q ∈ ℝ^(d_model × d_k)<br>
+      • W_i^K ∈ ℝ^(d_model × d_k)<br>
+      • W_i^V ∈ ℝ^(d_model × d_v)<br>
+      • W^O ∈ ℝ^(hd_v × d_model)
+    </div>
+    
+    <h3>Intuitive Understanding</h3>
+    
+    <p>Think of multi-head attention as having multiple "experts" looking at the same input sequence, each expert specializing in different types of relationships:</p>
+    
+    <div class="three-column">
+      <div>
+        <h4>Head 1: Syntactic Relations</h4>
+        <p>Focuses on grammatical relationships like subject-verb agreement, noun-adjective pairs.</p>
+      </div>
+      <div>
+        <h4>Head 2: Semantic Relations</h4>
+        <p>Captures meaning-based relationships like synonyms, antonyms, thematic connections.</p>
+      </div>
+      <div>
+        <h4>Head 3: Positional Relations</h4>
+        <p>Attends to nearby words, capturing local context and dependencies.</p>
+      </div>
+    </div>
+    
+    <h3>Dimension Analysis</h3>
+    
+    <p>A critical design choice in multi-head attention is the dimension allocation. Typically, d_k = d_v = d_model / h, ensuring that the total computational cost is similar to single-head attention with full dimensionality.</p>
+    
+    <div class="math-formula">
+      <strong>Parameter Count Analysis:</strong><br><br>
+      Single-head: 3 × d_model × d_model = 3d_model²<br>
+      Multi-head (h heads): h × 3 × d_model × (d_model/h) + d_model² = 4d_model²<br><br>
+      The additional W^O matrix adds only 33% more parameters<br>
+      while providing h times more representational capacity.
+    </div>
+    
+    <div class="diagram-container">
+      <svg width="700" height="350" viewBox="0 0 700 350">
+        <!-- Input -->
+        <g transform="translate(50,50)">
+          <rect x="0" y="0" width="80" height="40" fill="#f0f0f0" stroke="#333" stroke-width="2"/>
+          <text x="40" y="25" text-anchor="middle" font-size="12">Input X</text>
+        </g>
+        
+        <!-- Multiple heads -->
+        <g transform="translate(200,20)">
+          <text x="60" y="-5" text-anchor="middle" font-size="14" font-weight="bold">Multi-Head Attention</text>
+          
+          <!-- Head 1 -->
+          <g>
+            <rect x="0" y="0" width="40" height="25" fill="#ffcccc" stroke="#333"/>
+            <text x="20" y="17" text-anchor="middle" font-size="10">Q₁</text>
+            <rect x="45" y="0" width="40" height="25" fill="#ccffcc" stroke="#333"/>
+            <text x="65" y="17" text-anchor="middle" font-size="10">K₁</text>
+            <rect x="90" y="0" width="40" height="25" fill="#ccccff" stroke="#333"/>
+            <text x="110" y="17" text-anchor="middle" font-size="10">V₁</text>
+            <text x="135" y="17" font-size="10">→ head₁</text>
+          </g>
+          
+          <!-- Head 2 -->
+          <g transform="translate(0,35)">
+            <rect x="0" y="0" width="40" height="25" fill="#ffcccc" stroke="#333"/>
+            <text x="20" y="17" text-anchor="middle" font-size="10">Q₂</text>
+            <rect x="45" y="0" width="40" height="25" fill="#ccffcc" stroke="#333"/>
+            <text x="65" y="17" text-anchor="middle" font-size="10">K₂</text>
+            <rect x="90" y="0" width="40" height="25" fill="#ccccff" stroke="#333"/>
+            <text x="110" y="17" text-anchor="middle" font-size="10">V₂</text>
+            <text x="135" y="17" font-size="10">→ head₂</text>
+          </g>
+          
+          <!-- Head 3 -->
+          <g transform="translate(0,70)">
+            <rect x="0" y="0" width="40" height="25" fill="#ffcccc" stroke="#333"/>
+            <text x="20" y="17" text-anchor="middle" font-size="10">Q₃</text>
+            <rect x="45" y="0" width="40" height="25" fill="#ccffcc" stroke="#333"/>
+            <text x="65" y="17" text-anchor="middle" font-size="10">K₃</text>
+            <rect x="90" y="0" width="40" height="25" fill="#ccccff" stroke="#333"/>
+            <text x="110" y="17" text-anchor="middle" font-size="10">V₃</text>
+            <text x="135" y="17" font-size="10">→ head₃</text>
+          </g>
+          
+          <!-- Dots -->
+          <text x="65" y="115" text-anchor="middle" font-size="16">⋮</text>
+          
+          <!-- Head h -->
+          <g transform="translate(0,125)">
+            <rect x="0" y="0" width="40" height="25" fill="#ffcccc" stroke="#333"/>
+            <text x="20" y="17" text-anchor="middle" font-size="10">Qₕ</text>
+            <rect x="45" y="0" width="40" height="25" fill="#ccffcc" stroke="#333"/>
+            <text x="65" y="17" text-anchor="middle" font-size="10">Kₕ</text>
+            <rect x="90" y="0" width="40" height="25" fill="#ccccff" stroke="#333"/>
+            <text x="110" y="17" text-anchor="middle" font-size="10">Vₕ</text>
+            <text x="135" y="17" font-size="10">→ headₕ</text>
+          </g>
+        </g>
+        
+        <!-- Concatenation -->
+        <g transform="translate(480,80)">
+          <rect x="0" y="0" width="80" height="40" fill="#ffffcc" stroke="#333" stroke-width="2"/>
+          <text x="40" y="25" text-anchor="middle" font-size="11">Concat</text>
+        </g>
+        
+        <!-- Output projection -->
+        <g transform="translate(580,80)">
+          <rect x="0" y="0" width="60" height="40" fill="#f0f0f0" stroke="#333" stroke-width="2"/>
+          <text x="30" y="25" text-anchor="middle" font-size="11">W^O</text>
+        </g>
+        
+        <!-- Arrows -->
+        <line x1="130" y1="70" x2="180" y2="70" stroke="#333" stroke-width="2" marker-end="url(#arrowhead)"/>
+        <line x1="380" y1="90" x2="470" y2="100" stroke="#333" stroke-width="2" marker-end="url(#arrowhead)"/>
+        <line x1="560" y1="100" x2="575" y2="100" stroke="#333" stroke-width="2" marker-end="url(#arrowhead)"/>
+        
+        <!-- Arrow marker -->
+        <defs>
+          <marker id="arrowhead" markerWidth="10" markerHeight="7" refX="10" refY="3.5" orient="auto">
+            <polygon points="0 0, 10 3.5, 0 7" fill="#333"/>
+          </marker>
+        </defs>
+      </svg>
+      <div class="diagram-caption">Multi-head attention architecture: Input is projected to multiple Q, K, V triplets, attention is computed in parallel, then concatenated and projected</div>
+    </div>
+  </section>
+
+  <section>
+    <h2>Positional Encoding: Injecting Sequence Order</h2>
+    
+    <h3>The Position Problem</h3>
+    
+    <p>Unlike RNNs and CNNs, the self-attention mechanism is inherently permutation-invariant. This means that without additional information, a Transformer cannot distinguish between "The cat sat on the mat" and "The mat sat on the cat." Positional encoding solves this by adding position-specific patterns to the input embeddings.</p>
+    
+    <h3>Sinusoidal Positional Encoding</h3>
+    
+    <p>The original Transformer paper introduced sinusoidal positional encodings, which use sine and cosine functions of different frequencies to encode position information:</p>
+    
+    <div class="math-formula">
+      <strong>Sinusoidal Positional Encoding:</strong><br><br>
+      PE(pos, 2i) = sin(pos / 10000^(2i/d_model))<br>
+      PE(pos, 2i+1) = cos(pos / 10000^(2i/d_model))<br><br>
+      Where:<br>
+      • pos = position in the sequence<br>
+      • i = dimension index<br>
+      • d_model = model dimension
+    </div>
+    
+    <h3>Why Sinusoidal Functions?</h3>
+    
+    <p>The choice of sinusoidal functions is mathematically elegant and practically effective:</p>
+    
+    <ol>
+      <li><strong>Unique Representations:</strong> Each position gets a unique encoding pattern</li>
+      <li><strong>Relative Position:</strong> The model can learn relative positions through linear combinations</li>
+      <li><strong>Extrapolation:</strong> Can handle sequences longer than those seen during training</li>
+      <li><strong>Smooth Transitions:</strong> Adjacent positions have similar encodings</li>
+    </ol>
+    
+    <div class="math-formula">
+      <strong>Relative Position Property:</strong><br><br>
+      PE(pos + k) can be expressed as a linear function of PE(pos)<br><br>
+      This allows the model to learn relative positional relationships:<br>
+      PE(pos + k, 2i) = PE(pos, 2i) × cos(k/10000^(2i/d_model))<br>
+      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; + PE(pos, 2i+1) × sin(k/10000^(2i/d_model))
+    </div>
+    
+    <div class="diagram-container">
+      <svg width="600" height="300" viewBox="0 0 600 300">
+        <!-- Position encoding visualization -->
+        <g transform="translate(50,50)">
+          <text x="250" y="-20" text-anchor="middle" font-size="14" font-weight="bold">Positional Encoding Patterns</text>
+          
+          <!-- Grid for encoding values -->
+          <g stroke="#ddd" stroke-width="0.5">
+            <!-- Vertical lines (positions) -->
+            <line x1="0" y1="0" x2="0" y2="200"/>
+            <line x1="50" y1="0" x2="50" y2="200"/>
+            <line x1="100" y1="0" x2="100" y2="200"/>
+            <line x1="150" y1="0" x2="150" y2="200"/>
+            <line x1="200" y1="0" x2="200" y2="200"/>
+            <line x1="250" y1="0" x2="250" y2="200"/>
+            <line x1="300" y1="0" x2="300" y2="200"/>
+            <line x1="350" y1="0" x2="350" y2="200"/>
+            <line x1="400" y1="0" x2="400" y2="200"/>
+            <line x1="450" y1="0" x2="450" y2="200"/>
+            <line x1="500" y1="0" x2="500" y2="200"/>
+            
+            <!-- Horizontal lines (dimensions) -->
+            <line x1="0" y1="0" x2="500" y2="0"/>
+            <line x1="0" y1="25" x2="500" y2="25"/>
+            <line x1="0" y1="50" x2="500" y2="50"/>
+            <line x1="0" y1="75" x2="500" y2="75"/>
+            <line x1="0" y1="100" x2="500" y2="100"/>
+            <line x1="0" y1="125" x2="500" y2="125"/>
+            <line x1="0" y1="150" x2="500" y2="150"/>
+            <line x1="0" y1="175" x2="500" y2="175"/>
+            <line x1="0" y1="200" x2="500" y2="200"/>
+          </g>
+          
+          <!-- Color-coded cells representing encoding values -->
+          <g>
+            <!-- Position 0 -->
+            <rect x="0" y="0" width="50" height="25" fill="#ff0000" opacity="0.7"/>
+            <rect x="0" y="25" width="50" height="25" fill="#00ff00" opacity="0.7"/>
+            <rect x="0" y="50" width="50" height="25" fill="#0000ff" opacity="0.7"/>
+            <rect x="0" y="75" width="50" height="25" fill="#ffff00" opacity="0.7"/>
+            <rect x="0" y="100" width="50" height="25" fill="#ff00ff" opacity="0.7"/>
+            <rect x="0" y="125" width="50" height="25" fill="#00ffff" opacity="0.7"/>
+            <rect x="0" y="150" width="50" height="25" fill="#ffa500" opacity="0.7"/>
+            <rect x="0" y="175" width="50" height="25" fill="#800080" opacity="0.7"/>
+            
+            <!-- Position 1 -->
+            <rect x="50" y="0" width="50" height="25" fill="#ff4444" opacity="0.7"/>
+            <rect x="50" y="25" width="50" height="25" fill="#44ff44" opacity="0.7"/>
+            <rect x="50" y="50" width="50" height="25" fill="#4444ff" opacity="0.7"/>
+            <rect x="50" y="75" width="50" height="25" fill="#ffff44" opacity="0.7"/>
+            <rect x="50" y="100" width="50" height="25" fill="#ff44ff" opacity="0.7"/>
+            <rect x="50" y="125" width="50" height="25" fill="#44ffff" opacity="0.7"/>
+            <rect x="50" y="150" width="50" height="25" fill="#ffa544" opacity="0.7"/>
+            <rect x="50" y="175" width="50" height="25" fill="#804480" opacity="0.7"/>
+            
+            <!-- Position 2 -->
+            <rect x="100" y="0" width="50" height="25" fill="#ff8888" opacity="0.7"/>
+            <rect x="100" y="25" width="50" height="25" fill="#88ff88" opacity="0.7"/>
+            <rect x="100" y="50" width="50" height="25" fill="#8888ff" opacity="0.7"/>
+            <rect x="100" y="75" width="50" height="25" fill="#ffff88" opacity="0.7"/>
+            <rect x="100" y="100" width="50" height="25" fill="#ff88ff" opacity="0.7"/>
+            <rect x="100" y="125" width="50" height="25" fill="#88ffff" opacity="0.7"/>
+            <rect x="100" y="150" width="50" height="25" fill="#ffaa88" opacity="0.7"/>
+            <rect x="100" y="175" width="50" height="25" fill="#8088aa" opacity="0.7"/>
+            
+            <!-- Continue pattern for more positions... -->
+          </g>
+          
+          <!-- Labels -->
+          <text x="-10" y="15" font-size="10">d₀</text>
+          <text x="-10" y="40" font-size="10">d₁</text>
+          <text x="-10" y="65" font-size="10">d₂</text>
+          <text x="-10" y="90" font-size="10">d₃</text>
+          <text x="-10" y="115" font-size="10">⋮</text>
+          
+          <text x="25" y="220" font-size="10">pos₀</text>
+          <text x="75" y="220" font-size="10">pos₁</text>
+          <text x="125" y="220" font-size="10">pos₂</text>
+          <text x="200" y="220" font-size="10">...</text>
+        </g>
+      </svg>
+      <div class="diagram-caption">Positional encoding matrix: Each row represents a dimension, each column a position. Colors represent different encoding values</div>
+    </div>
+    
+    <h3>Alternative Positional Encodings</h3>
+    
+    <p>While sinusoidal encodings work well, researchers have explored various alternatives:</p>
+    
+    <div class="two-column">
+      <div>
+        <h4>Learned Positional Embeddings</h4>
+        <p>Train position embeddings as parameters. Simpler but less generalizable to longer sequences.</p>
+      </div>
+      <div>
+        <h4>Relative Positional Encodings</h4>
+        <p>Encode relative distances rather than absolute positions. Used in models like T5 and DeBERTa.</p>
+      </div>
+    </div>
+    
+    <div class="note">
+      In my research on language model architectures, I've found that the choice of positional encoding can significantly impact performance on tasks requiring strong positional awareness, such as code generation and structured text understanding.
+    </div>
+  </section>
+
+  <section>
+    <h2>The Complete Transformer Architecture</h2>
+    
+    <h3>Encoder-Decoder Structure</h3>
+    
+    <p>The original Transformer follows an encoder-decoder architecture, where the encoder processes the input sequence and the decoder generates the output sequence. This design is particularly well-suited for sequence-to-sequence tasks like machine translation.</p>
+    
+    <div class="diagram-container">
+      <svg width="800" height="600" viewBox="0 0 800 600">
+        <!-- Encoder Stack -->
+        <g transform="translate(100,50)">
+          <text x="100" y="-20" text-anchor="middle" font-size="16" font-weight="bold">Encoder</text>
+          
+          <!-- Encoder Layer 1 -->
+          <g>
+            <rect x="0" y="0" width="200" height="60" fill="#e6f3ff" stroke="#333" stroke-width="2"/>
+            <text x="100" y="20" text-anchor="middle" font-size="12">Multi-Head Self-Attention</text>
+            <text x="100" y="35" text-anchor="middle" font-size="10">+ Add & Norm</text>
+            
+            <rect x="0" y="70" width="200" height="40" fill="#fff0e6" stroke="#333" stroke-width="2"/>
+            <text x="100" y="95" text-anchor="middle" font-size="12">Feed Forward + Add & Norm</text>
+          </g>
+          
+          <!-- Encoder Layer 2 -->
+          <g transform="translate(0,130)">
+            <rect x="0" y="0" width="200" height="60" fill="#e6f3ff" stroke="#333" stroke-width="2"/>
+            <text x="100" y="20" text-anchor="middle" font-size="12">Multi-Head Self-Attention</text>
+            <text x="100" y="35" text-anchor="middle" font-size="10">+ Add & Norm</text>
+            
+            <rect x="0" y="70" width="200" height="40" fill="#fff0e6" stroke="#333" stroke-width="2"/>
+            <text x="100" y="95" text-anchor="middle" font-size="12">Feed Forward + Add & Norm</text>
+          </g>
+          
+          <!-- More layers indicator -->
+          <text x="100" y="280" text-anchor="middle" font-size="20">⋮</text>
+          <text x="100" y="300" text-anchor="middle" font-size="12">N × Encoder Layers</text>
+          
+          <!-- Input embeddings -->
+          <g transform="translate(0,350)">
+            <rect x="0" y="0" width="200" height="40" fill="#f0f8ff" stroke="#333" stroke-width="2"/>
+            <text x="100" y="25" text-anchor="middle" font-size="12">Input Embeddings + Positional Encoding</text>
+          </g>
+        </g>
+        
+        <!-- Decoder Stack -->
+        <g transform="translate(500,50)">
+          <text x="100" y="-20" text-anchor="middle" font-size="16" font-weight="bold">Decoder</text>
+          
+          <!-- Decoder Layer 1 -->
+          <g>
+            <rect x="0" y="0" width="200" height="60" fill="#ffe6e6" stroke="#333" stroke-width="2"/>
+            <text x="100" y="20" text-anchor="middle" font-size="12">Masked Multi-Head Self-Attention</text>
+            <text x="100" y="35" text-anchor="middle" font-size="10">+ Add & Norm</text>
+            
+            <rect x="0" y="70" width="200" height="60" fill="#e6ffe6" stroke="#333" stroke-width="2"/>
+            <text x="100" y="95" text-anchor="middle" font-size="12">Multi-Head Cross-Attention</text>
+            <text x="100" y="110" text-anchor="middle" font-size="10">+ Add & Norm</text>
+            
+            <rect x="0" y="140" width="200" height="40" fill="#fff0e6" stroke="#333" stroke-width="2"/>
+            <text x="100" y="165" text-anchor="middle" font-size="12">Feed Forward + Add & Norm</text>
+          </g>
+          
+          <!-- More layers indicator -->
+          <text x="100" y="210" text-anchor="middle" font-size="20">⋮</text>
+          <text x="100" y="230" text-anchor="middle" font-size="12">N × Decoder Layers</text>
+          
+          <!-- Output components -->
+          <g transform="translate(0,270)">
+            <rect x="0" y="0" width="200" height="30" fill="#ffffe0" stroke="#333" stroke-width="2"/>
+            <text x="100" y="20" text-anchor="middle" font-size="12">Linear & Softmax</text>
+            
+            <rect x="0" y="40" width="200" height="40" fill="#f0f8ff" stroke="#333" stroke-width="2"/>
+            <text x="100" y="65" text-anchor="middle" font-size="12">Output Embeddings + Positional Encoding</text>
+          </g>
+        </g>
+        
+        <!-- Connections -->
+        <g stroke="#666" stroke-width="2" fill="none" marker-end="url(#arrowhead2)">
+          <!-- Encoder to Decoder cross-attention -->
+          <path d="M 300,120 Q 400,80 500,120"/>
+          <text x="400" y="75" text-anchor="middle" font-size="10">K, V</text>
+          
+          <!-- Input flow -->
+          <line x1="200" y1="400" x2="200" y2="380"/>
+          <line x1="200" y1="350" x2="200" y2="330"/>
+          
+          <!-- Output flow -->
+          <line x1="600" y1="340" x2="600" y2="320"/>
+          <line x1="600" y1="310" x2="600" y2="290"/>
+        </g>
+        
+        <!-- Arrow marker -->
+        <defs>
+          <marker id="arrowhead2" markerWidth="10" markerHeight="7" refX="10" refY="3.5" orient="auto">
+            <polygon points="0 0, 10 3.5, 0 7" fill="#666"/>
+          </marker>
+        </defs>
+        
+        <!-- Labels -->
+        <text x="200" y="450" text-anchor="middle" font-size="12">Source Sequence</text>
+        <text x="600" y="20" text-anchor="middle" font-size="12">Output Probabilities</text>
+      </svg>
+      <div class="diagram-caption">Complete Transformer architecture: Encoder processes input sequence, decoder generates output using self-attention and cross-attention</div>
+    </div>
+    
+    <h3>Key Components Breakdown</h3>
+    
+    <h4>1. Multi-Head Self-Attention</h4>
+    <p>As discussed earlier, this allows each position to attend to all positions in the input sequence.</p>
+    
+    <h4>2. Masked Multi-Head Self-Attention (Decoder)</h4>
+    <p>Similar to self-attention but prevents positions from attending to future positions, ensuring autoregressive generation.</p>
+    
+    <div class="math-formula">
+      <strong>Causal Mask:</strong><br><br>
+      mask(i,j) = -∞ if j > i, else 0<br><br>
+      This ensures attention weights are zero for future positions
+    </div>
+    
+    <h4>3. Multi-Head Cross-Attention</h4>
+    <p>Decoder attends to encoder outputs. Queries come from decoder, Keys and Values from encoder.</p>
+    
+    <h4>4. Position-wise Feed-Forward Networks</h4>
+    
+    <div class="math-formula">
+      <strong>Feed-Forward Network:</strong><br><br>
+      FFN(x) = max(0, xW₁ + b₁)W₂ + b₂<br><br>
+      Typical dimensions:<br>
+      • Inner dimension: 4 × d_model<br>
+      • Activation: ReLU or GELU
+    </div>
+    
+    <h4>5. Residual Connections and Layer Normalization</h4>
+    
+    <div class="math-formula">
+      <strong>Residual Connection:</strong><br><br>
+      output = LayerNorm(x + Sublayer(x))<br><br>
+      This helps with gradient flow in deep networks
+    </div>
+  </section>
+
+  <section>
+    <h2>Training Transformers: Computational Considerations</h2>
+    
+    <h3>Computational Complexity</h3>
+    
+    <p>Understanding the computational complexity of Transformers is crucial for practical implementation and scaling:</p>
+    
+    <table>
+      <thead>
+        <tr>
+          <th>Component</th>
+          <th>Time Complexity</th>
+          <th>Space Complexity</th>
+          <th>Bottleneck</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Self-Attention</td>
+          <td>O(n²d)</td>
+          <td>O(n²)</td>
+          <td>Sequence length</td>
+        </tr>
+        <tr>
+          <td>Multi-Head Attention</td>
+          <td>O(n²d)</td>
+          <td>O(n²)</td>
+          <td>Sequence length</td>
+        </tr>
+        <tr>
+          <td>Feed-Forward</td>
+          <td>O(nd²)</td>
+          <td>O(nd)</td>
+          <td>Model dimension</td>
+        </tr>
+        <tr>
+          <td>Total per layer</td>
+          <td>O(n²d + nd²)</td>
+          <td>O(n² + nd)</td>
+          <td>Both n and d</td>
+        </tr>
+      </tbody>
+    </table>
+    
+    <h3>Scaling Analysis</h3>
+    
+    <p>The quadratic complexity with respect to sequence length (n²) becomes problematic for long sequences. Various approaches address this:</p>
+    
+    <div class="three-column">
+      <div>
+        <h4>Sparse Attention</h4>
+        <p>Only attend to selected positions rather than all positions. Examples: Longformer, BigBird.</p>
+      </div>
+      <div>
+        <h4>Linear Attention</h4>
+        <p>Approximate attention with linear complexity. Examples: Performer, LinFormer.</p>
+      </div>
+      <div>
+        <h4>Hierarchical Attention</h4>
+        <p>Process sequences in chunks or hierarchies. Examples: Reformer, Funnel Transformer.</p>
+      </div>
+    </div>
+    
+    <h3>Memory Optimization Techniques</h3>
+    
+    <div class="two-column">
+      <div>
+        <h4>Gradient Checkpointing</h4>
+        <p>Trade computation for memory by recomputing activations during backward pass.</p>
+        
+        <div class="math-formula">
+          Memory reduction: O(√n)<br>
+          Computation increase: ~33%
+        </div>
+      </div>
+      
+      <div>
+        <h4>Mixed Precision Training</h4>
+        <p>Use FP16 for most operations, FP32 for precision-sensitive operations.</p>
+        
+        <div class="math-formula">
+          Memory reduction: ~50%<br>
+          Speed increase: 1.5-2×
+        </div>
+      </div>
+    </div>
+    
+    <div class="note">
+      In our work at Cyrion Labs, we've found that careful attention to these optimization techniques can make the difference between a research prototype and a production-ready system. The quadratic attention complexity is often the first bottleneck encountered when scaling to real-world applications.
+    </div>
+  </section>
+
+  <section>
+    <h2>Visual: KV Cache at Inference</h2>
+    <div class="diagram-container">
+      <svg width="820" height="240" viewBox="0 0 820 240">
+        <rect x="40" y="60" width="200" height="60" rx="10" fill="#fff3e0" stroke="#7B6C50"/>
+        <text x="140" y="95" text-anchor="middle" fill="#5A4B33">Past K,V (cache)</text>
+        <text x="260" y="90" font-size="20" fill="#5A4B33">+</text>
+        <rect x="300" y="60" width="120" height="60" rx="10" fill="#e6f0ff" stroke="#7B6C50"/>
+        <text x="360" y="95" text-anchor="middle" fill="#5A4B33">New token</text>
+        <text x="440" y="90" font-size="20" fill="#5A4B33">→</text>
+        <rect x="480" y="40" width="280" height="100" rx="12" fill="#FFFDF7" stroke="#7B6C50"/>
+        <text x="620" y="75" text-anchor="middle" fill="#5A4B33">Attention computes with cached keys/values</text>
+        <text x="620" y="95" text-anchor="middle" fill="#5A4B33">O(n) per new token instead of O(n²)</text>
+      </svg>
+      <div class="diagram-caption">KV caching turns quadratic attention over history into linear-time per token.</div>
+    </div>
+  </section>
+
+  <section>
+    <h2>RoPE and ALiBi (Positional Schemes)</h2>
+    <p>Rotary Position Embeddings (RoPE) rotates queries/keys by position-dependent complex phases, enabling relative position awareness and long-context generalization.</p>
+    <div class="math-formula">
+      RoPE:  q̃ = R(θ)n ∘ q, &nbsp; k̃ = R(θ)n ∘ k, &nbsp; θ = 10000^{-2i/d}
+    </div>
+    <p>ALiBi adds a learned slope bias to attention scores proportional to distance, preserving attention decay with length while avoiding explicit embeddings.</p>
+    <div class="math-formula">
+      score(i,j) ← score(i,j) − m·(i−j), &nbsp; m depends on head index
+    </div>
+  </section>
+
+  <section>
+    <h2>Transformer Variants and Evolution</h2>
+    
+    <h3>BERT: Bidirectional Encoder Representations</h3>
+    
+    <p>BERT revolutionized NLP by introducing bidirectional training for language representation. Unlike traditional left-to-right language models, BERT considers context from both directions simultaneously.</p>
+    
+    <h4>Pre-training Objectives</h4>
+    
+    <div class="two-column">
+      <div>
+        <h4>Masked Language Modeling (MLM)</h4>
+        <div class="math-formula">
+          L_MLM = -∑ log P(x_i | context)<br><br>
+          15% of tokens are masked:<br>
+          • 80%: [MASK] token<br>
+          • 10%: random token<br>
+          • 10%: unchanged
+        </div>
+      </div>
+      
+      <div>
+        <h4>Next Sentence Prediction (NSP)</h4>
+        <div class="math-formula">
+          L_NSP = -log P(IsNext | [CLS])<br><br>
+          50% actual next sentences<br>
+          50% random sentences
+        </div>
+      </div>
+    </div>
+    
+    <h3>GPT: Generative Pre-trained Transformer</h3>
+    
+    <p>The GPT series demonstrates the power of autoregressive language modeling. By predicting the next token in a sequence, GPT learns to generate coherent text and demonstrates emergent capabilities at scale.</p>
+    
+    <div class="math-formula">
+      <strong>GPT Objective:</strong><br><br>
+      L = -∑ᵢ log P(xᵢ | x₁, x₂, ..., xᵢ₋₁; θ)<br><br>
+      Maximize likelihood of next token given previous context
+    </div>
+    
+    <h3>Scaling Laws and Emergent Abilities</h3>
+    
+    <p>Recent research has revealed predictable scaling laws for Transformer performance:</p>
+    
+    <table>
+      <thead>
+        <tr>
+          <th>Model</th>
+          <th>Parameters</th>
+          <th>Training Tokens</th>
+          <th>Key Capabilities</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>GPT-1</td>
+          <td>117M</td>
+          <td>~5B</td>
+          <td>Basic language understanding</td>
+        </tr>
+        <tr>
+          <td>GPT-2</td>
+          <td>1.5B</td>
+          <td>~40B</td>
+          <td>Coherent text generation</td>
+        </tr>
+        <tr>
+          <td>GPT-3</td>
+          <td>175B</td>
+          <td>~300B</td>
+          <td>Few-shot learning, reasoning</td>
+        </tr>
+        <tr>
+          <td>GPT-4</td>
+          <td>~1.8T (estimated)</td>
+          <td>~13T</td>
+          <td>Multimodal, complex reasoning</td>
+        </tr>
+      </tbody>
+    </table>
+    
+    <div class="math-formula">
+      <strong>Chinchilla Scaling Laws:</strong><br><br>
+      For compute budget C:<br>
+      N_optimal ∝ C^0.5 (parameters)<br>
+      D_optimal ∝ C^0.5 (training tokens)<br><br>
+      Optimal allocation: equal scaling of model size and data
+    </div>
+  </section>
+
+  <section>
+    <h2>Implementation Guide</h2>
+    
+    <h3>Core Transformer Block Implementation</h3>
+    
+    <div class="code-block">
+import torch
+import torch.nn as nn
+import torch.nn.functional as F
+import math
+
+class MultiHeadAttention(nn.Module):
+    def __init__(self, d_model, num_heads, dropout=0.1):
+        super().__init__()
+        assert d_model % num_heads == 0
+        
+        self.d_model = d_model
+        self.num_heads = num_heads
+        self.d_k = d_model // num_heads
+        
+        self.w_q = nn.Linear(d_model, d_model)
+        self.w_k = nn.Linear(d_model, d_model)
+        self.w_v = nn.Linear(d_model, d_model)
+        self.w_o = nn.Linear(d_model, d_model)
+        
+        self.dropout = nn.Dropout(dropout)
+        
+    def scaled_dot_product_attention(self, Q, K, V, mask=None):
+        batch_size, num_heads, seq_len, d_k = Q.size()
+        
+        # Compute attention scores
+        scores = torch.matmul(Q, K.transpose(-2, -1)) / math.sqrt(d_k)
+        
+        # Apply mask if provided
+        if mask is not None:
+            scores.masked_fill_(mask == 0, -1e9)
+        
+        # Apply softmax
+        attention_weights = F.softmax(scores, dim=-1)
+        attention_weights = self.dropout(attention_weights)
+        
+        # Apply attention to values
+        output = torch.matmul(attention_weights, V)
+        
+        return output, attention_weights
+    
+    def forward(self, query, key, value, mask=None):
+        batch_size, seq_len, d_model = query.size()
+        
+        # Linear transformations and reshape for multi-head attention
+        Q = self.w_q(query).view(batch_size, seq_len, self.num_heads, self.d_k).transpose(1, 2)
+        K = self.w_k(key).view(batch_size, seq_len, self.num_heads, self.d_k).transpose(1, 2)
+        V = self.w_v(value).view(batch_size, seq_len, self.num_heads, self.d_k).transpose(1, 2)
+        
+        # Apply scaled dot-product attention
+        attention_output, attention_weights = self.scaled_dot_product_attention(Q, K, V, mask)
+        
+        # Concatenate heads and apply output projection
+        attention_output = attention_output.transpose(1, 2).contiguous().view(
+            batch_size, seq_len, d_model)
+        
+        output = self.w_o(attention_output)
+        
+        return output, attention_weights
+
+class PositionalEncoding(nn.Module):
+    def __init__(self, d_model, max_len=5000):
+        super().__init__()
+        
+        pe = torch.zeros(max_len, d_model)
+        position = torch.arange(0, max_len, dtype=torch.float).unsqueeze(1)
+        
+        div_term = torch.exp(torch.arange(0, d_model, 2).float() * 
+                           (-math.log(10000.0) / d_model))
+        
+        pe[:, 0::2] = torch.sin(position * div_term)
+        pe[:, 1::2] = torch.cos(position * div_term)
+        
+        pe = pe.unsqueeze(0).transpose(0, 1)
+        self.register_buffer('pe', pe)
+    
+    def forward(self, x):
+        return x + self.pe[:x.size(0), :]
+
+class TransformerBlock(nn.Module):
+    def __init__(self, d_model, num_heads, d_ff, dropout=0.1):
+        super().__init__()
+        
+        self.attention = MultiHeadAttention(d_model, num_heads, dropout)
+        self.norm1 = nn.LayerNorm(d_model)
+        self.norm2 = nn.LayerNorm(d_model)
+        
+        self.feed_forward = nn.Sequential(
+            nn.Linear(d_model, d_ff),
+            nn.GELU(),
+            nn.Dropout(dropout),
+            nn.Linear(d_ff, d_model),
+            nn.Dropout(dropout)
+        )
+        
+        self.dropout = nn.Dropout(dropout)
+        
+    def forward(self, x, mask=None):
+        # Multi-head attention with residual connection
+        attn_output, attention_weights = self.attention(x, x, x, mask)
+        x = self.norm1(x + self.dropout(attn_output))
+        
+        # Feed-forward with residual connection
+        ff_output = self.feed_forward(x)
+        x = self.norm2(x + ff_output)
+        
+        return x, attention_weights
+
+class Transformer(nn.Module):
+    def __init__(self, vocab_size, d_model, num_heads, num_layers, d_ff, max_len, dropout=0.1):
+        super().__init__()
+        
+        self.d_model = d_model
+        self.embedding = nn.Embedding(vocab_size, d_model)
+        self.positional_encoding = PositionalEncoding(d_model, max_len)
+        
+        self.transformer_blocks = nn.ModuleList([
+            TransformerBlock(d_model, num_heads, d_ff, dropout)
+            for _ in range(num_layers)
+        ])
+        
+        self.layer_norm = nn.LayerNorm(d_model)
+        self.dropout = nn.Dropout(dropout)
+        
+    def forward(self, x, mask=None):
+        # Token embeddings with positional encoding
+        x = self.embedding(x) * math.sqrt(self.d_model)
+        x = self.positional_encoding(x)
+        x = self.dropout(x)
+        
+        attention_weights = []
+        
+        # Pass through transformer blocks
+        for transformer_block in self.transformer_blocks:
+            x, attn_weights = transformer_block(x, mask)
+            attention_weights.append(attn_weights)
+        
+        x = self.layer_norm(x)
+        
+        return x, attention_weights
+
+# Example usage
+if __name__ == "__main__":
+    # Model configuration
+    vocab_size = 10000
+    d_model = 512
+    num_heads = 8
+    num_layers = 6
+    d_ff = 2048
+    max_len = 1000
+    
+    # Create model
+    model = Transformer(vocab_size, d_model, num_heads, num_layers, d_ff, max_len)
+    
+    # Sample input
+    batch_size = 2
+    seq_len = 50
+    input_ids = torch.randint(0, vocab_size, (batch_size, seq_len))
+    
+    # Forward pass
+    output, attention_weights = model(input_ids)
+    
+    print(f"Input shape: {input_ids.shape}")
+    print(f"Output shape: {output.shape}")
+    print(f"Number of attention layers: {len(attention_weights)}")
+    print(f"Attention weights shape: {attention_weights[0].shape}")
+    </div>
+    
+    <div class="note">
+      This implementation demonstrates the core concepts but omits some optimizations used in production models, such as pre-layer normalization, different activation functions, and specialized initialization schemes. The attention visualization capabilities built into this code are particularly useful for understanding what the model has learned.
+    </div>
+  </section>
+
+  <section>
+    <h2>Applications and Impact</h2>
+    
+    <h3>Natural Language Processing Dominance</h3>
+    
+    <p>Transformers have achieved state-of-the-art results across virtually all NLP tasks:</p>
+    
+    <div class="three-column">
+      <div>
+        <h4>Language Understanding</h4>
+        <ul>
+          <li>GLUE benchmark</li>
+          <li>SuperGLUE tasks</li>
+          <li>Reading comprehension</li>
+          <li>Sentiment analysis</li>
+        </ul>
+      </div>
+      <div>
+        <h4>Language Generation</h4>
+        <ul>
+          <li>Text completion</li>
+          <li>Creative writing</li>
+          <li>Code generation</li>
+          <li>Dialogue systems</li>
+        </ul>
+      </div>
+      <div>
+        <h4>Specialized Tasks</h4>
+        <ul>
+          <li>Machine translation</li>
+          <li>Summarization</li>
+          <li>Question answering</li>
+          <li>Information extraction</li>
+        </ul>
+      </div>
+    </div>
+    
+    <h3>Beyond Natural Language</h3>
+    
+    <p>The success of Transformers has led to their adoption in other domains:</p>
+    
+    <table>
+      <thead>
+        <tr>
+          <th>Domain</th>
+          <th>Model</th>
+          <th>Innovation</th>
+          <th>Key Achievement</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Computer Vision</td>
+          <td>Vision Transformer (ViT)</td>
+          <td>Image patches as tokens</td>
+          <td>Competitive with CNNs</td>
+        </tr>
+        <tr>
+          <td>Multimodal</td>
+          <td>DALL-E, CLIP</td>
+          <td>Cross-modal attention</td>
+          <td>Text-to-image generation</td>
+        </tr>
+        <tr>
+          <td>Protein Biology</td>
+          <td>AlphaFold 2</td>
+          <td>Evolutionary attention</td>
+          <td>Protein structure prediction</td>
+        </tr>
+        <tr>
+          <td>Reinforcement Learning</td>
+          <td>Decision Transformer</td>
+          <td>Trajectory modeling</td>
+          <td>Offline RL as sequence modeling</td>
+        </tr>
+      </tbody>
+    </table>
+  </section>
+
+  <section>
+    <h2>Current Research Frontiers</h2>
+    
+    <h3>Efficiency and Scaling</h3>
+    
+    <p>Current research focuses on making Transformers more efficient while maintaining their effectiveness:</p>
+    
+    <div class="two-column">
+      <div>
+        <h4>Architectural Innovations</h4>
+        <ul>
+          <li><strong>Switch Transformer:</strong> Sparse expert models</li>
+          <li><strong>PaLM:</strong> Improved scaling strategies</li>
+          <li><strong>GLaM:</strong> Mixture of experts at scale</li>
+          <li><strong>Chinchilla:</strong> Compute-optimal training</li>
+        </ul>
+      </div>
+      
+      <div>
+        <h4>Training Innovations</h4>
+        <ul>
+          <li><strong>T5:</strong> Text-to-text unified framework</li>
+          <li><strong>UL2:</strong> Unified language learner</li>
+          <li><strong>InstructGPT:</strong> Human feedback training</li>
+          <li><strong>Constitutional AI:</strong> Self-supervised alignment</li>
+        </ul>
+      </div>
+    </div>
+    
+    <h3>Emergent Capabilities</h3>
+    
+    <p>Large-scale Transformers demonstrate emergent capabilities that arise unpredictably at certain scales:</p>
+    
+    <div class="timeline">
+      <div class="timeline-item">
+        <div class="timeline-year">Few-shot Learning</div>
+        <p>Ability to perform tasks with just a few examples, emerging around 1B parameters.</p>
+      </div>
+      
+      <div class="timeline-item">
+        <div class="timeline-year">Chain-of-Thought Reasoning</div>
+        <p>Step-by-step reasoning capabilities, prominent in models with 100B+ parameters.</p>
+      </div>
+      
+      <div class="timeline-item">
+        <div class="timeline-year">Code Understanding</div>
+        <p>Programming and code generation abilities, enhanced by specialized training.</p>
+      </div>
+      
+      <div class="timeline-item">
+        <div class="timeline-year">Instruction Following</div>
+        <p>Natural language instruction understanding and execution.</p>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <h2>My Research with Transformers</h2>
+    
+    <div class="note">
+      Throughout my research at Cyrion Labs and SourceMind Labs, I've worked extensively with Transformer architectures, particularly in developing more efficient attention mechanisms and exploring their applications in specialized domains.
+    </div>
+    
+    <h3>Key Research Projects</h3>
+    
+    <div class="two-column">
+      <div>
+        <h4>LSLM: Listening-while-Speaking Language Model</h4>
+        <p>My LSLM project explores real-time language processing using modified Transformer architectures that can simultaneously process input and generate output, enabling natural conversational AI systems.</p>
+        
+        <div class="math-formula">
+          Key innovation: Parallel attention streams<br>
+          Input stream: Processes ongoing speech<br>
+          Output stream: Generates responses<br>
+          Cross-attention: Coordinates both streams
+        </div>
+        
+        <a href="https://github.com/sanowl/LSLM-Listening-while-Speaking-Language-Model" target="_blank" class="implementation-link">
+          View LSLM Project
+        </a>
+      </div>
+      
+      <div>
+        <h4>CoRAG: Chain-of-Retrieval Augmented Generation</h4>
+        <p>This project combines Transformers with retrieval mechanisms, using chain-of-thought prompting to guide the retrieval process for more accurate and contextual response generation.</p>
+        
+        <div class="math-formula">
+          Architecture: Transformer + Retrieval<br>
+          Query generation: CoT-guided retrieval<br>
+          Context integration: Cross-attention<br>
+          Response synthesis: Autoregressive generation
+        </div>
+        
+        <a href="https://github.com/sanowl/CoRAG" target="_blank" class="implementation-link">
+          View CoRAG Project
+        </a>
+      </div>
+    </div>
+    
+    <h3>Research Insights</h3>
+    
+    <div class="two-column">
+      <div>
+        <h4>Attention Pattern Analysis</h4>
+        <p>Through extensive analysis of attention patterns, I've found that different heads consistently specialize in different linguistic phenomena - syntactic heads focus on grammar, while semantic heads capture meaning relationships.</p>
+      </div>
+      
+      <div>
+        <h4>Scaling Observations</h4>
+        <p>My experiments suggest that the relationship between model scale and capability is more nuanced than simple scaling laws suggest - task-specific scaling curves vary significantly across different types of reasoning.</p>
+      </div>
+    </div>
+    
+    <h3>Future Directions</h3>
+    
+    <p>Based on my research experience, I see several promising directions for Transformer development:</p>
+    
+    <ol>
+      <li><strong>Biologically-inspired Attention:</strong> Incorporating principles from neuroscience to create more efficient and interpretable attention mechanisms</li>
+      <li><strong>Adaptive Computation:</strong> Dynamic allocation of computational resources based on input complexity</li>
+      <li><strong>Multimodal Integration:</strong> Better fusion of different modalities through specialized attention mechanisms</li>
+      <li><strong>Continual Learning:</strong> Transformers that can learn continuously without catastrophic forgetting</li>
+    </ol>
+  </section>
+
+  <section>
+    <h2>Practical Guidelines and Best Practices</h2>
+    
+    <h3>Model Design Decisions</h3>
+    
+    <table>
+      <thead>
+        <tr>
+          <th>Aspect</th>
+          <th>Typical Values</th>
+          <th>Considerations</th>
+          <th>Trade-offs</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Number of Heads</td>
+          <td>8-16</td>
+          <td>Should divide d_model evenly</td>
+          <td>More heads = more specialized attention</td>
+        </tr>
+        <tr>
+          <td>Layer Depth</td>
+          <td>6-24</td>
+          <td>Task complexity dependent</td>
+          <td>Deeper = more capacity but harder to train</td>
+        </tr>
+        <tr>
+          <td>d_model</td>
+          <td>512-1024</td>
+          <td>Memory and compute constraints</td>
+          <td>Larger = more expressive but more expensive</td>
+        </tr>
+        <tr>
+          <td>d_ff ratio</td>
+          <td>4×d_model</td>
+          <td>Feed-forward expansion factor</td>
+          <td>Larger = more non-linearity but more parameters</td>
+        </tr>
+      </tbody>
+    </table>
+    
+    <h3>Training Recommendations</h3>
+    
+    <div class="three-column">
+      <div>
+        <h4>Initialization</h4>
+        <ul>
+          <li>Xavier/Glorot for attention weights</li>
+          <li>Small random values for position embeddings</li>
+          <li>Layer normalization parameters</li>
+        </ul>
+      </div>
+      
+      <div>
+        <h4>Optimization</h4>
+        <ul>
+          <li>AdamW optimizer</li>
+          <li>Learning rate scheduling</li>
+          <li>Gradient clipping</li>
+          <li>Warmup strategy</li>
+        </ul>
+      </div>
+      
+      <div>
+        <h4>Regularization</h4>
+        <ul>
+          <li>Dropout in attention and FF</li>
+          <li>Label smoothing</li>
+          <li>Weight decay</li>
+          <li>Early stopping</li>
+        </ul>
+      </div>
+    </div>
+    
+    <div class="note">
+      From my experience, the most critical factors for successful Transformer training are proper learning rate scheduling and careful attention to numerical stability. Small implementation details, like the order of layer normalization and residual connections, can significantly impact training dynamics.
+    </div>
+  </section>
+
+  <footer>
+    <p><em>"Transformers taught me that the right architectural inductive bias can unlock unprecedented capabilities. By allowing every position to directly communicate with every other position, we've created models that truly understand context and relationships."</em></p>
+    <p>– San Hashimhama, AI Researcher</p>
+    
+    <div style="margin-top: 30px;">
+      <a href="index.html" style="color: #666; text-decoration: none;">← Back to Algorithm Guide</a>
+    </div>
+  </footer>
+</body>
+</html>

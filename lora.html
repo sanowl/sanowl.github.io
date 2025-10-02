@@ -1,0 +1,500 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>LoRA: Low‑Rank Adaptation for Efficient Fine‑Tuning</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: Georgia, serif;
+      line-height: 1.7;
+      color: #333;
+      background: white;
+      max-width: 1000px;
+      margin: 0 auto;
+      padding: 40px 20px;
+    }
+    .back-nav { margin-bottom: 40px; }
+    .back-nav a { color: #666; text-decoration: none; font-size: 0.9rem; }
+    .back-nav a:hover { color: #333; }
+    header {
+      margin-bottom: 50px;
+      text-align: center;
+      padding-bottom: 30px;
+      border-bottom: 1px solid #eee;
+    }
+    h1 { font-size: 2.6rem; font-weight: normal; margin-bottom: 12px; }
+    .subtitle { color: #666; font-size: 1.15rem; margin-bottom: 10px; }
+    .author { color: #888; font-size: 0.9rem; }
+    h2 { font-size: 1.9rem; font-weight: normal; margin: 48px 0 22px; padding-bottom: 10px; border-bottom: 1px solid #eee; }
+    h3 { font-size: 1.5rem; font-weight: normal; margin: 30px 0 16px; }
+    h4 { font-size: 1.25rem; font-weight: normal; margin: 22px 0 12px; }
+    p { margin-bottom: 18px; text-align: justify; }
+    ul, ol { margin: 16px 0 18px 28px; }
+    li { margin-bottom: 10px; }
+    .math-formula {
+      background: #f8f8f8;
+      padding: 26px;
+      margin: 24px 0;
+      border-left: 3px solid #333;
+      font-family: 'Times New Roman', serif;
+      text-align: center;
+      font-size: 1.1rem;
+    }
+    .note {
+      background: #f5f5f5;
+      padding: 22px;
+      margin: 22px 0;
+      border-left: 3px solid #666;
+      font-style: italic;
+    }
+    .note::before { content: "Research Note: "; font-weight: bold; font-style: normal; }
+    .code-block {
+      background: #f8f8f8;
+      padding: 24px;
+      margin: 24px 0;
+      font-family: 'Courier New', monospace;
+      font-size: 0.9rem;
+      overflow-x: auto;
+      border: 1px solid #ddd;
+    }
+    table { width: 100%; border-collapse: collapse; margin: 26px 0; font-size: 0.95rem; }
+    th, td { padding: 14px; text-align: left; border-bottom: 1px solid #ddd; }
+    th { background: #f8f8f8; font-weight: normal; }
+    footer { margin-top: 70px; padding-top: 36px; border-top: 1px solid #eee; text-align: center; color: #666; font-size: 0.9rem; }
+    @media (max-width: 768px) {
+      body { padding: 20px 15px; }
+      h1 { font-size: 2.1rem; }
+    }
+  </style>
+  <link rel="stylesheet" href="assets/css/theme.css">
+  <meta name="description" content="LoRA (Low-Rank Adaptation): a parameter-efficient fine-tuning method for adapting large models by learning low-rank weight updates. Includes math, intuition, and implementation tips.">
+  <meta name="author" content="San Hashimhama">
+  <meta name="keywords" content="LoRA, Low-Rank Adaptation, PEFT, fine-tuning, parameter efficient, transformers, QKV, adapters">
+  <meta property="og:title" content="LoRA: Low‑Rank Adaptation for Efficient Fine‑Tuning">
+  <meta property="og:type" content="article">
+  <meta property="og:description" content="A clear, math-first explanation of LoRA with why it matters and how to use it.">
+</head>
+<body>
+  <nav class="back-nav">
+    <a href="index.html">← Back to Home</a>
+  </nav>
+
+  <header>
+    <h1>LoRA: Low‑Rank Adaptation</h1>
+    <p class="subtitle">Parameter‑Efficient Fine‑Tuning for Large Models</p>
+    <p class="author">San Hashimhama • AI Researcher</p>
+  </header>
+
+  <section>
+    <h2>Why LoRA Matters</h2>
+    <p>LoRA (Low‑Rank Adaptation) fine‑tunes large neural networks by learning a small low‑rank update to selected weight matrices while keeping the original weights frozen. This dramatically reduces trainable parameters and optimizer state, enabling affordable, fast, and modular adaptation on modest hardware. In practice, LoRA achieves comparable quality to full fine‑tuning for many tasks while using 10–1000× fewer trainable parameters.</p>
+    <ul>
+      <li>Lower memory: only the low‑rank factors are trained (and their optimizer states), not the full weights.</li>
+      <li>Faster training: fewer parameters and better I/O locality for updates.</li>
+      <li>Composable: multiple LoRA adapters can be swapped or merged per task/domain.</li>
+      <li>Production friendly: merge the adapter into base weights for zero‑overhead inference.</li>
+    </ul>
+  </section>
+
+  <section>
+    <h2>Core Idea & Mathematics</h2>
+    <p>Consider a linear layer with weight <em>W</em> ∈ ℝ<sup>d<sub>out</sub>×d<sub>in</sub></sup>. Full fine‑tuning learns ΔW of the same size. LoRA constrains the update to have low rank <em>r</em> ≪ min(d<sub>out</sub>, d<sub>in</sub>):</p>
+
+    <div class="math-formula">
+      ΔW ≈ B A, with A ∈ ℝ<sup>r×d<sub>in</sub></sup>, B ∈ ℝ<sup>d<sub>out</sub>×r</sup>, rank(ΔW) ≤ r
+    </div>
+
+    <p>The adapted weight is then</p>
+    <div class="math-formula">
+      W' = W + (α/r) · (B A)
+    </div>
+    <p>where α is a scaling hyperparameter that controls the magnitude of the low‑rank update. In most implementations, <em>W</em> is frozen and only <em>A</em>, <em>B</em> are trained.</p>
+
+    <h3>Parameter Efficiency</h3>
+    <p>Full update: d<sub>out</sub>×d<sub>in</sub> parameters. LoRA update: r·(d<sub>in</sub> + d<sub>out</sub>) parameters (for A and B). For square layers with d = d<sub>in</sub> = d<sub>out</sub>:</p>
+
+    <div class="math-formula">
+      Params(full) = d²,  Params(LoRA) = 2 d r,  Reduction ≈ d² / (2 d r) = d / (2 r)
+    </div>
+
+    <p>Example: d = 4096, r = 8 → Params(full) = 16,777,216 vs. Params(LoRA) = 65,536 (≈256× fewer). Optimizer memory also drops proportionally because moments are maintained only for A and B.</p>
+
+    <h3>Forward Pass with LoRA</h3>
+    <p>For input x ∈ ℝ<sup>d<sub>in</sub></sup>:</p>
+    <div class="math-formula">
+      y = W x + b + (α/r) · (B (A x))
+    </div>
+    <p>The LoRA branch is a small bottleneck MLP (A then B) added residually to the frozen linear layer.</p>
+  </section>
+
+  <section>
+    <h2>Visual Intuition</h2>
+    <div class="diagram-container">
+      <svg width="820" height="260" viewBox="0 0 820 260">
+        <!-- Base weight W -->
+        <rect x="40" y="40" width="220" height="160" rx="10" fill="#e9efe6" stroke="#7B6C50" stroke-width="2"/>
+        <text x="150" y="35" text-anchor="middle" font-size="14" fill="#5A4B33">Frozen Base Weight (W)</text>
+        
+        <!-- Plus sign -->
+        <text x="300" y="120" font-size="28" fill="#5A4B33">+</text>
+        
+        <!-- Low-rank factors A and B composing BA -->
+        <g>
+          <rect x="340" y="60" width="100" height="120" rx="8" fill="#fff3e0" stroke="#7B6C50" stroke-width="2"/>
+          <text x="390" y="55" text-anchor="middle" font-size="12" fill="#5A4B33">A (r × d_in)</text>
+          
+          <text x="450" y="120" font-size="18" fill="#5A4B33">→</text>
+          
+          <rect x="480" y="60" width="120" height="120" rx="8" fill="#fff3e0" stroke="#7B6C50" stroke-width="2"/>
+          <text x="540" y="55" text-anchor="middle" font-size="12" fill="#5A4B33">B (d_out × r)</text>
+          
+          <text x="540" y="200" text-anchor="middle" font-size="12" fill="#5A4B33">Low‑Rank Update: BA</text>
+        </g>
+        
+        <!-- Equals and W' -->
+        <text x="630" y="120" font-size="28" fill="#5A4B33">=</text>
+        <rect x="660" y="40" width="120" height="160" rx="10" fill="#e6f0ff" stroke="#7B6C50" stroke-width="2"/>
+        <text x="720" y="35" text-anchor="middle" font-size="14" fill="#5A4B33">Adapted Weight (W')</text>
+        
+        <!-- Scale annotation -->
+        <text x="420" y="230" text-anchor="middle" font-size="12" fill="#5A4B33">W' = W + (α/r) · (B A)</text>
+      </svg>
+      <div class="diagram-caption">LoRA learns low‑rank factors A and B and adds their product to the frozen base weight.</div>
+    </div>
+
+    <div class="diagram-container" style="margin-top: 24px;">
+      <svg width="860" height="310" viewBox="0 0 860 310">
+        <!-- Attention block -->
+        <rect x="40" y="40" width="780" height="220" rx="12" fill="#FFFDF7" stroke="#7B6C50" stroke-width="2"/>
+        <text x="430" y="30" text-anchor="middle" font-size="14" fill="#5A4B33">Self‑Attention with LoRA</text>
+
+        <!-- Q, K, V projections -->
+        <g>
+          <rect x="80" y="80" width="160" height="60" rx="8" fill="#e9efe6" stroke="#7B6C50" stroke-width="2"/>
+          <text x="160" y="110" text-anchor="middle" font-size="14" fill="#5A4B33">W_q (frozen)</text>
+          <rect x="100" y="150" width="120" height="40" rx="8" fill="#fff3e0" stroke="#7B6C50" stroke-width="2"/>
+          <text x="160" y="175" text-anchor="middle" font-size="12" fill="#5A4B33">LoRA: B_q A_q</text>
+        </g>
+        <g>
+          <rect x="340" y="80" width="160" height="60" rx="8" fill="#e9efe6" stroke="#7B6C50" stroke-width="2"/>
+          <text x="420" y="110" text-anchor="middle" font-size="14" fill="#5A4B33">W_k (frozen)</text>
+          <rect x="360" y="150" width="120" height="40" rx="8" fill="#f6f6f6" stroke="#d1c8bb" stroke-width="1"/>
+          <text x="420" y="175" text-anchor="middle" font-size="12" fill="#8f8574">(optional)</text>
+        </g>
+        <g>
+          <rect x="600" y="80" width="160" height="60" rx="8" fill="#e9efe6" stroke="#7B6C50" stroke-width="2"/>
+          <text x="680" y="110" text-anchor="middle" font-size="14" fill="#5A4B33">W_v (frozen)</text>
+          <rect x="620" y="150" width="120" height="40" rx="8" fill="#fff3e0" stroke="#7B6C50" stroke-width="2"/>
+          <text x="680" y="175" text-anchor="middle" font-size="12" fill="#5A4B33">LoRA: B_v A_v</text>
+        </g>
+
+        <!-- Output note -->
+        <text x="430" y="235" text-anchor="middle" font-size="12" fill="#5A4B33">Apply LoRA to Q and V for best efficiency/quality trade‑off</text>
+      </svg>
+      <div class="diagram-caption">Typical placement: LoRA on Q and V projections (K optional).</div>
+    </div>
+  </section>
+
+  <section>
+    <h2>Where to Apply LoRA</h2>
+    <p>In Transformers, LoRA is commonly applied to attention projections where most parameters live and adaptation is impactful:</p>
+    <ul>
+      <li>Self‑Attention: W<sub>q</sub>, W<sub>v</sub> (sometimes W<sub>k</sub>, rarely W<sub>o</sub>)</li>
+      <li>Cross‑Attention (encoder‑decoder): again W<sub>q</sub>, W<sub>v</sub></li>
+      <li>Optionally to large feed‑forward layers (W<sub>in</sub>, W<sub>out</sub>) when domain shift is significant</li>
+    </ul>
+    <div class="math-formula">
+      W<sub>q</sub>' = W<sub>q</sub> + (α/r) · B<sub>q</sub>A<sub>q</sub>, &nbsp; W<sub>v</sub>' = W<sub>v</sub> + (α/r) · B<sub>v</sub>A<sub>v</sub>
+    </div>
+    <p>Adapters are trained per target task/domain; the base model remains unchanged.</p>
+  </section>
+
+  <section>
+    <h2>Complexity & Memory</h2>
+    <table>
+      <thead>
+        <tr>
+          <th>Aspect</th>
+          <th>Full Fine‑Tuning</th>
+          <th>LoRA</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Trainable params per d×d layer</td>
+          <td>d²</td>
+          <td>2 d r</td>
+        </tr>
+        <tr>
+          <td>Backward optimizer states</td>
+          <td>Moments for all d² weights</td>
+          <td>Moments only for A, B</td>
+        </tr>
+        <tr>
+          <td>Extra FLOPs per forward</td>
+          <td>—</td>
+          <td>O(d r) for A x and O(d r) for B(·)</td>
+        </tr>
+        <tr>
+          <td>Inference overhead</td>
+          <td>—</td>
+          <td>Zero after merge: W ← W + (α/r) · BA</td>
+        </tr>
+      </tbody>
+    </table>
+    <p>Since r ≪ d, compute overhead is negligible. During inference, merge the adapter into W to avoid additional matmuls.</p>
+  </section>
+
+  <section>
+    <h2>Implementation Sketch (PyTorch)</h2>
+    <div class="code-block">
+<pre><code>import math
+import torch
+import torch.nn as nn
+
+class LoRALinear(nn.Module):
+    def __init__(self, in_features, out_features, r=8, alpha=16, dropout=0.0, bias=True):
+        super().__init__()
+        self.in_features = in_features
+        self.out_features = out_features
+        self.r = r
+        self.alpha = alpha
+        self.scaling = alpha / r if r > 0 else 1.0
+
+        # Frozen base weight
+        self.weight = nn.Parameter(torch.empty(out_features, in_features))
+        nn.init.kaiming_uniform_(self.weight, a=math.sqrt(5))
+        self.weight.requires_grad = False
+
+        self.bias = nn.Parameter(torch.zeros(out_features)) if bias else None
+
+        # Trainable low-rank factors (A: r×in, B: out×r)
+        if r > 0:
+            self.A = nn.Parameter(torch.zeros(r, in_features))
+            self.B = nn.Parameter(torch.zeros(out_features, r))
+            nn.init.kaiming_uniform_(self.A, a=math.sqrt(5))
+            nn.init.zeros_(self.B)  # start near zero so W' ≈ W
+        else:
+            self.register_parameter('A', None)
+            self.register_parameter('B', None)
+
+        self.dropout = nn.Dropout(dropout)
+
+    def forward(self, x):
+        # Base
+        y = x @ self.weight.T
+        if self.bias is not None:
+            y = y + self.bias
+        # Low-rank residual
+        if self.r > 0:
+            y = y + self.scaling * (self.dropout(x) @ self.A.T @ self.B.T)
+        return y
+
+    @torch.no_grad()
+    def merge_adapter_(self):
+        if self.r > 0:
+            self.weight += self.scaling * (self.B @ self.A)
+            # After merging, you may set r=0 to disable adapter branch
+</code></pre>
+    </div>
+    <p>In practice, LoRA is wrapped around existing linear layers (e.g., attention projections). Many libraries implement injection utilities to replace layers without editing model code.</p>
+  </section>
+
+  <section>
+    <h2>Choosing Hyperparameters</h2>
+    <ul>
+      <li><strong>Rank r:</strong> 4–16 for medium models, 8–32 for larger; increase if task/domain is far from base pretraining.</li>
+      <li><strong>Scaling α:</strong> Often 2–8× r; tune with a small grid (e.g., {r=8, α∈{8,16,32}}).</li>
+      <li><strong>Targets:</strong> Start with W<sub>q</sub>, W<sub>v</sub>; add W<sub>o</sub> or MLP if needed.</li>
+      <li><strong>Dropout:</strong> 0.05–0.2 on the LoRA branch for stability.</li>
+      <li><strong>Optimizer:</strong> AdamW on adapters only; keep base weights frozen with weight_decay=0.</li>
+      <li><strong>Precision:</strong> BF16/FP16 works well; adapters can be FP32 if memory permits.</li>
+    </ul>
+  </section>
+
+  <section>
+    <h2>Comparison to Other PEFT Methods</h2>
+    <table>
+      <thead>
+        <tr>
+          <th>Method</th>
+          <th>Idea</th>
+          <th>Trainable Params</th>
+          <th>Notes</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>LoRA</td>
+          <td>Low‑rank residual update B A</td>
+          <td>Low (∝ r)</td>
+          <td>Mergeable; good quality/efficiency trade‑off</td>
+        </tr>
+        <tr>
+          <td>Adapters</td>
+          <td>Small MLP blocks in residuals</td>
+          <td>Low–Medium</td>
+          <td>Heavier at inference unless merged</td>
+        </tr>
+        <tr>
+          <td>Prefix/Prompt Tuning</td>
+          <td>Learned prompts/key‑values</td>
+          <td>Very Low</td>
+          <td>Strong for generation; may underperform on some tasks</td>
+        </tr>
+      </tbody>
+    </table>
+  </section>
+
+  <section>
+    <h2>Practical Tips & Pitfalls</h2>
+    <ul>
+      <li><strong>Merging for deployment:</strong> After training, set W ← W + (α/r)·BA and drop A,B for zero overhead.</li>
+      <li><strong>LayerNorm/scale interactions:</strong> Keep α modest; very large α can destabilize optimization.</li>
+      <li><strong>Task mixing:</strong> Multiple adapters can coexist; select or blend adapters per request/domain.</li>
+      <li><strong>Regularization:</strong> Weight decay on adapters only; consider small LoRA dropout.</li>
+      <li><strong>Coverage:</strong> If accuracy plateaus, increase r or include MLP layers as LoRA targets.</li>
+      <li><strong>Validation parity:</strong> Compare unmerged vs merged outputs on a batch before exporting.</li>
+      <li><strong>Precision hygiene:</strong> Merge with consistent dtype (e.g., keep BF16 end‑to‑end).</li>
+      <li><strong>Packed qkv nuance:</strong> If using packed W<sub>qkv</sub>, confirm gradients don’t leak to frozen weights.</li>
+      <li><strong>Quantization caveat:</strong> With QLoRA, ensure dequant ops are non‑differentiable only for W, not for A,B.</li>
+      <li><strong>Check shapes:</strong> A is r×d<sub>in</sub>, B is d<sub>out</sub>×r; transpose mistakes are common.</li>
+    </ul>
+    <div class="note">In my experiments, most of the benefit comes from targeting attention Q and V with small ranks (r ≤ 16). For domain‑heavy shifts (e.g., code or math), adding LoRA to MLP layers often closes the gap to full fine‑tuning.</div>
+  </section>
+
+  <section>
+    <h2>Training Dynamics & Gradients</h2>
+    <p>LoRA optimizes the loss L(W') over low‑rank factors with W' = W + (α/r)·BA. With W frozen, the gradients factor cleanly:</p>
+    <div class="math-formula">
+      Let G = ∂L/∂W' ∈ ℝ<sup>d<sub>out</sub>×d<sub>in</sub></sup>.<br><br>
+      ∂L/∂A = (α/r) · B<sup>T</sup> G ∈ ℝ<sup>r×d<sub>in</sub></sup><br>
+      ∂L/∂B = (α/r) · G A<sup>T</sup> ∈ ℝ<sup>d<sub>out</sub>×r</sup>
+    </div>
+    <p>Zero‑initializing B makes W' ≈ W at step 0, stabilizing early training. The α scale balances update magnitude. Combine with gradient clipping (e.g., 0.5–1.0) for stability on long sequences.</p>
+    <h3>Optimization Recipe</h3>
+    <ul>
+      <li>Freeze base weights; optimizer sees only A, B.</li>
+      <li>AdamW on adapters, β1=0.9, β2=0.999; weight_decay 0.0–0.01 on adapters.</li>
+      <li>LR 1e‑4–2e‑4 (instruction tuning), warmup 3–5%, cosine/linear decay.</li>
+      <li>LoRA dropout 0.05–0.2 when data is limited; 0.0 for large clean datasets.</li>
+      <li>FP16/BF16 training; keep adapters FP32 if memory allows for extra stability.</li>
+    </ul>
+  </section>
+
+  <section>
+    <h2>Low‑Rank View via SVD</h2>
+    <p>If a full fine‑tune produces ΔW*, the best rank‑r approximation (Frobenius norm) is given by truncated SVD. This motivates LoRA’s parameterization:</p>
+    <div class="math-formula">
+      ΔW* = U Σ V<sup>T</sup> ⇒ argmin<sub>rank(X)≤r</sub> ||ΔW* − X||<sub>F</sub> = U<sub>:,1:r</sub> Σ<sub>1:r,1:r</sub> V<sub>:,1:r</sub><sup>T</sup>
+    </div>
+    <p>Practical corollary: compress a full fine‑tune by SVD‑factoring ΔW* into B A with rank r, or initialize LoRA from an SVD of a few saved full‑tune checkpoints.</p>
+    <div class="diagram-container">
+      <svg width="760" height="220" viewBox="0 0 760 220">
+        <text x="120" y="30" text-anchor="middle" font-size="14" fill="#5A4B33">Full Update ΔW*</text>
+        <rect x="40" y="50" width="160" height="120" rx="8" fill="#e6f0ff" stroke="#7B6C50" stroke-width="2"/>
+        <text x="120" y="190" text-anchor="middle" font-size="12" fill="#5A4B33">d_out × d_in</text>
+        <text x="230" y="110" font-size="20" fill="#5A4B33">≈</text>
+        <rect x="260" y="70" width="90" height="80" rx="8" fill="#fff3e0" stroke="#7B6C50" stroke-width="2"/>
+        <text x="305" y="60" text-anchor="middle" font-size="12" fill="#5A4B33">U<sub>r</sub></text>
+        <rect x="360" y="70" width="60" height="80" rx="8" fill="#fff3e0" stroke="#7B6C50" stroke-width="2"/>
+        <text x="390" y="60" text-anchor="middle" font-size="12" fill="#5A4B33">Σ<sub>r</sub></text>
+        <rect x="430" y="70" width="90" height="80" rx="8" fill="#fff3e0" stroke="#7B6C50" stroke-width="2"/>
+        <text x="475" y="60" text-anchor="middle" font-size="12" fill="#5A4B33">V<sub>r</sub><sup>T</sup></text>
+        <text x="560" y="110" font-size="20" fill="#5A4B33">=</text>
+        <rect x="590" y="70" width="110" height="80" rx="8" fill="#e9efe6" stroke="#7B6C50" stroke-width="2"/>
+        <text x="645" y="60" text-anchor="middle" font-size="12" fill="#5A4B33">B A</text>
+        <text x="645" y="170" text-anchor="middle" font-size="12" fill="#5A4B33">LoRA rank r</text>
+      </svg>
+      <div class="diagram-caption">Truncated SVD gives the best rank‑r approximation; LoRA learns such structure directly.</div>
+    </div>
+  </section>
+
+  <section>
+    <h2>Placement & Shapes in Transformers</h2>
+    <p>Attention projections are often packed as W<sub>qkv</sub> ∈ ℝ<sup>3d<sub>model</sub>×d<sub>model</sub></sup>. You can attach one adapter to the packed matrix or split by projection or head:</p>
+    <ul>
+      <li><strong>Packed:</strong> One adapter on W<sub>qkv</sub>; simplest wiring.</li>
+      <li><strong>Per‑projection:</strong> Separate adapters on W<sub>q</sub>, W<sub>k</sub>, W<sub>v</sub>; typically Q and V only.</li>
+      <li><strong>Per‑head (grouped):</strong> Block‑diagonal A,B per attention head for fine‑grained control.</li>
+    </ul>
+    <div class="math-formula">
+      Common shapes: W<sub>q</sub>, W<sub>k</sub>, W<sub>v</sub>, W<sub>o</sub> ∈ ℝ<sup>d<sub>model</sub>×d<sub>model</sub></sup>
+    </div>
+    <div class="code-block"><pre><code># Inject LoRA into two Linear layers (qkv, proj) in an attention block
+class LoRAInject:
+    def __init__(self, module, targets, r=8, alpha=16):
+        for name in targets:  # e.g., ["qkv", "proj"]
+            base = getattr(module, name)
+            lora = LoRALinear(base.in_features, base.out_features, r=r, alpha=alpha, bias=(base.bias is not None))
+            with torch.no_grad():
+                lora.weight.copy_(base.weight)
+                if base.bias is not None:
+                    lora.bias.copy_(base.bias)
+            setattr(module, name, lora)
+
+# Example: LoRAInject(self.attn, ["qkv", "proj"], r=8, alpha=16)
+</code></pre></div>
+  </section>
+
+  <section>
+    <h2>QLoRA: LoRA on Quantized Models</h2>
+    <p>QLoRA adds adapters on top of 4‑bit quantized base weights to minimize memory without sacrificing much quality. The base W is quantized (e.g., NF4) and dequantized during forward passes; A and B remain trainable at higher precision.</p>
+    <div class="math-formula">
+      Memory(base) ≈ (bits/8)·|W| (frozen) • Memory(adapters) ≈ params(A,B) + optimizer states for A,B
+    </div>
+    <p>NF4 (normal‑float 4‑bit) with double quantization for scales and paged optimizers are commonly used. This enables 7B+ models to fine‑tune on a single high‑memory GPU.</p>
+    <div class="diagram-container">
+      <svg width="760" height="220" viewBox="0 0 760 220">
+        <text x="110" y="30" text-anchor="middle" font-size="13" fill="#5A4B33">Full FT</text>
+        <rect x="60" y="60" width="100" height="120" fill="#e6f0ff" stroke="#7B6C50"/>
+        <text x="210" y="30" text-anchor="middle" font-size="13" fill="#5A4B33">LoRA</text>
+        <rect x="160" y="100" width="100" height="80" fill="#fff3e0" stroke="#7B6C50"/>
+        <text x="310" y="30" text-anchor="middle" font-size="13" fill="#5A4B33">QLoRA</text>
+        <rect x="260" y="120" width="100" height="60" fill="#e9efe6" stroke="#7B6C50"/>
+        <text x="430" y="150" font-size="12" fill="#5A4B33">Relative training memory footprint</text>
+      </svg>
+      <div class="diagram-caption">Full fine‑tune ≫ LoRA > QLoRA for training memory usage.</div>
+    </div>
+  </section>
+
+  <section>
+    <h2>Composing Multiple Adapters</h2>
+    <p>Train adapters for different domains or tasks and combine them at inference:</p>
+    <div class="math-formula">
+      W' = W + ∑<sub>i</sub> γ<sub>i</sub> · (α<sub>i</sub>/r<sub>i</sub>) · B<sub>i</sub>A<sub>i</sub>
+    </div>
+    <ul>
+      <li><strong>Static blend:</strong> Fixed γ<sub>i</sub> per route (e.g., code vs dialogue).</li>
+      <li><strong>Gated:</strong> A small predictor sets γ<sub>i</sub> from the prompt.</li>
+      <li><strong>Routing by tag:</strong> Pick the adapter by metadata.</li>
+    </ul>
+    <p>Merge pre‑blended adapters into W for zero‑overhead deployment.</p>
+  </section>
+
+  <section>
+    <h2>Algorithm Summary</h2>
+    <div class="code-block"><pre><code># Training (LoRA)
+freeze(base_model.parameters())
+for batch in data:
+    logits = model(x)              # uses W' = W + (α/r)·BA
+    loss = loss_fn(logits, y)
+    loss.backward()                # grads only for A, B
+    clip_grad_norm_(adapters, 1.0)
+    opt.step(); opt.zero_grad()
+
+# Deployment
+with torch.no_grad():
+    for layer in model.lora_layers:
+        layer.merge_adapter_()     # W ← W + (α/r)·BA
+drop_adapters(model)               # keep W only (zero overhead)
+</code></pre></div>
+  </section>
+
+  <footer>
+    <p>© 2025 San Hashimhama. Educational use permitted with attribution.</p>
+  </footer>
+</body>
+</html>

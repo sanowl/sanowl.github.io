@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>TRPO (Trust Region Policy Optimization) - San’s AI Notes</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: Georgia, serif; line-height: 1.7; color: #333; background: white; max-width: 1000px; margin: 0 auto; padding: 40px 20px; }
+    .back-nav { margin-bottom: 40px; }
+    .back-nav a { color: #666; text-decoration: none; font-size: 0.9rem; }
+    .back-nav a:hover { color: #333; }
+    header { margin-bottom: 50px; text-align: center; padding-bottom: 30px; border-bottom: 1px solid #eee; }
+    h1 { font-size: 2.6rem; font-weight: normal; margin-bottom: 12px; }
+    .subtitle { color: #666; font-size: 1.15rem; margin-bottom: 10px; }
+    h2 { font-size: 1.9rem; font-weight: normal; margin: 48px 0 22px; padding-bottom: 10px; border-bottom: 1px solid #eee; }
+    p { margin-bottom: 18px; text-align: justify; }
+    ul, ol { margin: 16px 0 18px 28px; }
+    li { margin-bottom: 10px; }
+    .math-formula { background: #f8f8f8; padding: 24px; margin: 24px 0; border-left: 3px solid #333; text-align: center; font-size: 1.05rem; }
+    .diagram-container { margin: 30px 0; text-align: center; }
+    .diagram-caption { font-size: 0.9rem; color: #666; margin-top: 8px; font-style: italic; }
+    .code-block { background: #f8f8f8; padding: 24px; margin: 24px 0; font-family: 'Courier New', monospace; font-size: 0.9rem; overflow-x: auto; border: 1px solid #ddd; }
+    footer { margin-top: 70px; padding-top: 36px; border-top: 1px solid #eee; text-align: center; color: #666; font-size: 0.9rem; }
+  </style>
+  <link rel="stylesheet" href="assets/css/theme.css">
+</head>
+<body>
+  <nav class="back-nav">
+    <a href="index.html">← Back to Home</a>
+  </nav>
+
+  <header>
+    <h1>TRPO (Trust Region Policy Optimization)</h1>
+    <p class="subtitle">Policy improvement with KL‑constrained natural gradient</p>
+  </header>
+
+  <section>
+    <h2>Constrained Optimization</h2>
+    <div class="math-formula">
+      maximize E\big[r<sub>t</sub>(θ) Â<sub>t</sub>\big] &nbsp; subject to &nbsp; E\big[ KL(π<sub>θ<sub>old</sub></sub> || π<sub>θ</sub>) \big] ≤ δ
+    </div>
+    <p>TRPO uses a second‑order approximation to solve this trust‑region problem and compute a step along the natural gradient direction using conjugate gradients.</p>
+  </section>
+
+  <section>
+    <h2>Update Step</h2>
+    <div class="math-formula">
+      θ' = θ + √(\frac{2δ}{g^T H^{-1} g}) · H^{-1} g, &nbsp; g = ∇ L, &nbsp; H ≈ Fisher information
+    </div>
+    <p>Backtracking line search ensures the KL constraint holds empirically on the batch.</p>
+  </section>
+
+  <section>
+    <h2>Conjugate Gradient Details</h2>
+    <p>We do not form H explicitly. Instead, we define Fisher‑vector products (Fv) via automatic differentiation on KL and use CG to solve Hx=g. Typically 10–20 iterations suffice.</p>
+    <div class="code-block">
+<pre><code># Pseudocode for CG with Fisher-vector product
+def fisher_vec(v): return grad( KL(π_θ||π_{θ+εv}), ε ) |_{ε=0}
+x = 0; r = g - fisher_vec(x); p = r; rs = r.T @ r
+for _ in range(K):
+  Ap = fisher_vec(p)
+  α = rs / (p.T @ Ap + 1e-8)
+  x = x + α p
+  r = r - α Ap
+  rs_new = r.T @ r
+  if sqrt(rs_new) < tol: break
+  p = r + (rs_new/rs) p; rs = rs_new
+</code></pre>
+    </div>
+  </section>
+
+  <section>
+    <h2>Diagram: Trust Region</h2>
+    <div class="diagram-container">
+      <svg width="760" height="260" viewBox="0 0 760 260">
+        <rect x="60" y="60" width="260" height="140" rx="12" fill="#FFFDF7" stroke="#7B6C50"/>
+        <text x="190" y="120" text-anchor="middle" fill="#5A4B33">KL ≤ δ</text>
+        <circle cx="160" cy="140" r="6" fill="#7B6C50"/>
+        <text x="170" y="135" fill="#5A4B33">θ</text>
+        <line x1="160" y1="140" x2="260" y2="120" stroke="#7B6C50" stroke-width="2"/>
+        <circle cx="260" cy="120" r="6" fill="#7B6C50"/>
+        <text x="270" y="115" fill="#5A4B33">θ'</text>
+      </svg>
+      <div class="diagram-caption">Step along natural gradient then line search to satisfy KL constraint.</div>
+    </div>
+  </section>
+
+  <section>
+    <h2>Practical Tips</h2>
+    <ul>
+      <li>Normalize advantages; subsample for KL eval during line search.</li>
+      <li>Backtracking factor 0.5–0.8; target KL δ ≈ 0.01–0.1 depending on task.</li>
+      <li>Use GAE(λ) to stabilize advantage estimation before TRPO updates.</li>
+    </ul>
+  </section>
+
+  <section>
+    <h2>Diagram</h2>
+    <div class="diagram-container">
+      <svg width="760" height="240" viewBox="0 0 760 240">
+        <rect x="60" y="60" width="220" height="120" rx="12" fill="#FFFDF7" stroke="#7B6C50"/>
+        <text x="170" y="120" text-anchor="middle" fill="#5A4B33">Feasible region (KL ≤ δ)</text>
+        <circle cx="220" cy="120" r="6" fill="#7B6C50"/>
+        <text x="240" y="115" fill="#5A4B33">θ</text>
+        <line x1="220" y1="120" x2="380" y2="100" stroke="#7B6C50" stroke-width="2"/>
+        <circle cx="380" cy="100" r="6" fill="#7B6C50"/>
+        <text x="395" y="95" fill="#5A4B33">θ'</text>
+      </svg>
+      <div class="diagram-caption">Take a natural‑gradient step constrained by a KL trust region.</div>
+    </div>
+  </section>
+
+  <section>
+    <h2>Sketch (Conjugate Gradient)</h2>
+    <div class="code-block">
+<pre><code>compute g = ∇_θ L(θ)
+solve Hx = g approximately via conjugate gradients using Fisher‑vector products
+scale step: step = √(2δ / (x^T H x)) * x
+backtracking line search until KL(θ, θ + step) ≤ δ and L improves
+apply step to θ
+</code></pre>
+    </div>
+  </section>
+
+  <section>
+    <h2>Notes</h2>
+    <ul>
+      <li>More stable than vanilla policy gradient; heavier than PPO.</li>
+      <li>Requires Fisher‑vector product implementation and line search.</li>
+      <li>PPO approximates TRPO’s constraint with clipping for simplicity.</li>
+    </ul>
+  </section>
+
+  <footer>
+    <p>© 2025 San Hashimhama. Educational use permitted with attribution.</p>
+  </footer>
+</body>
+</html>
